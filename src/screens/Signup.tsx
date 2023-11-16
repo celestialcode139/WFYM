@@ -1,4 +1,4 @@
-import { Box, Typography, Container, Link } from "@mui/material";
+import { Box, Typography, Container } from "@mui/material";
 import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -6,6 +6,7 @@ import "../App.css";
 import Button from "../components/button";
 import SignupBg from "../assets/images/signupBg.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -59,9 +60,11 @@ function Signup() {
         />
 
         <Box>
-          <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }}>
-            Continue with email
-          </Button>
+          <Link to={{ pathname: "/signup-form" }}>
+            <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }}>
+              Continue with email
+            </Button>
+          </Link>
         </Box>
         <Box className={`h-center`}>
           <Typography className={`signupOthers ${classes.signupOthers}`}>
@@ -72,11 +75,10 @@ function Signup() {
           className={`${classes.signupOthers}`}
           sx={{ marginTop: "10px!important", marginBottom: "30px" }}
         >
-          <Link
-            sx={{ color: "#075bce!important", textDecoration: "none" }}
-            href="#"
-          >
-            Sign in here
+          <Link to={{ pathname: "/signin" }}>
+            <Box sx={{ color: "#075bce!important", textDecoration: "none" }}>
+              Sign in here
+            </Box>
           </Link>
         </Typography>
       </Container>

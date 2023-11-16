@@ -1,16 +1,10 @@
-import {
-  Box,
-  Typography,
-  Container,
-  TextField,
-  Grid,
-} from "@mui/material";
+import { Box, Typography, Container, TextField, Grid } from "@mui/material";
 import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import Button from "../components/button";
-import signupForm from "../assets/images/signupForm.svg";
+import signinForm from "../assets/images/signupForm.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
 import { Link } from "react-router-dom";
 
@@ -18,10 +12,10 @@ const useStyles = makeStyles(() => {
   const theme = useTheme();
 
   return {
-    signupFrom: {
+    signinFrom: {
       backgroundColor: "#ffffff",
       minHeight: "100vh",
-      backgroundImage: `url(${signupForm})`,
+      backgroundImage: `url(${signinForm})`,
       backgroundRepeat: "no-repeat",
       backgroundSize: "contain",
       backgroundPosition: "bottom left",
@@ -51,7 +45,7 @@ const useStyles = makeStyles(() => {
       fontFamily: "Mori-normal!important",
       marginTop: "8px!important",
     },
-    signupOthers: {
+    signinOthers: {
       fontSize: "14px!important",
       textAlign: "center",
       color: "#22172aad",
@@ -59,12 +53,12 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function Signup() {
+function Signin() {
   const classes = useStyles();
   return (
-    <Box className={`${classes.signupFrom}`}>
+    <Box className={`${classes.signinFrom}`}>
       <Container maxWidth="lg">
-        <OnBoardingHeader heading="Sign up"/>
+        <OnBoardingHeader heading="Sign in" />
         <Box
           component="form"
           className={`h-center`}
@@ -82,8 +76,8 @@ function Signup() {
                     borderRadius: "15px!important",
                   },
                 }}
-                label="Email"
-                defaultValue="johndoe@gmail.com"
+                label="Username"
+                defaultValue=""
               />
             </Grid>
             <Grid item xs={12} className="h-center" sx={{ marginTop: "25px" }}>
@@ -97,21 +91,10 @@ function Signup() {
                 label="Password"
               />
             </Grid>
-            <Grid item xs={12} className="h-center" sx={{ marginTop: "25px" }}>
-              <TextField
-                sx={{
-                  "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root": {
-                    borderRadius: "15px!important",
-                  },
-                }}
-                type="password"
-                label="Retry Password"
-              />
-            </Grid>
           </Grid>
         </Box>
         <Box sx={{ marginTop: "20px" }}>
-          <Link to={{ pathname: "/otp" }}>
+          <Link to={{ pathname: "/dashboard" }}>
             <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }}>
               Continue
             </Button>
@@ -122,4 +105,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Signin;

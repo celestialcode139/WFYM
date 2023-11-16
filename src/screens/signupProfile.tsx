@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Container,
-  Link,
-  TextField,
-  Grid,
-} from "@mui/material";
+import { Box, Typography, Container, TextField, Grid } from "@mui/material";
 import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -18,6 +11,7 @@ import avatar from "../assets/images/avatar.png";
 import Button from "../components/button";
 import DatepickerSticky from "../components/datepickerSticky";
 import OnBoardingHeader from "../components/onBoardingHeader";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -101,11 +95,13 @@ function SignupProfile() {
             className="v-bottom h-center"
             sx={{ display: { sm: "flex", xs: "none" } }}
           >
-            <Box
-              component="img"
-              src={backArrow}
-              className={`${classes.backArrow} backButton`}
-            ></Box>
+            <Link to={{ pathname: "/otp" }}>
+              <Box
+                component="img"
+                src={backArrow}
+                className={`${classes.backArrow} backButton`}
+              ></Box>
+            </Link>
           </Grid>
           <Grid item xs={12} sm={10}>
             <Grid container>
@@ -164,7 +160,9 @@ function SignupProfile() {
                     </DatepickerSticky>
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
-                    <Button>Confirm</Button>
+                    <Link to={{ pathname: "/gender" }}>
+                      <Button>Confirm</Button>
+                    </Link>
                   </Grid>
                 </Grid>
               </Grid>

@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Container,
-  Link,
-  TextField,
-  Grid,
-} from "@mui/material";
+import { Box, Typography, Container, TextField, Grid } from "@mui/material";
 import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -18,6 +11,7 @@ import camera from "../assets/icons/cam.svg";
 import Button from "../components/button";
 import DatepickerSticky from "../components/datepickerSticky";
 import OnBoardingHeader from "../components/onBoardingHeader";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -194,14 +188,18 @@ function Interests() {
           ></Grid>
         </Grid>
         <Box className="h-center">
-          <Button sx={{ width: "280px", marginTop: "30px" }}>Continue</Button>
+          <Link to={{ pathname: "/dashboard" }}>
+            <Button sx={{ width: "280px", marginTop: "30px" }}>Continue</Button>
+          </Link>
         </Box>
       </Container>
-      <Box
-        component="img"
-        src={backArrow}
-        className={`${classes.backArrow} backButton`}
-      ></Box>
+      <Link to={{ pathname: "/gender" }}>
+        <Box
+          component="img"
+          src={backArrow}
+          className={`${classes.backArrow} backButton`}
+        ></Box>
+      </Link>
     </Box>
   );
 }

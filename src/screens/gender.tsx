@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Container,
-  Link,
-  TextField,
-  Grid,
-} from "@mui/material";
+import { Box, Typography, Container, TextField, Grid } from "@mui/material";
 import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -22,6 +15,7 @@ import maleWhite from "../assets/icons/maleWhite.svg";
 import femaleBlack from "../assets/icons/femaleBlack.svg";
 import femaleWhite from "../assets/icons/femaleWhite.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -153,30 +147,34 @@ function SignupProfile() {
                 <Typography>Other</Typography>
               </Box>
             </Button>
-            <Button
-              onClick={() => setactive(2)}
-              sx={{
-                backgroundColor: "#065BCE",
-                color: "#ffffff",
-                width: "264px",
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "40px",
-                cursor: "pointer!important",
-              }}
-            >
-              <Box className="v-center">
-                <Typography>Continue</Typography>
-              </Box>
-            </Button>
+            <Link to={{ pathname: "/interests" }}>
+              <Button
+                onClick={() => setactive(2)}
+                sx={{
+                  backgroundColor: "#065BCE",
+                  color: "#ffffff",
+                  width: "264px",
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "40px",
+                  cursor: "pointer!important",
+                }}
+              >
+                <Box className="v-center">
+                  <Typography>Continue</Typography>
+                </Box>
+              </Button>
+            </Link>
           </Box>
         </Box>
       </Container>
-      <Box
-        component="img"
-        src={backArrow}
-        className={`${classes.backArrow} backButton hover`}
-      ></Box>
+      <Link to={{ pathname: "/signup-profile" }}>
+        <Box
+          component="img"
+          src={backArrow}
+          className={`${classes.backArrow} backButton hover`}
+        ></Box>
+      </Link>
     </Box>
   );
 }

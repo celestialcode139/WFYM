@@ -1,12 +1,5 @@
-import { useState,useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Container,
-  Link,
-  TextField,
-  Grid,
-} from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, Typography, Container, TextField, Grid } from "@mui/material";
 import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -15,6 +8,7 @@ import Button from "../components/button";
 import OtpInput from "react-otp-input";
 import backArrow from "../assets/icons/backArrow.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -51,10 +45,10 @@ const useStyles = makeStyles(() => {
       color: "#9B9B9B",
       marginTop: "40px!important",
     },
-    backArrow:{
-        width:"55px",
-        height:"55px"
-    }
+    backArrow: {
+      width: "55px",
+      height: "55px",
+    },
   };
 });
 function OTP() {
@@ -67,53 +61,76 @@ function OTP() {
       setTimeout(() => setSeconds(seconds - 1), 1000);
     }
   });
+  useEffect((): any => {
+    if (otp.length >= 4) {
+      redirect();
+    }
+  }, [otp]);
+  const redirect = () => {
+    window.location.href = "/signup-profile";
+  };
+
   return (
     <Box className={`${classes.OTP}`}>
       <Container maxWidth="lg">
-        <OnBoardingHeader/>
+        <OnBoardingHeader />
         <Typography className={`${classes.h1}`}>00:{seconds}</Typography>
         <Typography className={`${classes.otpMsg}`}>
           Type the verification code we’ve sent you
         </Typography>
 
         <Grid container>
-            <Grid item xs={12} sm={4} className="v-bottom h-center" sx={{display:{sm:'flex',xs:"none"}}}>
-                <Box component="img" src={backArrow} className={`${classes.backArrow}`}></Box>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <Box className="h-center" sx={{ marginTop: "40px" }}>
-                    <OtpInput
-                        shouldAutoFocus={true}
-                        value={otp}
-                        onChange={setOtp}
-                        numInputs={4}
-                        renderSeparator={<Box sx={{ marginRight: "10px" }}></Box>}
-                        renderInput={(props) => <input {...props} />}
-                        inputStyle={{
-                        height: "50px",
-                        width: "50px",
-                        borderRadius: "10px",
-                        border: "2px solid #065BCE",
-                        fontSize: "30px",
-                        backgroundColor: "#065BCE",
-                        color: "#ffffff",
-                        }}
-                    />
-                </Box>
-            </Grid>
-            <Grid item xs={12} sm={4} sx={{display:{sm:'block',xs:"none"}}}></Grid>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            className="v-bottom h-center"
+            sx={{ display: { sm: "flex", xs: "none" } }}
+          >
+            <Link to={{ pathname: "/signup-form" }}>
+              <Box
+                component="img"
+                src={backArrow}
+                className={`${classes.backArrow}`}
+              ></Box>
+            </Link>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Box className="h-center" sx={{ marginTop: "40px" }}>
+              <OtpInput
+                shouldAutoFocus={true}
+                value={otp}
+                onChange={setOtp}
+                numInputs={4}
+                renderSeparator={<Box sx={{ marginRight: "10px" }}></Box>}
+                renderInput={(props) => <input {...props} />}
+                inputStyle={{
+                  height: "50px",
+                  width: "50px",
+                  borderRadius: "10px",
+                  border: "2px solid #065BCE",
+                  fontSize: "30px",
+                  backgroundColor: "#065BCE",
+                  color: "#ffffff",
+                }}
+              />
+            </Box>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{ display: { sm: "block", xs: "none" } }}
+          ></Grid>
         </Grid>
-        
+
         <Typography
           className={`${classes.signupOthers}`}
           sx={{ marginBottom: "25px" }}
         >
-          <Link
-            sx={{ color: "#9B9B9B!important", textDecoration: "none" }}
-            href="#"
-          >
+          <Box sx={{ color: "#9B9B9B!important", textDecoration: "none" }}>
             Send again
-          </Link>
+          </Box>
         </Typography>
       </Container>
     </Box>
