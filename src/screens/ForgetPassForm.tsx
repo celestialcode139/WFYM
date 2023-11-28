@@ -7,7 +7,7 @@ import "../App.css";
 import Button from "../components/button";
 import signinForm from "../assets/images/signupForm.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
@@ -28,17 +28,6 @@ const useStyles = makeStyles(() => {
       [theme.breakpoints.down("sm")]: {
         backgroundImage: "unset!important",
       },
-    },
-    forgetPass:{
-      color:"#000000",
-      textDecoration:"underline",
-      fontSize:16,
-      fontWeight:"500",
-      margin:"0 auto!important",
-      textAlign:"center",
-      paddingTop:20,
-      cursor:"pointer",
-      width:"fit-content"
     },
     input: {
       borderRadius: "50px", // Adjust the value to your desired border radius
@@ -70,39 +59,54 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function Signin() {
+function ForgetPassForm() {
   const navigate = useNavigate();
   const classes = useStyles();
 
   const [Email, setEmail] = React.useState("");
-  const [Password, setPassword] = React.useState("");
 
   const Validation = () => {
-    if (Email != "" && Password != "") {
-      SignIn()
-    }else{
-      GeneralHelper.ShowToast("Please fill out all fields.")
-
+    if (Email != "") {
+      CallApi()
+    } else {
+      GeneralHelper.ShowToast("Email can't be empty.")
     }
   }
-  const SignIn = () => {
-    APIHelper.CallApi(config.Endpoints.auth.SignIn, { email: Email, password: Password }).then((result:any) => {
-      if (result.status == "success") {
-        console.log("Success", result.data.token);
-        GeneralHelper.storeData("Token", result.data.token)
-        GeneralHelper.storeData("UserId", result.data.user_id)
-        navigate("/dashboard")
+  const CallApi = async () => {
+    APIHelper.CallApi(config.Endpoints.auth.forgetPass, { email: Email }).then((result:any) => {
+      if (result?.status == "success") {
+        StoreData()
       } else {
-        console.log(result.message);
         GeneralHelper.ShowToast(String(result.message))
+      }
+    })
+  }
+  const StoreData = () => {
+    GeneralHelper.storeData("Email", Email).then((result: any) => {
+      if (result.status == 1) {
+        navigate("/otpresetpassword")
+      } else {
+        console.log(result);
+        alert("Something went wrong")
+
       }
 
     })
   }
+  const retrieveData = async () => {
+    const Email = await GeneralHelper.retrieveData("Email")
+    if (Email.status == 1) {
+      setEmail(Email.data)
+    }
+  }
+  React.useEffect(() => {
+    retrieveData()
+  }, [])
+  
   return (
     <Box className={`${classes.signinFrom}`}>
       <Container maxWidth="lg">
-        <OnBoardingHeader heading="Sign in" />
+        <OnBoardingHeader heading="Forget Password" />
         <Box
           component="form"
           className={`h-center`}
@@ -125,30 +129,17 @@ function Signin() {
                 onChange={(e) => { setEmail(e.target.value) }}
               />
             </Grid>
-            <Grid item xs={12} className="h-center" sx={{ marginTop: "25px" }}>
-              <TextField
-                sx={{
-                  "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root": {
-                    borderRadius: "15px!important",
-                  },
-                }}
-                type="password"
-                label="Password"
-                value={Password}
-                onChange={(e) => { setPassword(e.target.value) }}
-              />
-            </Grid>
+
           </Grid>
         </Box>
         <Box sx={{ marginTop: "20px" }}>
-            <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={()=>{Validation()}}>
-              Continue
-            </Button>
-            <Typography className={`${classes.forgetPass}`} onClick={()=>{navigate("/forgetpass")}}>Forgot password</Typography>
+          <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
+            Continue
+          </Button>
         </Box>
       </Container>
     </Box>
   );
 }
 
-export default Signin;
+export default ForgetPassForm;

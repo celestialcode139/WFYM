@@ -35,8 +35,11 @@ export default function Carousel(props: any) {
 
   const handleIndexChanged = (index: any) => {
     setCurrentIndex(index.activeIndex);
-    props.activeIndex(index.activeIndex);
   };
+  useEffect(() => {
+  //  console.log("props.data",props.data[0]);
+  }, [])
+  
 
   return (
     <Box className={`${classes.slider}`} sx={{ paddingTop: "50px" }}>

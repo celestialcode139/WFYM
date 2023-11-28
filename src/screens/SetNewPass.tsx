@@ -7,7 +7,7 @@ import "../App.css";
 import Button from "../components/button";
 import signinForm from "../assets/images/signupForm.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
-import { Link,useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
@@ -28,17 +28,6 @@ const useStyles = makeStyles(() => {
       [theme.breakpoints.down("sm")]: {
         backgroundImage: "unset!important",
       },
-    },
-    forgetPass:{
-      color:"#000000",
-      textDecoration:"underline",
-      fontSize:16,
-      fontWeight:"500",
-      margin:"0 auto!important",
-      textAlign:"center",
-      paddingTop:20,
-      cursor:"pointer",
-      width:"fit-content"
     },
     input: {
       borderRadius: "50px", // Adjust the value to your desired border radius
@@ -70,39 +59,49 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function Signin() {
+function SetNewPass() {
   const navigate = useNavigate();
   const classes = useStyles();
 
-  const [Email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
+  const [CPassword, setCPassword] = React.useState("");
 
   const Validation = () => {
-    if (Email != "" && Password != "") {
-      SignIn()
-    }else{
-      GeneralHelper.ShowToast("Please fill out all fields.")
-
+    if (Password != "") {
+      if (Password == CPassword) {
+        retrieveData()
+      } else {
+        GeneralHelper.ShowToast("Confirm Password does not match.")
+      }
+    } else {
+      GeneralHelper.ShowToast("Password Can't be empty")
     }
   }
-  const SignIn = () => {
-    APIHelper.CallApi(config.Endpoints.auth.SignIn, { email: Email, password: Password }).then((result:any) => {
-      if (result.status == "success") {
-        console.log("Success", result.data.token);
-        GeneralHelper.storeData("Token", result.data.token)
-        GeneralHelper.storeData("UserId", result.data.user_id)
-        navigate("/dashboard")
-      } else {
-        console.log(result.message);
-        GeneralHelper.ShowToast(String(result.message))
-      }
-
-    })
+  const retrieveData = async () => {
+    const Email = await GeneralHelper.retrieveData("Email")
+    const OTP_ID = await GeneralHelper.retrieveData("OTP_ID")
+    if (Email.status == 1 && OTP_ID.status == 1) {
+      handleUpdatePass(Email.data, OTP_ID.data, Password)
+    }
   }
+  const handleUpdatePass = (Email: string, OTP_Id: string, Password: string) => {
+    APIHelper.CallApi(config.Endpoints.auth.setPass, { email: Email, otp_id: OTP_Id, password: Password }).then((result) => {
+      if (result?.status == "success") {
+        GeneralHelper.ClearData("Email").then(() => {
+          GeneralHelper.ClearData("OTP_ID").then(() => {
+            GeneralHelper.ShowToast("Password Updated Successfully.")
+            navigate("/signin")
+          })
+        })
+      } else {
+        GeneralHelper.ShowToast("Something wen't wrong.")
+      }
+    })
+  };
   return (
     <Box className={`${classes.signinFrom}`}>
       <Container maxWidth="lg">
-        <OnBoardingHeader heading="Sign in" />
+        <OnBoardingHeader heading="Forget Password" />
         <Box
           component="form"
           className={`h-center`}
@@ -113,18 +112,6 @@ function Signin() {
           autoComplete="off"
         >
           <Grid container>
-            <Grid item xs={12} className="h-center">
-              <TextField
-                sx={{
-                  "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root": {
-                    borderRadius: "15px!important",
-                  },
-                }}
-                label="Email"
-                value={Email}
-                onChange={(e) => { setEmail(e.target.value) }}
-              />
-            </Grid>
             <Grid item xs={12} className="h-center" sx={{ marginTop: "25px" }}>
               <TextField
                 sx={{
@@ -138,17 +125,30 @@ function Signin() {
                 onChange={(e) => { setPassword(e.target.value) }}
               />
             </Grid>
+            <Grid item xs={12} className="h-center" sx={{ marginTop: "25px" }}>
+              <TextField
+                sx={{
+                  "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root": {
+                    borderRadius: "15px!important",
+                  },
+                }}
+                type="password"
+                label="Confirm Password"
+                value={CPassword}
+                onChange={(e) => { setCPassword(e.target.value) }}
+              />
+            </Grid>
+
           </Grid>
         </Box>
         <Box sx={{ marginTop: "20px" }}>
-            <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={()=>{Validation()}}>
-              Continue
-            </Button>
-            <Typography className={`${classes.forgetPass}`} onClick={()=>{navigate("/forgetpass")}}>Forgot password</Typography>
+          <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
+            Continue
+          </Button>
         </Box>
       </Container>
     </Box>
   );
 }
 
-export default Signin;
+export default SetNewPass;

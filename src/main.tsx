@@ -4,7 +4,10 @@ import LandingPage from "./App.tsx";
 import Signup from "./screens/Signup.tsx";
 import SignupForm from "./screens/SignupForm.tsx";
 import SigninForm from "./screens/SigninForm.tsx";
+import ForgetPassForm from "./screens/ForgetPassForm.tsx";
 import OTP from "./screens/OTP.tsx";
+import OTPResetPass from "./screens/OTPResetPass.tsx";
+import SetNewPass from "./screens/SetNewPass.tsx";
 import SignupProfile from "./screens/signupProfile.tsx";
 import Gender from "./screens/gender.tsx";
 import Interests from "./screens/interests.tsx";
@@ -21,12 +24,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/" Component={LandingPage} />
         <Route path="/signup" Component={Signup} />
         <Route path="/signup-form" Component={SignupForm} />
-        <Route path="/signin" Component={SigninForm} />
         <Route path="/otp" Component={OTP} />
         <Route path="/signup-profile" Component={SignupProfile} />
         <Route path="/gender" Component={Gender} />
-        <Route path="/interests" Component={Interests} />
+        <Route path="/signin" Component={SigninForm} />
+        <Route path="/forgetpass" Component={ForgetPassForm} />
+        <Route path="/otpresetpassword" Component={OTPResetPass} />
+        <Route path="/SetNewPassword" Component={SetNewPass} />
         <Route path="/dashboard" Component={Dashboard} />
+        <Route path="/interests" Component={Interests} />
       </Routes>
       <Routes>
         <Route path="admin-dashboard" Component={Admin_Dashboard} />

@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Container, TextField, Grid } from "@mui/material";
-import Logo from "../assets/logo/logo-w.svg";
+import { Box, Container, TextField, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import OtpInput from "react-otp-input";
 import backArrow from "../assets/icons/backArrow.svg";
 import camera from "../assets/icons/camera.svg";
 import avatar from "../assets/images/avatar.png";
 import Button from "../components/button";
 import DatepickerSticky from "../components/datepickerSticky";
 import OnBoardingHeader from "../components/onBoardingHeader";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+// Helpers
+import GeneralHelper from "../Helpers/GeneralHelper";
+import APIHelper from "../Helpers/APIHelper";
+import config from "../../config";
+
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -57,6 +60,7 @@ const useStyles = makeStyles(() => {
       height: "120px",
       width: "120px",
       backgroundImage: `url(${avatar})`,
+      // backgroundImage: `url(${avatar})`,
       backgroundSize: "contain",
       marginTop: "8px",
       borderRadius: "15px",
@@ -71,20 +75,55 @@ const useStyles = makeStyles(() => {
       bottom: "-11px",
       right: "-11px",
       width: "20px",
+      cursor: "pointer"
     },
   };
 });
 function SignupProfile() {
-  const [otp, setOtp] = useState("");
-  const [seconds, setSeconds] = useState(60);
+  const navigate = useNavigate();
   const classes = useStyles();
+  const [FirstName, setFirstName] = useState("");
+  const [LastName, setLastName] = useState("");
+  const [ProfileImage, setProfileImage] = useState("");
+  const [DOB, setDOB] = useState("10-11-2003");
+
+  const Validation = () => {
+    if (FirstName != "" && LastName != "") {
+      handleNext()
+    }
+    else {
+      GeneralHelper.ShowToast("Please fill out all fields.")
+    }
+  }
+
+  const handleNext = () => {
+    const data = JSON.stringify({
+      FirstName: FirstName,
+      LastName: LastName,
+      DOB: DOB,
+    })
+    GeneralHelper.storeData("UserDetails_Names", data)
+    navigate("/gender")
+
+  };
+  const featchData = async () => {
+    const result = await GeneralHelper.retrieveData("UserDetails_Names")
+    if (result.status == 1) {
+      const data = JSON.parse(result.data as string)
+      setFirstName(data.FirstName)
+      setLastName(data.LastName)
+    }
+  }
+  useEffect(() => {
+    featchData()
+}, [])
 
   return (
     <Box className={`${classes.SignupProfile}`}>
       <Container maxWidth="lg">
         <OnBoardingHeader
           heading="Profile details"
-          subheading="Type the verification code we’ve sent you"
+
         />
 
         <Grid container>
@@ -113,11 +152,22 @@ function SignupProfile() {
                 sx={{ marginBottom: { md: "0px", xs: "10px" } }}
               >
                 <Box className={`${classes.profileImage}`}>
-                  <Box
-                    className={`${classes.imagePicker}`}
-                    component="img"
-                    src={camera}
-                  ></Box>
+                  <input
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="raised-button-file"
+                    type="file"
+                    onChange={(e) => {
+                      console.log("Image : ", e.target.value);
+                    }}
+                  />
+                  <label htmlFor="raised-button-file">
+                    <Box
+                      className={`${classes.imagePicker}`}
+                      component="img"
+                      src={camera}
+                    ></Box>
+                  </label>
                 </Box>
               </Grid>
               <Grid item md={7} xs={12}>
@@ -127,13 +177,15 @@ function SignupProfile() {
                       sx={{
                         width: "100%",
                         "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root":
-                          {
-                            borderRadius: "15px!important",
-                            width: "100%",
-                          },
+                        {
+                          borderRadius: "15px!important",
+                          width: "100%",
+                        },
                       }}
-                      type="password"
-                      label="Retry Password"
+                      type="text"
+                      label="First Name"
+                      value={FirstName}
+                      onChange={(e) => { setFirstName(e.target.value) }}
                     />
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
@@ -141,13 +193,15 @@ function SignupProfile() {
                       sx={{
                         width: "100%",
                         "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root":
-                          {
-                            borderRadius: "15px!important",
-                            width: "100%",
-                          },
+                        {
+                          borderRadius: "15px!important",
+                          width: "100%",
+                        },
                       }}
-                      type="password"
-                      label="Retry Password"
+                      type="text"
+                      label="Last Name"
+                      value={LastName}
+                      onChange={(e) => { setLastName(e.target.value) }}
                     />
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
@@ -160,9 +214,9 @@ function SignupProfile() {
                     </DatepickerSticky>
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
-                    <Link to={{ pathname: "/gender" }}>
-                      <Button>Confirm</Button>
-                    </Link>
+                    {/* <Link to={{ pathname: "/gender" }}> */}
+                      <Button onClick={()=>{Validation()}}>Confirm</Button>
+                    {/* </Link> */}
                   </Grid>
                 </Grid>
               </Grid>

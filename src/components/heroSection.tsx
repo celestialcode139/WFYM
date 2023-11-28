@@ -71,14 +71,12 @@ const useStyles = makeStyles(() => {
 
 const HeroSection = () => {
   const classes = useStyles();
-  
-  
 
   return (
     <Box className={`${classes.heroSection}`}>
 
       <Container maxWidth="lg">
-        <Typography className={`${classes.h1}`}>Start your heart's </Typography>
+        <Typography className={`${classes.h1}`}>Start your heart's</Typography>
         <Typography className={`${classes.h2}`}>adventure today</Typography>
         <Grid container>
           <Grid item sm={6.5} xs={12}>

@@ -13,7 +13,8 @@ const useStyles = makeStyles(() => {
       padding:"17px 15px",
       color:"#ffffff",
       textAlign:'center',
-      fontFamily:'Mori-bold!important'
+      fontFamily:'Mori-bold!important',
+      cursor:"pointer"
     },
     
   });
