@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function OTP() {
+function OTPResetPass() {
   const navigate = useNavigate();
 
   const [otp, setOtp] = useState("");
@@ -66,15 +66,27 @@ function OTP() {
   const handleOTPVerification = (OTP: string) => {
     retrieveData(OTP, "Varify")
   }
+  const StoreData = (id:string) => {
+    GeneralHelper.storeData("OTP_ID", id).then((result: any) => {
+      if (result.status == 1) {
+        navigate("/SetNewPassword")
+      } else {
+        console.log(result);
+        alert("Something went wrong")
+      }
+    })
+  }
 
   const retrieveData = async (OTP: string, For: string) => {
-    const result = await GeneralHelper.retrieveData("Signup_Details")
+    const result = await GeneralHelper.retrieveData("Email")
     if (result.status == 1) {
-      const data = JSON.parse(result.data as string)
+      console.log(result);
+      
+      const data = result.data;
       if (For == "Varify") {
-        CallApi(String(data.Email), OTP)
+        CallApi(String(data), OTP)
       } else {
-        ResenOTP(String(data.Email))
+        ResenOTP(String(data))
       }
     }
   }
@@ -82,9 +94,8 @@ function OTP() {
     if (Resend == false) {
       APIHelper.CallApi(config.Endpoints.auth.OTP.VarifyOtp, { email: Email, otp: OTP }).then((result: any) => {
         console.log(result);
-        if (result?.data.varify_otp != null) {
-          console.log("Yupeeeee");
-          navigate("/signup-profile")
+        if (result?.data?.varify_otp != null) {
+          StoreData(String(result.data?.varify_otp?._id))
         } else {
           GeneralHelper.ShowToast("Please enter a valid OTP.")
         }
@@ -94,6 +105,8 @@ function OTP() {
     }
 
   }
+
+
   const ResenOTP = async (Email: string) => {
     APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email }).then((result) => {
       if (result?.status == "success") {
@@ -109,7 +122,7 @@ function OTP() {
   const handleResend = () => {
     setSeconds(60)
     setResend(false)
-}
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -147,7 +160,7 @@ function OTP() {
             className="v-bottom h-center"
             sx={{ display: { sm: "flex", xs: "none" } }}
           >
-            <Link to={{ pathname: "/signup-form" }}>
+            <Link to={{ pathname: "/forgetpass" }}>
               <Box
                 component="img"
                 src={backArrow}
@@ -188,9 +201,9 @@ function OTP() {
           <Typography
             className={`${classes.signupOthers}`}
             sx={{ marginBottom: "25px", }}
-            
+
           >
-            <Box sx={{ color: "#9B9B9B!important", textDecoration: "none",cursor:"pointer" }} onClick={()=>{retrieveData("0000", "Resend")}}>
+            <Box sx={{ color: "#9B9B9B!important", textDecoration: "none", cursor: "pointer" }} onClick={() => { retrieveData("0000", "Resend") }}>
               Send again
             </Box>
           </Typography>
@@ -201,4 +214,4 @@ function OTP() {
   );
 }
 
-export default OTP;
+export default OTPResetPass;

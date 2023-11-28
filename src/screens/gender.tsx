@@ -1,21 +1,24 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Container, TextField, Grid } from "@mui/material";
-import Logo from "../assets/logo/logo-w.svg";
+import { Box, Typography, Container} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import OtpInput from "react-otp-input";
 import backArrow from "../assets/icons/backArrow.svg";
-import camera from "../assets/icons/camera.svg";
 import avatar from "../assets/images/avatar.png";
 import Button from "../components/button";
-import DatepickerSticky from "../components/datepickerSticky";
 import maleBlack from "../assets/icons/maleBlack.svg";
 import maleWhite from "../assets/icons/maleWhite.svg";
 import femaleBlack from "../assets/icons/femaleBlack.svg";
 import femaleWhite from "../assets/icons/femaleWhite.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+
+// Helpers
+import GeneralHelper from "../Helpers/GeneralHelper";
+import APIHelper from "../Helpers/APIHelper";
+import config from "../../config";
+
+
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -80,8 +83,44 @@ const useStyles = makeStyles(() => {
   };
 });
 function SignupProfile() {
-  const [active, setactive] = useState(1);
   const classes = useStyles();
+  const navigate = useNavigate();
+
+  const [SelectedGender, setSelectedGender] = useState("male");
+
+  const featchData = async () => {
+    const Signup_Details = await GeneralHelper.retrieveData("Signup_Details")
+    const UserDetails_Names = await GeneralHelper.retrieveData("UserDetails_Names")
+    if (Signup_Details.status == 1 && UserDetails_Names.status == 1) {
+      const SignupDetails = JSON.parse(Signup_Details.data as string)
+      const UserDetailsNames = JSON.parse(UserDetails_Names.data as string)
+      const data = {
+        first_name: UserDetailsNames.FirstName,
+        last_name: UserDetailsNames.LastName,
+        user_name: `${UserDetailsNames.FirstName} ${UserDetailsNames.LastName}`,
+        email: SignupDetails.Email,
+        password: SignupDetails.Password,
+        gender: SelectedGender,
+        dob: UserDetailsNames.DOB,
+      }
+      SignUp(data)
+    }
+  }
+  const SignUp = (data: object) => {
+    APIHelper.CallApi(config.Endpoints.auth.SignUp, data).then((result:any) => {
+      if (result.status == "success") {
+        GeneralHelper.ClearData("Signup_Details").then((result:any)=>{
+          GeneralHelper.ClearData("UserDetails_Names").then((result:any)=>{
+            navigate("/signin")
+          })
+        })
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message))
+      }
+
+    })
+  }
 
   return (
     <Box className={`${classes.SignupProfile}`}>
@@ -91,10 +130,10 @@ function SignupProfile() {
         <Box className="h-center">
           <Box>
             <Button
-              onClick={() => setactive(0)}
+              onClick={() => setSelectedGender("male")}
               sx={{
-                backgroundColor: active == 0 ? "#22172A" : "#EFFBFC",
-                color: active == 0 ? "#ffffff" : "#323232",
+                backgroundColor: SelectedGender == "male" ? "#22172A" : "#EFFBFC",
+                color: SelectedGender == "male" ? "#ffffff" : "#323232",
                 width: "264px",
                 display: "flex",
                 justifyContent: "center",
@@ -105,16 +144,16 @@ function SignupProfile() {
                 <Box
                   sx={{ width: "22px" }}
                   component="img"
-                  src={active == 0 ? maleWhite : maleBlack}
+                  src={SelectedGender == "male" ? maleWhite : maleBlack}
                 ></Box>
                 <Typography>Man</Typography>
               </Box>
             </Button>
             <Button
-              onClick={() => setactive(1)}
+              onClick={() => setSelectedGender("female")}
               sx={{
-                backgroundColor: active == 1 ? "#22172A" : "#EFFBFC",
-                color: active == 1 ? "#ffffff" : "#323232",
+                backgroundColor: SelectedGender == "female" ? "#22172A" : "#EFFBFC",
+                color: SelectedGender == "female" ? "#ffffff" : "#323232",
                 width: "264px",
                 display: "flex",
                 justifyContent: "center",
@@ -126,16 +165,16 @@ function SignupProfile() {
                 <Box
                   sx={{ width: "22px" }}
                   component="img"
-                  src={active == 1 ? femaleWhite : femaleBlack}
+                  src={SelectedGender == "female" ? femaleWhite : femaleBlack}
                 ></Box>
                 <Typography>Woman</Typography>
               </Box>
             </Button>
             <Button
-              onClick={() => setactive(2)}
+              onClick={() => setSelectedGender("Other")}
               sx={{
-                backgroundColor: active == 2 ? "#22172A" : "#EFFBFC",
-                color: active == 2 ? "#ffffff" : "#323232",
+                backgroundColor: SelectedGender == "Other" ? "#22172A" : "#EFFBFC",
+                color: SelectedGender == "Other" ? "#ffffff" : "#323232",
                 width: "264px",
                 display: "flex",
                 justifyContent: "center",
@@ -147,24 +186,24 @@ function SignupProfile() {
                 <Typography>Other</Typography>
               </Box>
             </Button>
-            <Link to={{ pathname: "/interests" }}>
-              <Button
-                onClick={() => setactive(2)}
-                sx={{
-                  backgroundColor: "#065BCE",
-                  color: "#ffffff",
-                  width: "264px",
-                  display: "flex",
-                  justifyContent: "center",
-                  marginTop: "40px",
-                  cursor: "pointer!important",
-                }}
-              >
-                <Box className="v-center">
-                  <Typography>Continue</Typography>
-                </Box>
-              </Button>
-            </Link>
+            {/* <Link to={{ pathname: "/interests" }}> */}
+            <Button
+              onClick={() => { featchData() }}
+              sx={{
+                backgroundColor: "#065BCE",
+                color: "#ffffff",
+                width: "264px",
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "40px",
+                cursor: "pointer!important",
+              }}
+            >
+              <Box className="v-center">
+                <Typography>Continue</Typography>
+              </Box>
+            </Button>
+            {/* </Link> */}
           </Box>
         </Box>
       </Container>

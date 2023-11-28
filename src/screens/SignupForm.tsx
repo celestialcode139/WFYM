@@ -1,18 +1,26 @@
+import React from "react";
+import {useNavigate} from "react-router-dom";
+
+// MUI
 import {
   Box,
-  Typography,
   Container,
   TextField,
   Grid,
 } from "@mui/material";
-import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
+// CSS
 import "../App.css";
+// Components
 import Button from "../components/button";
-import signupForm from "../assets/images/signupForm.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
-import { Link } from "react-router-dom";
+// Images
+import signupForm from "../assets/images/signupForm.svg";
+// Helpers
+import GeneralHelper from "../Helpers/GeneralHelper";
+import APIHelper from "../Helpers/APIHelper";
+import config from "../../config";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -61,10 +69,78 @@ const useStyles = makeStyles(() => {
 });
 function Signup() {
   const classes = useStyles();
+  const navigate = useNavigate();
+  const [Email, setEmail] = React.useState("");
+  const [Password, setPassword] = React.useState("");
+  const [CPassword, setCPassword] = React.useState("");
+
+  const Validation = () => {
+    if (Email != "" && Password != "" && CPassword != "") {
+      if (Password == CPassword) {
+        StoreData()
+      } else {
+        GeneralHelper.ShowToast("Confirm Password does not match.")
+      }
+    }
+    else {
+      GeneralHelper.ShowToast("Please fill out all fields.")
+    }
+  }
+  const StoreData = () => {
+    const data = JSON.stringify({
+      Email: Email,
+      Password: Password,
+      CPassword: CPassword
+    })
+    GeneralHelper.storeData("Signup_Details", data).then((result: any) => {
+      if (result.status == 1) {
+        CallApi()
+      } else {
+        console.log(result);
+
+      }
+
+    })
+  }
+
+  const RetrieveData = () => {
+    GeneralHelper.retrieveData("Signup_Details").then((result: any) => {
+      if (result.status == 1) {
+        if (result.status == 1) {
+          const data = JSON.parse(result.data as string)
+          setEmail(data.Email)
+          setPassword(data.Password)
+          setCPassword(data.CPassword)
+        }
+      } else {
+        console.log(result);
+      }
+    })
+  }
+
+  const CallApi = async () => {
+    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email }).then((result:any) => {
+      if (result.status == "success") {
+        console.log("Response is ",result);
+          navigate("/otp")
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message))
+      }
+
+    })
+
+  }
+
+  React.useEffect(() => {
+    RetrieveData()
+  }, [])
+
+
   return (
     <Box className={`${classes.signupFrom}`}>
       <Container maxWidth="lg">
-        <OnBoardingHeader heading="Sign up"/>
+        <OnBoardingHeader heading="Sign up" />
         <Box
           component="form"
           className={`h-center`}
@@ -83,7 +159,8 @@ function Signup() {
                   },
                 }}
                 label="Email"
-                defaultValue="johndoe@gmail.com"
+                value={Email}
+                onChange={(e) => { setEmail(e.target.value) }}
               />
             </Grid>
             <Grid item xs={12} className="h-center" sx={{ marginTop: "25px" }}>
@@ -95,6 +172,8 @@ function Signup() {
                 }}
                 type="password"
                 label="Password"
+                value={Password}
+                onChange={(e) => { setPassword(e.target.value) }}
               />
             </Grid>
             <Grid item xs={12} className="h-center" sx={{ marginTop: "25px" }}>
@@ -106,16 +185,18 @@ function Signup() {
                 }}
                 type="password"
                 label="Retry Password"
+                value={CPassword}
+                onChange={(e) => { setCPassword(e.target.value) }}
               />
             </Grid>
           </Grid>
         </Box>
         <Box sx={{ marginTop: "20px" }}>
-          <Link to={{ pathname: "/otp" }}>
-            <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }}>
-              Continue
-            </Button>
-          </Link>
+          {/* <Link to={{ pathname: "/otp" }}> */}
+          <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }} >
+            Continue
+          </Button>
+          {/* </Link> */}
         </Box>
       </Container>
     </Box>
