@@ -71,10 +71,7 @@ const useStyles = makeStyles(() => {
 
 const HeroSection = () => {
   const classes = useStyles();
-  React.useEffect(() => {
-    console.log(process.env.REACT_APP_API_KEY);
-    
-  }, [])
+  
   
 
   return (
