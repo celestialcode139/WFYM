@@ -107,7 +107,7 @@ function SignupProfile() {
 
   };
   const featchData = async () => {
-    const result = await GeneralHelper.retrieveData("UserDetails_Names")
+    const result:any = await GeneralHelper.retrieveData("UserDetails_Names")
     if (result.status == 1) {
       const data = JSON.parse(result.data as string)
       setFirstName(data.FirstName)

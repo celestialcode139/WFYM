@@ -89,8 +89,8 @@ function SignupProfile() {
   const [SelectedGender, setSelectedGender] = useState("male");
 
   const featchData = async () => {
-    const Signup_Details = await GeneralHelper.retrieveData("Signup_Details")
-    const UserDetails_Names = await GeneralHelper.retrieveData("UserDetails_Names")
+    const Signup_Details:any = await GeneralHelper.retrieveData("Signup_Details")
+    const UserDetails_Names:any = await GeneralHelper.retrieveData("UserDetails_Names")
     if (Signup_Details.status == 1 && UserDetails_Names.status == 1) {
       const SignupDetails = JSON.parse(Signup_Details.data as string)
       const UserDetailsNames = JSON.parse(UserDetails_Names.data as string)

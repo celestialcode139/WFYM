@@ -68,7 +68,7 @@ function OTP() {
   }
 
   const retrieveData = async (OTP: string, For: string) => {
-    const result = await GeneralHelper.retrieveData("Signup_Details")
+    const result:any = await GeneralHelper.retrieveData("Signup_Details")
     if (result.status == 1) {
       const data = JSON.parse(result.data as string)
       if (For == "Varify") {
