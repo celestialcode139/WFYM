@@ -12,6 +12,8 @@ import SignupProfile from "./screens/signupProfile.tsx";
 import Gender from "./screens/gender.tsx";
 import Interests from "./screens/interests.tsx";
 import Dashboard from "./screens/Dashboard.tsx";
+import Race from "./screens/IdealPersonality/race.tsx";
+
 import Admin_Dashboard from "./screens/Admin/dashboard.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -33,6 +35,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/SetNewPassword" Component={SetNewPass} />
         <Route path="/dashboard" Component={Dashboard} />
         <Route path="/interests" Component={Interests} />
+        <Route path="/ideal-personality/race" Component={Race} />
+
       </Routes>
       <Routes>
         <Route path="admin-dashboard" Component={Admin_Dashboard} />
