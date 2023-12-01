@@ -80,6 +80,13 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 .blurBg {
   background-color: #fbfbfbed;
   backdrop-filter: blur(5px);
+  border-width: 1px;
+  border-style: solid;
+  border-image: linear-gradient( to bottom, white, #00000052,white ) 1 100%;
+  height: 100vh;
+}
+.br1{
+  border-right: 1px solid;
 }
 .f-22-bold {
   font-family: Mori-bold !important;
