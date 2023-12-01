@@ -96,7 +96,7 @@ function Race() {
               >
                 <Sidebar />
               </Grid>
-              <Grid item lg={10} md={9}>
+              <Grid item lg={10} md={9} sx={{margin:"0 auto"}}>
                 <Outlet />
               </Grid>
             </Grid>

@@ -19,6 +19,9 @@ import Generalinfo from "./screens/IdealPersonality/generalinfo.tsx";
 
 import profileScreen1 from "./screens/Profile/profilep1.tsx";
 import profileScreen2 from "./screens/Profile/profileScreen2.tsx";
+import profileScreen3 from "./screens/Profile/profileScreen3.tsx";
+import profileScreen4 from "./screens/Profile/profileScreen4.tsx";
+import profileScreen5 from "./screens/Profile/profileScreen5.tsx";
 import Admin_Dashboard from "./screens/Admin/dashboard.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -53,6 +56,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/profile" Component={PLayout}>
           <Route path="page-1" Component={profileScreen1} />
           <Route path="page-2" Component={profileScreen2} />
+          <Route path="page-3" Component={profileScreen3} />
+          <Route path="page-4" Component={profileScreen4} />
+          <Route path="page-5" Component={profileScreen5} />
         </Route>
       </Routes>
       <Routes>
