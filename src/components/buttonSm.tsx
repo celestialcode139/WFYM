@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => {
 function Button(props:any) {
   const classes = useStyles();
   return (
-    <Box onClick={()=>props.onClick()} sx={props.sx} className={`${classes.button}`}>
+    <Box onClick={()=>props.onClick()} sx={props.sx} className={`${classes.button} ${props.className}`}>
         {props.children}
     </Box>
   )

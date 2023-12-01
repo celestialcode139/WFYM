@@ -12,11 +12,13 @@ import SignupProfile from "./screens/signupProfile.tsx";
 import Gender from "./screens/gender.tsx";
 import Interests from "./screens/interests.tsx";
 import Dashboard from "./screens/Dashboard.tsx";
+import PLayout from "./screens/Profile/Layout.tsx";
 import Race from "./screens/IdealPersonality/race.tsx";
 import MaleLooks from "./screens/IdealPersonality/maleLooks.tsx";
 import Generalinfo from "./screens/IdealPersonality/generalinfo.tsx";
 
-import ProfileLayout from "./screens/Profile/Layout.tsx";
+import profileScreen1 from "./screens/Profile/profilep1.tsx";
+import profileScreen2 from "./screens/Profile/profileScreen2.tsx";
 import Admin_Dashboard from "./screens/Admin/dashboard.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -38,12 +40,20 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/SetNewPassword" Component={SetNewPass} />
         <Route path="/dashboard" Component={Dashboard} />
         <Route path="/interests" Component={Interests} />
-        <Route path="/ideal-personality/race" Component={Race} />
-        <Route path="/ideal-personality/general-info" Component={Generalinfo} />
+      </Routes>
+
+      <Routes>
+        <Route path="/ideal-personality">
+          <Route path="Race" Component={Race} />
+          <Route path="looks" Component={MaleLooks} />
+          <Route path="general-info" Component={Generalinfo} />
+        </Route>
       </Routes>
       <Routes>
-        <Route path="/profile/layout" Component={ProfileLayout} />
-        <Route path="/ideal-personality/male-looks" Component={MaleLooks} />
+        <Route path="/profile" Component={PLayout}>
+          <Route path="page-1" Component={profileScreen1} />
+          <Route path="page-2" Component={profileScreen2} />
+        </Route>
       </Routes>
       <Routes>
         <Route path="admin-dashboard" Component={Admin_Dashboard} />

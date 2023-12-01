@@ -57,12 +57,12 @@ let gender=[femaleLooks,maleLooks]
 function Looks(props: any) {
   const classes = useStyles();
   const [active, setactive] = useState("hourglass");
-
+  
   return (
     <Box className={`${classes.looks}`}>
       <Grid container spacing={0}>
-        {gender[props.gender=="female"?0:1].map((gender) => (
-          <Grid item lg={2.4}>
+        {gender[props.gender=="female"?0:1].map((gender,i) => (
+          <Grid item lg={2.4} key={i}>
             <Box
               sx={{ width: "100%" }}
               onClick={() => setactive(gender.value)}

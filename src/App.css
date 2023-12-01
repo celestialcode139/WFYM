@@ -87,6 +87,11 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
   border-image-slice: 1;
   border-radius: 10px;
 }
+.brgradient{
+  border-image: linear-gradient(to bottom, #ffffff, #0000004f, #ffffff);
+  border-image-slice: 1;
+  border-right: 1px solid;
+}
 .f-22-bold {
   font-family: Mori-bold !important;
   font-size: 22px !important;
@@ -144,6 +149,10 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 }
 .min100vh {
   min-height: calc(100vh - 185px);
+}
+.min100vh_h100vh {
+  min-height: calc(100vh - 185px);
+  height: calc(100vh - 185px);
 }
 .owl-dots {
   display: none;
