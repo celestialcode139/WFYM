@@ -11,7 +11,7 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-
+import GeneralinfoComp from "../../components/generalinfo";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -64,135 +64,7 @@ function Generalinfo() {
             className={`${classes.pageContainer}`}
             sx={{ marginTop: { md: "100px", sm: "60px", xs: "30px" } }}
           >
-            <Box className={`${classes.TextFieldParent}`}>
-              <TextField
-                multiline
-                rows={4}
-                fullWidth
-                sx={{
-                  "& .css-8ewcdo-MuiInputBase-root-MuiOutlinedInput-root": {
-                    borderRadius: "15px!important",
-                  },
-                }}
-                label="Describe your ideal Match"
-                value={body.desc}
-                onChange={(e) => {
-                  setbody({ ...body, desc: e.target.value });
-                }}
-              />
-            </Box>
-            <Box className={`${classes.TextFieldParent}`}>
-              <TextField
-                fullWidth
-                select
-                label="Personality"
-                variant="outlined"
-                SelectProps={{
-                  multiple: true,
-                  value: body.personality,
-                  onChange: personalityHandler,
-                }}
-                sx={{
-                  "& .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root": {
-                    borderRadius: "15px",
-                  },
-                  "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
-                    color: "#065bce",
-                  },
-                  "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
-                    color: "#065bce",
-                  },
-                }}
-              >
-                <MenuItem value="principled">Principled</MenuItem>
-                <MenuItem value="creative">Creative</MenuItem>
-                <MenuItem value="caring">Caring</MenuItem>
-              </TextField>
-            </Box>
-            <Box className={`${classes.TextFieldParent}`}>
-              <TextField
-                fullWidth
-                sx={{
-                  "& div": {
-                    borderRadius: "15px!important",
-                  },
-                }}
-                label="Occupation"
-                value={body.occupation}
-                onChange={(e) => {
-                  setbody({ ...body, occupation: e.target.value });
-                }}
-              />
-            </Box>
-            <Box className={`${classes.TextFieldParent}`}>
-              <TextField
-                fullWidth
-                select
-                label="Religion"
-                variant="outlined"
-                SelectProps={{
-                  multiple: false,
-                  value: body.religion,
-                  onChange: religionHandler,
-                }}
-                sx={{
-                  "& .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root": {
-                    borderRadius: "15px",
-                  },
-                  "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
-                    color: "#065bce",
-                  },
-                  "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
-                    color: "#065bce",
-                  },
-                }}
-              >
-                <MenuItem value="principled">Principled</MenuItem>
-                <MenuItem value="creative">Creative</MenuItem>
-                <MenuItem value="caring">Caring</MenuItem>
-              </TextField>
-            </Box>   
-            <Box className={`${classes.TextFieldParent}`}>
-              <TextField
-                fullWidth
-                sx={{
-                  "& div": {
-                    borderRadius: "15px!important",
-                  },
-                }}
-                label="Political Party"
-                value={body.political_Party}
-                onChange={(e) => {
-                  setbody({ ...body, political_Party: e.target.value });
-                }}
-              />
-            </Box>
-            <Box className={`${classes.TextFieldParent}`}>
-              <TextField
-                fullWidth
-                sx={{
-                  "& div": {
-                    borderRadius: "15px!important",
-                  },
-                }}
-                label="Children's"
-                value={body.childrens}
-                onChange={(e) => {
-                  setbody({ ...body, childrens: e.target.value });
-                }}
-              />
-            </Box>
-            <Box className={`${classes.TextFieldParent}`}>
-              <FormControl component="fieldset">
-                <FormGroup aria-label="position" row>
-                  <FormControlLabel
-                    value="start"
-                    control={<Switch color="primary" />}
-                    label="Plan for children"
-                  />
-                </FormGroup>
-              </FormControl>
-            </Box>
+            <GeneralinfoComp />
             <Button
               sx={{
                 maxWidth: "200px",
@@ -204,7 +76,7 @@ function Generalinfo() {
             </Button>
           </Box>
         </Box>
-      </Container>   
+      </Container>
     </Box>
   );
 }

@@ -2,12 +2,10 @@ import { useState, useEffect } from "react";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
-import "../../App.css";
-import AdminSignature from "../../assets/images/adminSignature.svg";
-import HeaderApp from "../../components/header/AppHeader";
-import Button from "../../components/buttonSm";
-import RangeSlider from "../../components/RangeSlider";
-import AgeRace from "../../components/race";
+import "../App.css";
+import AdminSignature from "../assets/images/adminSignature.svg";
+import RangeSlider from "./RangeSlider";
+import WizerdPagination from "./wizerdPagination";
 
 // import $ from "jquery";
 
@@ -88,33 +86,31 @@ function Race() {
   };
 
   return (
-    <Box className={`${classes.appheader}`}>
-      <Container maxWidth="xl">
-        <HeaderApp sx={{ position: "relative", top: "15px" }} />
-        <Box
-          sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
-          className={`blurBg min100vh h-center`}
-        >
-          <Box
-            className={`${classes.pageContainer}`}
-            sx={{ marginTop: { md: "100px", sm: "60px", xs: "30px" } }}
-          >
-            <AgeRace />
-            <Button
-              sx={{
-                maxWidth: "200px",
-                margin: "0 auto",
-                marginTop: { md: "80", sm: "50px", xs: "30px" },
-              }}
-            >
-              Next
-            </Button>
-          </Box>
-          {/* <Box>
-            <WizerdPagination steps={8}/>
-          </Box> */}
-        </Box>
-      </Container>
+    <Box>
+      <Box sx={{ marginBottom: "30px" }}>
+        <RangeSlider title="Age" handleChange={(e: []) => console.log(e)} />
+      </Box>
+      <Box>
+        <Typography className={`f-bold v-center`} sx={{ marginBottom: "30px" }}>
+          Race
+        </Typography>
+        <Grid container spacing={2}>
+          {interest.map((val, i) => (
+            <Grid item>
+              <Typography
+                onClick={() => {
+                  toggleFun(i);
+                }}
+                className={`${classes.badge} ${
+                  GetInterest(i)[0] == i ? classes.activeBadge : null
+                }`}
+              >
+                {val.text}
+              </Typography>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
     </Box>
   );
 }

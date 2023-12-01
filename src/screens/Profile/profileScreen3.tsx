@@ -3,7 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
-import Gender from "../../components/gender";
+import AgeRace from "../../components/race";
 import avatar from "../../assets/images/avatar.png";
 import camera from "../../assets/icons/camera.svg";
 import { useState } from "react";
@@ -65,6 +65,9 @@ const useStyles = makeStyles(() => {
     },
     marginTop100: {
       marginTop: "80px",
+    },
+    pageContainer: {
+      maxWidth: "500px",
     },
   };
 });
@@ -145,37 +148,12 @@ function profileScreen2() {
   };
   return (
     <>
-      <Grid container spacing={2} className="h-center">
-        <Grid item sm={3} xs={12}>
-          <Typography className={`${classes.h1}`}>I am</Typography>
-          <Gender />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <Typography className={`${classes.h1}`}>Your interests</Typography>
-          <Grid container spacing={2}>
-            {interest.map((val, i) => (
-              <Grid item>
-                <Typography
-                  onClick={() => {
-                    toggleFun(i);
-                  }}
-                  className={`${classes.badge} ${
-                    GetInterest(i)[0] == i ? classes.activeBadge : null
-                  }`}
-                >
-                  <Box
-                    component="img"
-                    src={camera}
-                    sx={{ width: "18px", paddingRight: "5px" }}
-                  ></Box>{" "}
-                  {val.text}
-                </Typography>
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid container className="h-center" sx={{marginTop:"40px"}}>
+    <Box className={`h-center`}>
+      <Box className={`${classes.pageContainer}`}>
+        <AgeRace />
+      </Box>
+    </Box>
+    <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
           <Button>Save Changes</Button>
         </Grid>
@@ -183,7 +161,7 @@ function profileScreen2() {
           <Button className={`${classes.cancelBtn}`}>Cancel</Button>
         </Grid>
       </Grid>
-    </>
+      </>
   );
 }
 
