@@ -14,6 +14,7 @@ import Interests from "./screens/interests.tsx";
 import Dashboard from "./screens/Dashboard.tsx";
 import Race from "./screens/IdealPersonality/race.tsx";
 import MaleLooks from "./screens/IdealPersonality/maleLooks.tsx";
+import Generalinfo from "./screens/IdealPersonality/generalinfo.tsx";
 
 import ProfileLayout from "./screens/Profile/Layout.tsx";
 import Admin_Dashboard from "./screens/Admin/dashboard.tsx";
@@ -38,6 +39,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/dashboard" Component={Dashboard} />
         <Route path="/interests" Component={Interests} />
         <Route path="/ideal-personality/race" Component={Race} />
+        <Route path="/ideal-personality/general-info" Component={Generalinfo} />
       </Routes>
       <Routes>
         <Route path="/profile/layout" Component={ProfileLayout} />
