@@ -5,8 +5,9 @@ import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
 import HeaderApp from "../../components/header/AppHeader";
-import BorderedBG from "../../assets/images/borderedBG.png";
+import Button from "../../components/buttonSm";
 import RangeSlider from "../../components/RangeSlider";
+import WizerdPagination from "../../components/wizerdPagination";
 
 // import $ from "jquery";
 
@@ -20,14 +21,6 @@ const useStyles = makeStyles(() => {
       backgroundSize: "100%",
       backgroundRepeat: "no-repeat",
     },
-    BorderedBG: {
-      backgroundImage: `url(${BorderedBG})`,
-      borderRadius: "15px",
-      backgroundSize: "100% 100%",
-    },
-    innerContainer: {
-      //   minWidth: "400px",
-    },
     badge: {
       display: "flex",
       alignItems: "center",
@@ -35,8 +28,6 @@ const useStyles = makeStyles(() => {
       border: "1px solid #E8E6EA",
       padding: "10px 16px",
       fontSize: "12px!important",
-      marginBottom: "20px!important",
-      width: "100px",
       cursor: "pointer",
     },
     activeBadge: {
@@ -53,58 +44,40 @@ function Race() {
   const classes = useStyles();
   const [matchMessage, setmatchMessage] = useState("match");
   const [matches, setmatches] = useState<any[]>([]);
-  const [activeInterest, setActiveInterest] = useState([0, 5, 7]);
+  const [activeInterest, setActiveInterest] = useState<any[]>([]);
   const interest = [
     {
-      text: "Photography",
+      text: "South Asian",
     },
     {
-      text: "Shopping",
+      text: "Black African",
     },
     {
-      text: "Karaoke",
+      text: "White/Caucasian",
     },
     {
-      text: "Yoga",
+      text: "East Asian",
     },
     {
-      text: "Cooking",
+      text: "Black American",
     },
     {
-      text: "Tennis",
+      text: "Middle Eastern",
     },
     {
-      text: "Run",
+      text: "Hispanic/Latino",
     },
     {
-      text: "Swimming",
-    },
-    {
-      text: "Art",
-    },
-    {
-      text: "Traveling",
-    },
-    {
-      text: "Extreme",
-    },
-    {
-      text: "Drink",
-    },
-    {
-      text: "Music",
-    },
-    {
-      text: "Video games",
+      text: "Other",
     },
   ];
 
-  const GetInterest = (id: any): number[] => {
+  const GetInterest = (id: any): any => {
     return activeInterest.filter((val) => {
       return val == id;
     });
   };
-  const toggleFun = (i: number) => {
+  const toggleFun = (i: any) => {
     let data = activeInterest.filter((val) => val == i);
     if (data.length <= 0) {
       setActiveInterest([...activeInterest, i]);
@@ -119,14 +92,11 @@ function Race() {
       <Container maxWidth="xl">
         <HeaderApp sx={{ position: "relative", top: "15px" }} />
         <Box
-          sx={{ marginTop: "30px", padding: "20px" }}
-          className={`blurBg min100vh h-center v-center ${classes.BorderedBG}`}
+          sx={{ marginTop: "30px", padding: "20px",position:"relative" }}
+          className={`blurBg min100vh h-center`}
         >
-          <Box className={`${classes.pageContainer}`}>
-            <Box
-              className={`${classes.innerContainer}`}
-              sx={{ marginBottom: "30px" }}
-            >
+          <Box className={`${classes.pageContainer}`} sx={{marginTop:{md:"100px",sm:"60px",xs:"30px"}}}>
+            <Box sx={{ marginBottom: "30px" }}>
               <RangeSlider
                 title="Age"
                 handleChange={(e: []) => console.log(e)}
@@ -139,9 +109,9 @@ function Race() {
               >
                 Race
               </Typography>
-              <Grid container>
+              <Grid container spacing={2}>
                 {interest.map((val, i) => (
-                  <Grid item sx={{ marginRight: "10px" }}>
+                  <Grid item>
                     <Typography
                       onClick={() => {
                         toggleFun(i);
@@ -156,9 +126,15 @@ function Race() {
                 ))}
               </Grid>
             </Box>
+            <Button sx={{maxWidth:"200px",margin:"0 auto",marginTop:{md:"80",sm:"50px",xs:"30px"}}}>Next</Button>
           </Box>
+          {/* <Box>
+            <WizerdPagination steps={8}/>
+          </Box> */}
+          
         </Box>
       </Container>
+        
     </Box>
   );
 }
