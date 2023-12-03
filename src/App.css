@@ -87,7 +87,7 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
   border-image-slice: 1;
   border-radius: 10px;
 }
-.brgradient{
+.brgradient {
   border-image: linear-gradient(to bottom, #ffffff, #0000004f, #ffffff);
   border-image-slice: 1;
   border-right: 1px solid;
@@ -152,7 +152,7 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 }
 .min100vh_h100vh {
   min-height: calc(100vh - 185px);
-  height: calc(100vh - 185px);
+  /* height: calc(100vh - 185px); */
 }
 .owl-dots {
   display: none;
@@ -221,4 +221,17 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 }
 .f-14 {
   font-size: 14px !important;
+}
+.video220 {
+  width: 100%;
+  /* object-fit: none; */
+  height: 220px;
+  border-radius: 7px;
+}
+.prelative{
+  position: relative;
+}
+.pabsolute{
+  position: absolute;
+  top: 0px;
 }

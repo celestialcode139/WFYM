@@ -154,7 +154,7 @@ function profileScreen2() {
           <Typography className={`${classes.h1}`}>Your interests</Typography>
           <Grid container spacing={2}>
             {interest.map((val, i) => (
-              <Grid item>
+              <Grid item key={i}>
                 <Typography
                   onClick={() => {
                     toggleFun(i);

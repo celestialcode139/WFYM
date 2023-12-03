@@ -1,11 +1,11 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
-import "../../App.css";
-import Button from "../../components/buttonSm";
-import AgeRace from "../../components/race";
-import avatar from "../../assets/images/avatar.png";
-import Generalinfo from "../../components/generalinfo";
+import "../App.css";
+import Button from "../components/buttonSm";
+import AgeRace from "../components/race";
+import avatar from "../assets/images/avatar.png";
+import ChangePasswordComp from "../components/changePassword";
 import { useState } from "react";
 
 // import $ from "jquery";
@@ -67,12 +67,12 @@ const useStyles = makeStyles(() => {
       marginTop: "80px",
     },
     pageContainer: {
-      maxWidth: "500px",
+      maxWidth: "400px",
       margin: "0 auto",
     },
   };
 });
-function profileScreen5() {
+function ChangePassword() {
   const [activeInterest, setActiveInterest] = useState([0, 5, 7]);
   const classes = useStyles();
   
@@ -80,7 +80,7 @@ function profileScreen5() {
     <>
       <Box>
         <Box className={`${classes.pageContainer}`}>
-          <Generalinfo />
+          <ChangePasswordComp />
         </Box>
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
@@ -95,4 +95,4 @@ function profileScreen5() {
   );
 }
 
-export default profileScreen5;
+export default ChangePassword;

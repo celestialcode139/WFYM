@@ -12,16 +12,21 @@ import SignupProfile from "./screens/signupProfile.tsx";
 import Gender from "./screens/gender.tsx";
 import Interests from "./screens/interests.tsx";
 import Dashboard from "./screens/Dashboard.tsx";
+import ViewProfile from "./screens/viewProfile.tsx";
 import PLayout from "./screens/Profile/Layout.tsx";
+import DashLayout from "./screens/Profile/DashLayout.tsx";
 import Race from "./screens/IdealPersonality/race.tsx";
 import MaleLooks from "./screens/IdealPersonality/maleLooks.tsx";
-import Generalinfo from "./screens/IdealPersonality/generalinfo.tsx";
 
 import profileScreen1 from "./screens/Profile/profilep1.tsx";
 import profileScreen2 from "./screens/Profile/profileScreen2.tsx";
 import profileScreen3 from "./screens/Profile/profileScreen3.tsx";
 import profileScreen4 from "./screens/Profile/profileScreen4.tsx";
 import profileScreen5 from "./screens/Profile/profileScreen5.tsx";
+import Generalinfo from "./screens/IdealPersonality/generalinfo.tsx";
+import ChangePassword from "./screens/changePassword.tsx";
+import Media from "./screens/media.tsx";
+
 import Admin_Dashboard from "./screens/Admin/dashboard.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -40,16 +45,20 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/signin" Component={SigninForm} />
         <Route path="/forgetpass" Component={ForgetPassForm} />
         <Route path="/otpresetpassword" Component={OTPResetPass} />
+        <Route path="/interests" Component={Interests} />
         <Route path="/SetNewPassword" Component={SetNewPass} />
         <Route path="/dashboard" Component={Dashboard} />
-        <Route path="/interests" Component={Interests} />
       </Routes>
-
       <Routes>
         <Route path="/ideal-personality">
           <Route path="Race" Component={Race} />
           <Route path="looks" Component={MaleLooks} />
           <Route path="general-info" Component={Generalinfo} />
+        </Route>
+      </Routes>
+      <Routes>
+        <Route path="/dash" Component={DashLayout}>
+          <Route path="view-matchprofile" Component={ViewProfile} />
         </Route>
       </Routes>
       <Routes>
@@ -59,6 +68,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="page-3" Component={profileScreen3} />
           <Route path="page-4" Component={profileScreen4} />
           <Route path="page-5" Component={profileScreen5} />
+          <Route path="change-password" Component={ChangePassword} />
+          <Route path="media" Component={Media} />
         </Route>
       </Routes>
       <Routes>
