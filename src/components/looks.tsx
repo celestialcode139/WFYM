@@ -56,7 +56,7 @@ const useStyles = makeStyles(() => {
 let gender=[femaleLooks,maleLooks]
 function Looks(props: any) {
   const classes = useStyles();
-  const [active, setactive] = useState("hourglass");
+  const [active, setactive] = useState(props.look);
   
   return (
     <Box className={`${classes.looks}`}>
@@ -65,7 +65,7 @@ function Looks(props: any) {
           <Grid item lg={2.4} key={i}>
             <Box
               sx={{ width: "100%" }}
-              onClick={() => setactive(gender.value)}
+              onClick={() => {setactive(gender.value);props.onChange(gender.value)}}
               className={`${active == gender.value ? classes.active : null}`}
               component={"img"}
               src={gender.image}

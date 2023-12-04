@@ -42,52 +42,44 @@ function Race(props:any) {
   const classes = useStyles();
   const [matchMessage, setmatchMessage] = useState("match");
   const [matches, setmatches] = useState<any[]>([]);
-  const [activeInterest, setActiveInterest] = useState<any[]>([]);
+  const [activeInterest, setActiveInterest] = useState(props.race);
   const interest = [
     {
+      value:"south_asian",
       text: "South Asian",
     },
     {
+      value:"black_african",
       text: "Black African",
     },
     {
+      value:"white_caucasion",
       text: "White/Caucasian",
     },
     {
+      value:"east_asian",
       text: "East Asian",
     },
     {
+      value:"black_american",
       text: "Black American",
     },
     {
+      value:"middle_eastern",
       text: "Middle Eastern",
     },
     {
+      value:"hispanic_latino",
       text: "Hispanic/Latino",
     },
     {
+      value:"other",
       text: "Other",
     },
-  ];
+  ];  
 
-  const GetInterest = (id: any): any => {
-    return activeInterest.filter((val) => {
-      return val == id;
-    });
-  };
-  const toggleFun = (i: any) => {
-    let data = activeInterest.filter((val) => val == i);
-    if (data.length <= 0) {
-      console.log(i);
-      
-      setActiveInterest([i]);
-      props.onChange([i])
-    } else {
-      let updateData = activeInterest.filter((val) => val !== i);
-      setActiveInterest(updateData);
-      props.onChange(updateData)
-    }
-  };
+
+
 
   return (
     <Box>
@@ -99,14 +91,15 @@ function Race(props:any) {
           Race
         </Typography>
         <Grid container spacing={2}>
-          {interest.map((val, i) => (
+          {interest.map((val:any, i) => (
             <Grid item key={i}>
               <Typography
                 onClick={() => {
-                  toggleFun(i);
+                  setActiveInterest(val.value);
+                  props.onChange(val.value)
                 }}
                 className={`${classes.badge} ${
-                  GetInterest(i)[0] == i ? classes.activeBadge : null
+                  activeInterest == val.value ? classes.activeBadge : null
                 }`}
               >
                 {val.text}

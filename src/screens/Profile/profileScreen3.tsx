@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
+import { useNavigate } from "react-router-dom";
 import "../../App.css";
 import Button from "../../components/buttonSm";
 import AgeRace from "../../components/race";
@@ -76,25 +77,81 @@ const useStyles = makeStyles(() => {
   };
 });
 function profileScreen2() {
-  const [activeInterest, setActiveInterest] = useState([0, 5, 7]);
+  const [activeInterest, setActiveInterest] = useState("");
+  
+  const [Token, setToken] = useState("");
+
   const classes = useStyles();
- 
+  const navigate = useNavigate();
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+    }
+  };
+  const GetProfile = (Token: string) => {
+    APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
+      (result: any) => {
+        if (result.status == "success") {
+          console.log(result.data);
+          setActiveInterest(result?.data?.user_details?.race ? result.data.user_details.race : "");
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  // Updating Profile Details
+
+  const UpdateBio = () => {
+    const data = {
+      race: activeInterest,
+    };
+    APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
+      (result) => {
+        if (result.status == "success") {
+          navigate("/profile/page-4");
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  const handleNext = () => {
+    UpdateBio();
+  };
+  // Other functions
+  useEffect(() => {
+    if (Token != "") {
+      GetProfile(Token);
+    } else {
+      featchToken();
+    }
+  }, [Token]);
+
   return (
     <>
-    <Box className={`h-center`}>
-      <Box className={`${classes.pageContainer}`}>
-        <AgeRace race={"South Asian"} onChange={(data:number[])=>alert(data.length)} />
+      <Box className={`h-center`}>
+        <Box className={`${classes.pageContainer}`}>
+          <AgeRace
+            key={activeInterest}
+            race={activeInterest}
+            onChange={(data: any) => setActiveInterest(data)}
+          />
+        </Box>
       </Box>
-    </Box>
-    <Grid container className="h-center" sx={{ marginTop: "40px" }}>
+      <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button>Save Changes</Button>
+          <Button onClick={()=>handleNext()}>Save Changes</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
           <Button className={`${classes.cancelBtn}`}>Cancel</Button>
         </Grid>
       </Grid>
-      </>
+    </>
   );
 }
 

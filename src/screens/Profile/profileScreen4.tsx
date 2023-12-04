@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -5,9 +6,12 @@ import "../../App.css";
 import Button from "../../components/buttonSm";
 import AgeRace from "../../components/race";
 import avatar from "../../assets/images/avatar.png";
+import { useNavigate } from "react-router-dom";
 import Looks from "../../components/looks";
-import { useState } from "react";
-
+import GeneralHelper from "../../Helpers/GeneralHelper";
+import APIHelper from "../../Helpers/APIHelper";
+import config from "../../../config";
+import moment from "moment";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -72,14 +76,77 @@ const useStyles = makeStyles(() => {
   };
 });
 function profileScreen4() {
-  const [activeInterest, setActiveInterest] = useState([0, 5, 7]);
   const classes = useStyles();
+  const navigate = useNavigate();
+  const [activeLook, setactiveLook] = useState("");
+
+  const [Token, setToken] = useState("");
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+    }
+  };
+  const GetProfile = (Token: string) => {
+    APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
+      (result: any) => {
+        if (result.status == "success") {
+          console.log(result.data);
+          setactiveLook(
+            result?.data?.user_details?.personality
+              ? result.data.user_details.personality
+              : ""
+          );
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  // Updating Profile Details
+
+  const UpdateBio = () => {
+    const data = {
+      personality: activeLook,
+    };
+    APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
+      (result) => {
+        if (result.status == "success") {
+          navigate("/profile/page-5");
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  const handleNext = () => {
+    UpdateBio();
+  };
+  // Other functions
+  useEffect(() => {
+    if (Token != "") {
+      GetProfile(Token);
+    } else {
+      featchToken();
+    }
+  }, [Token]);
 
   return (
     <>
       <Box className={`h-center`}>
         <Box className={`${classes.pageContainer}`}>
-          <Looks gender="female"/>
+          <Looks
+            key={activeLook}
+            gender="female"
+            look={activeLook}
+            onChange={(look: any) => {
+              setactiveLook(look);
+              handleNext();
+            }}
+          />
         </Box>
       </Box>
     </>
