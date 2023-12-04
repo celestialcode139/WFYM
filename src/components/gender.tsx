@@ -32,15 +32,23 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function SignupProfile() {
+function SignupProfile(props: any) {
   const classes = useStyles();
   const [SelectedGender, setSelectedGender] = useState("male");
 
+  useEffect(() => {
+    console.log(props.gender);
+    props.gender? setSelectedGender(props.gender):null;
+  }, [props.gender]);
+
   return (
     <Box className="h-center">
-      <Box sx={{width:"100%"}}>
+      <Box sx={{ width: "100%" }}>
         <Button
-          onClick={() => setSelectedGender("male")}
+          onClick={() => {
+            props.onChange("male");
+            setSelectedGender("male");
+          }}
           sx={{
             backgroundColor: SelectedGender == "male" ? "#22172A" : "#EFFBFC",
             color: SelectedGender == "male" ? "#ffffff" : "#323232",
@@ -60,7 +68,10 @@ function SignupProfile() {
           </Box>
         </Button>
         <Button
-          onClick={() => setSelectedGender("female")}
+          onClick={() => {
+            props.onChange("female");
+            setSelectedGender("female");
+          }}
           sx={{
             backgroundColor: SelectedGender == "female" ? "#22172A" : "#EFFBFC",
             color: SelectedGender == "female" ? "#ffffff" : "#323232",
@@ -81,10 +92,13 @@ function SignupProfile() {
           </Box>
         </Button>
         <Button
-          onClick={() => setSelectedGender("Other")}
+          onClick={() => {
+            props.onChange("other");
+            setSelectedGender("other");
+          }}
           sx={{
-            backgroundColor: SelectedGender == "Other" ? "#22172A" : "#EFFBFC",
-            color: SelectedGender == "Other" ? "#ffffff" : "#323232",
+            backgroundColor: SelectedGender == "other" ? "#22172A" : "#EFFBFC",
+            color: SelectedGender == "other" ? "#ffffff" : "#323232",
             maxWidth: "264px",
             display: "flex",
             justifyContent: "center",

@@ -1,12 +1,17 @@
+import { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
-import Gender from "../../components/gender";
+import GenderComp from "../../components/gender";
 import avatar from "../../assets/images/avatar.png";
 import camera from "../../assets/icons/camera.svg";
-import { useState } from "react";
+import GeneralHelper from "../../Helpers/GeneralHelper";
+import APIHelper from "../../Helpers/APIHelper";
+import config from "../../../config";
+import moment from "moment";
 
 // import $ from "jquery";
 
@@ -69,8 +74,12 @@ const useStyles = makeStyles(() => {
   };
 });
 function profileScreen2() {
-  const [activeInterest, setActiveInterest] = useState([0, 5, 7]);
+  const navigate = useNavigate();
   const classes = useStyles();
+  const [activeInterest, setActiveInterest] = useState<number[]>([]);
+  const [Gender, setGender] = useState("male");
+  const [Token, setToken] = useState("");
+
   const interest = [
     {
       text: "Photography",
@@ -129,6 +138,74 @@ function profileScreen2() {
       img: camera,
     },
   ];
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+    }
+  };
+  const GetProfile = (Token: string) => {
+    APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
+      (result: any) => {
+        if (result.status == "success") {
+          console.log(result.data);
+          setGender(result?.data?.gender ? result.data.gender : "");
+          setActiveInterest(result?.data?.user_details?.hobbies ? result.data.user_details.hobbies : "");
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  // Updating Profile Details
+  const UpdateProfile = () => {
+    const data = {
+      gender: Gender,
+    };
+    APIHelper.CallApi(
+      config.Endpoints.user.UpdateUserProfile,
+      data,
+      null,
+      Token
+    ).then((result) => {
+      if (result.status == "success") {
+        UpdateBio();
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    }).catch((error)=>{
+      console.log(error);
+      
+    });
+  };
+  const UpdateBio = () => {
+    const data = {
+      hobbies: activeInterest,
+    };
+    APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
+      (result) => {
+        if (result.status == "success") {
+          navigate("/profile/page-3");
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  const handleNext = () => {
+    UpdateProfile();
+  };
+  // Other functions
+  useEffect(() => {
+    if (Token != "") {
+      GetProfile(Token);
+    } else {
+      featchToken();
+    }
+  }, [Token]);
   const GetInterest = (id: any): number[] => {
     return activeInterest.filter((val) => {
       return val == id;
@@ -148,7 +225,7 @@ function profileScreen2() {
       <Grid container spacing={2} className="h-center">
         <Grid item sm={3} xs={12}>
           <Typography className={`${classes.h1}`}>I am</Typography>
-          <Gender />
+          <GenderComp gender={Gender} onChange={(e: any) => setGender(e)} />
         </Grid>
         <Grid item sm={6} xs={12}>
           <Typography className={`${classes.h1}`}>Your interests</Typography>
@@ -175,9 +252,9 @@ function profileScreen2() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container className="h-center" sx={{marginTop:"40px"}}>
+      <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button>Save Changes</Button>
+          <Button onClick={() => handleNext()}>Save Changes</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
           <Button className={`${classes.cancelBtn}`}>Cancel</Button>

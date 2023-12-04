@@ -50,7 +50,7 @@ function Sidebar() {
           activeBtn == "settings" ? classes.activeBtn : classes.deactiveBtn
         }`}
       >
-        Settings
+        Profile
       </Button>
       <Button
         onClick={() => setactiveBtn("media")}

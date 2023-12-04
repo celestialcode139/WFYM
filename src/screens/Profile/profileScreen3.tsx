@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -6,7 +7,10 @@ import Button from "../../components/buttonSm";
 import AgeRace from "../../components/race";
 import avatar from "../../assets/images/avatar.png";
 import camera from "../../assets/icons/camera.svg";
-import { useState } from "react";
+import GeneralHelper from "../../Helpers/GeneralHelper";
+import APIHelper from "../../Helpers/APIHelper";
+import config from "../../../config";
+import moment from "moment";
 
 // import $ from "jquery";
 
@@ -74,83 +78,12 @@ const useStyles = makeStyles(() => {
 function profileScreen2() {
   const [activeInterest, setActiveInterest] = useState([0, 5, 7]);
   const classes = useStyles();
-  const interest = [
-    {
-      text: "Photography",
-      img: camera,
-    },
-    {
-      text: "Shopping",
-      img: camera,
-    },
-    {
-      text: "Karaoke",
-      img: camera,
-    },
-    {
-      text: "Yoga",
-      img: camera,
-    },
-    {
-      text: "Cooking",
-      img: camera,
-    },
-    {
-      text: "Tennis",
-      img: camera,
-    },
-    {
-      text: "Run",
-      img: camera,
-    },
-    {
-      text: "Swimming",
-      img: camera,
-    },
-    {
-      text: "Art",
-      img: camera,
-    },
-    {
-      text: "Traveling",
-      img: camera,
-    },
-    {
-      text: "Extreme",
-      img: camera,
-    },
-    {
-      text: "Drink",
-      img: camera,
-    },
-    {
-      text: "Music",
-      img: camera,
-    },
-    {
-      text: "Video games",
-      img: camera,
-    },
-  ];
-  const GetInterest = (id: any): number[] => {
-    return activeInterest.filter((val) => {
-      return val == id;
-    });
-  };
-  const toggleFun = (i: number) => {
-    let data = activeInterest.filter((val) => val == i);
-    if (data.length <= 0) {
-      setActiveInterest([...activeInterest, i]);
-    } else {
-      let updateData = activeInterest.filter((val) => val !== i);
-      setActiveInterest(updateData);
-    }
-  };
+ 
   return (
     <>
     <Box className={`h-center`}>
       <Box className={`${classes.pageContainer}`}>
-        <AgeRace />
+        <AgeRace race={"South Asian"} onChange={(data:number[])=>alert(data.length)} />
       </Box>
     </Box>
     <Grid container className="h-center" sx={{ marginTop: "40px" }}>

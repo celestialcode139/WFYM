@@ -1,9 +1,9 @@
 import Cookies from 'js-cookie';
 
-const ShowToast = (msg) => {
+const ShowToast = (msg:string) => {
     alert(msg)
 };
-const storeData = (label, data) => {
+const storeData = (label:string, data:any) => {
     return new Promise((resolve, reject) => {
         try {
             Cookies.set(label, data)
@@ -15,7 +15,7 @@ const storeData = (label, data) => {
         }
     })
 };
-const retrieveData = (label) => {
+const retrieveData = (label:string) => {
     return new Promise((resolve, reject) => {
         try {
             const storedData = Cookies.get(label);
@@ -26,7 +26,7 @@ const retrieveData = (label) => {
         }
     })
 };
-const ClearData = (label) => {
+const ClearData = (label:string) => {
     return new Promise((resolve, reject) => {
         try {
             Cookies.remove(label);

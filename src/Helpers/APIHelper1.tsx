@@ -9,28 +9,24 @@ interface Response {
     message:string
 }
 
-
-const CallApi = ({ url, method }:Options, body:{},Id:any,Tokken:any):Promise<Response> => {
-    const headers :Record<string, string> = {
+const CallApi = ({ url, method }:Options, body:{}):Promise<Response> => {
+    const headers = {
         "Content-Type": "application/json",
     }
     return new Promise((resolve, reject) => {
         try {
-            if (Tokken) {
-                headers.Authorization=Tokken;
-            }
-            console.log("API url :", Id?url+Id:url,
+            console.log("API url :", url,
                 "\n Method :", method,
                 "\n Headers :", headers,
                 "\n Body :", body
             )
-            fetch(Id?url+Id:url, {
+            fetch(url, {
                 method: method,
                 headers: headers,
                 body: method != "GET" ? JSON.stringify(body) : null
             })
                 .then((res) => res.json())
-                .then((resjson) => {
+                .then((resjson:any) => {
                     resolve(resjson)
                 })
                 .catch((err) => {

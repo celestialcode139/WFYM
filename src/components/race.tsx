@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function Race() {
+function Race(props:any) {
   const classes = useStyles();
   const [matchMessage, setmatchMessage] = useState("match");
   const [matches, setmatches] = useState<any[]>([]);
@@ -78,25 +78,29 @@ function Race() {
   const toggleFun = (i: any) => {
     let data = activeInterest.filter((val) => val == i);
     if (data.length <= 0) {
-      setActiveInterest([...activeInterest, i]);
+      console.log(i);
+      
+      setActiveInterest([i]);
+      props.onChange([i])
     } else {
       let updateData = activeInterest.filter((val) => val !== i);
       setActiveInterest(updateData);
+      props.onChange(updateData)
     }
   };
 
   return (
     <Box>
-      <Box sx={{ marginBottom: "30px" }}>
+      {/* <Box sx={{ marginBottom: "30px" }}>
         <RangeSlider title="Age" handleChange={(e: []) => console.log(e)} />
-      </Box>
+      </Box> */}
       <Box>
         <Typography className={`f-bold v-center`} sx={{ marginBottom: "30px" }}>
           Race
         </Typography>
         <Grid container spacing={2}>
           {interest.map((val, i) => (
-            <Grid item>
+            <Grid item key={i}>
               <Typography
                 onClick={() => {
                   toggleFun(i);

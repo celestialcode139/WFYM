@@ -28,12 +28,12 @@ import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Menu, { MenuProps } from "@mui/material/Menu";
 import { Box } from "@mui/material";
-import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from "dayjs";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "../App.css";
 
 const StyledMenu = styled((props: MenuProps) => (
@@ -102,9 +102,12 @@ export default function CustomizedMenus(props: any) {
         onClose={handleClose}
       >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <StaticDatePicker onChange={(e)=>{
-                console.log("Log,",e);
-            }}  defaultValue={dayjs("2022-04-17")} />
+          <StaticDatePicker
+            onChange={(e: any) => {
+              props.onChange(e);
+            }}
+            defaultValue={dayjs()}
+          />
         </LocalizationProvider>
       </StyledMenu>
     </div>
