@@ -1,5 +1,6 @@
 const Base_Url = {
   url: "https://witty-eel-leg-warmers.cyclic.app/api/v1/",
+  // url: "http://localhost:8000/api/v1/"
 };
 const Endpoints = {
   auth: {
@@ -69,6 +70,12 @@ const Endpoints = {
     },
     AssignSubsecription: {
       url: `${Base_Url.url}user-subscription/create`,
+      method: "GET",
+    },
+  },
+  Match: {
+    GetMatches: {
+      url: `${Base_Url.url}match/match-request`,
       method: "GET",
     },
   },

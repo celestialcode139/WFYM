@@ -24,6 +24,7 @@ import profileScreen3 from "./screens/Profile/profileScreen3.tsx";
 import profileScreen4 from "./screens/Profile/profileScreen4.tsx";
 import profileScreen5 from "./screens/Profile/profileScreen5.tsx";
 import Generalinfo from "./screens/IdealPersonality/generalinfo.tsx";
+import ProfileGeneralinfo from "./screens/Profile/generalinfo.tsx";
 import ChangePassword from "./screens/changePassword.tsx";
 import Media from "./screens/media.tsx";
 
@@ -53,12 +54,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/ideal-personality">
           <Route path="Race" Component={Race} />
           <Route path="looks" Component={MaleLooks} />
-          <Route path="general-info" Component={Generalinfo} />
+          <Route path="general-info" Component={ProfileGeneralinfo} />
         </Route>
       </Routes>
       <Routes>
         <Route path="/dash" Component={DashLayout}>
-          <Route path="view-matchprofile" Component={ViewProfile} />
+          <Route path="view-matchprofile/:id" Component={ViewProfile} />
         </Route>
       </Routes>
       <Routes>

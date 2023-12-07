@@ -79,6 +79,10 @@ function Race(props:any) {
   ];  
 
 
+useEffect(() => {
+console.log(props.race);
+
+}, [props.race])
 
 
   return (

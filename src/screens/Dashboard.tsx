@@ -11,6 +11,7 @@ import HeaderApp from "../components/header/AppHeader";
 import BorderedBG from "../assets/images/borderedBG.png";
 import matchBlue from "../assets/icons/matchBlue.svg";
 import matchWhite from "../assets/icons/matchWhite.svg";
+import Fav from "../assets/icons/fav.svg";
 import msgBlue from "../assets/icons/msgBlue.svg";
 import msgWhite from "../assets/icons/msgWhite.svg";
 import MatchCards from "../components/matchCards";
@@ -22,6 +23,10 @@ import ButtonSm from "../components/buttonSm";
 import image from "../assets/icons/image.png";
 import image1 from "../assets/icons/image1.png";
 import image2 from "../assets/icons/image2.png";
+import GeneralHelper from "../Helpers/GeneralHelper";
+import APIHelper from "../Helpers/APIHelper";
+import config from "../../config";
+import NoMatches from "../assets/images/no_matches.svg";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -99,7 +104,7 @@ const useStyles = makeStyles(() => {
       zIndex: "999999",
       background: "#f9f9f9",
       borderRadius: "10px",
-      boxShadow: "6px 7px 17px #00000017",
+      // boxShadow: "6px 7px 17px #00000017",
       padding: "10px",
     },
     prt200: {
@@ -111,7 +116,67 @@ const useStyles = makeStyles(() => {
 function Dashboard() {
   const classes = useStyles();
   const [matchMessage, setmatchMessage] = useState("match");
-  const [matches, setmatches] = useState<any[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [matchHistory, setmatchHistory] = useState([])
+  const [matchFavourite, setmatchFavourite] = useState([])
+  const [matches, setmatches] = useState<any[]>([
+    {
+      _id:"q3452346263",
+      image: image,
+      name: "Jessica Parker",
+      age: 23,
+      desg: "Proffesional model",
+    },
+    {
+      _id:"5637456",
+      image: image1,
+      name: "Jacqueline",
+      age: 26,
+      desg: "Artist",
+    },
+    {
+      _id:"756857354",
+      image: image2,
+      name: "Sophia",
+      age: 31,
+      desg: "CEO",
+    },
+  ]);
+  const [Token, setToken] = useState("");
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+    }
+  };
+  const GetMatchHistory = (Token: string) => {
+    let data={
+      use_auth_user_id:true
+    };
+    APIHelper.CallApi(config.Endpoints.Match.GetMatches, {}, "?use_auth_user_id=true", Token).then(
+      (result: any) => {
+        if (result.status == "success") {
+          
+          debugger
+
+          console.log(result.data);
+          // setGender(result?.data?.gender ? result.data.gender : "");
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (Token != "") {
+      GetMatchHistory(Token);
+    } else {
+      featchToken();
+    }
+  }, [Token]);
 
   return (
     <Box className={`${classes.appheader}`}>
@@ -154,7 +219,7 @@ function Dashboard() {
                         }}
                         className={`${classes.circleBadge}`}
                       >
-                        30
+                        {matchHistory.length}
                       </Box>
                     </Box>
                   </Grid>
@@ -187,58 +252,62 @@ function Dashboard() {
                         }}
                         className={`${classes.circleBadge}`}
                       >
-                        10
+                        {matchFavourite.length}
                       </Box>
                     </Box>
                   </Grid>
                 </Grid>
-                <Typography sx={{ marginTop: "20px" }} className={`f-26-bold`}>
-                  Matches History
+                {/* <Typography sx={{ marginTop: "20px" }} className={`f-26-bold`}>
+                  {matchMessage == "match" ? "Matches History" : "Favourite"}
                 </Typography>
                 <Typography className="p-12">
                   This is a list of people who have liked you and your matches.
                 </Typography>
                 <Typography className={`p12BA`} sx={{ marginTop: "15px" }}>
                   Today
-                </Typography>
+                </Typography> */}
               </Box>
-              <Grid container spacing={1} sx={{ marginTop: "1px" }}>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
+              {matches.length <= 0 ? (
+                <Box className="h-center">
+                  <Box
+                    sx={{ width: "80%" }}
+                    component="img"
+                    src={NoMatches}
+                  ></Box>
+                </Box>
+              ) : (
+                <Grid container spacing={1} sx={{ marginTop: "1px" }}>
+                  <Grid item xs={6}>
+                    <MatchCards name="Leilani" age={19} img={MatchImg} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-              </Grid>
+              )}
             </Box>
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={matches.length > 0 ? 5 : 8.5}>
             <Box
               className={`blurBg h100  ${classes.BorderedBG} `}
               sx={{ minHeight: "400px", padding: "15px" }}
             >
-              <Box className="sticky" sx={{ display: matches.length > 0 ? "block" : "none" }}>
+              <Box
+                className="sticky"
+                sx={{ display: matches.length > 0 ? "block" : "none" }}
+              >
                 <Box>
-                  <Typography className={`f-22-bold mb-10`} sx={{marginTop:"10px"}}>
+                  <Typography
+                    className={`f-22-bold mb-10`}
+                    sx={{ marginTop: "10px" }}
+                  >
                     Discover
                   </Typography>
                   <Typography className={`p-12`}>
                     {matches.length} matches found
                   </Typography>
                 </Box>
-                <Carousel data={matches} />
+                <Carousel
+                  data={matches}
+                  currentIndex={(e: any) => setCurrentIndex(e)}
+                />
               </Box>
               <Box
                 className={`${classes.prt200}`}
@@ -284,12 +353,17 @@ function Dashboard() {
               </Box>
             </Box>
           </Grid>
-          <Grid item xs={12} md={3.5}>
+          <Grid
+            item
+            xs={12}
+            md={3.5}
+            sx={{ display: matches.length <= 0 ? "none" : null }}
+          >
             <Box
               className={`blurBg h100 ${classes.BorderedBG}`}
               sx={{ minHeight: "400px" }}
             >
-              <ProfileSummery />
+              <ProfileSummery data={matches[currentIndex]} key={currentIndex} />
             </Box>
           </Grid>
         </Grid>

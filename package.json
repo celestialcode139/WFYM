@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "https://witty-eel-leg-warmers.cyclic.app/api/v1/match/match-request",
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
