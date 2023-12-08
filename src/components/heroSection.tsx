@@ -3,9 +3,6 @@ import { makeStyles } from "@mui/styles";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import HeroSectionSignature from "../assets/images/heroSectionSignature.svg";
 import { useTheme } from "@mui/material/styles";
-import { gsap } from "gsap-trial";
-import { DrawSVGPlugin } from "gsap-trial/DrawSVGPlugin";
-gsap.registerPlugin(DrawSVGPlugin);
 
 
 const useStyles = makeStyles(() => {

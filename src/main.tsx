@@ -29,6 +29,8 @@ import ChangePassword from "./screens/changePassword.tsx";
 import Media from "./screens/media.tsx";
 
 import Admin_Dashboard from "./screens/Admin/dashboard.tsx";
+import BuyMatches from "./screens/BuyMatches.tsx";
+import Paypal from "./screens/paypal.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "./index.css";
@@ -49,10 +51,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/interests" Component={Interests} />
         <Route path="/SetNewPassword" Component={SetNewPass} />
         <Route path="/dashboard" Component={Dashboard} />
+        <Route path="buy-matches" Component={BuyMatches} />
+        <Route path="paypal" Component={Paypal} />
       </Routes>
       <Routes>
         <Route path="/ideal-personality">
-          <Route path="Race" Component={Race} />
+          <Route path="race" Component={Race} />
           <Route path="looks" Component={MaleLooks} />
           <Route path="general-info" Component={ProfileGeneralinfo} />
         </Route>

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
-  
+
   return {
     slider: {
       position: "sticky",
@@ -46,6 +46,15 @@ export default function Carousel(props: any) {
     props.currentIndex(currentIndex);
   }, [currentIndex]);
 
+  const calculateAge = (birthDate: any) => {
+    var birthDateObject: any = new Date(birthDate);
+    var currentDate: any = new Date();
+    var timeDifference = currentDate - birthDateObject;
+    var age = Math.floor(timeDifference / (365.25 * 24 * 60 * 60 * 1000));
+
+    return age;
+  };
+
   return (
     <Box className={`${classes.slider}`} sx={{ paddingTop: "50px" }}>
       <Swiper
@@ -59,18 +68,21 @@ export default function Carousel(props: any) {
           <SwiperSlide key={i}>
             <Box
               onClick={() => {
-                navigate(`/dash/view-matchprofile/${val._id}`);
+                navigate(`/dash/view-matchprofile/${val?.result_user_id?._id}`);
               }}
               className="hw100 ofitt-cover bg-cover"
-              sx={{ backgroundImage: `url(${val.image})` }}
+              sx={{
+                backgroundImage: `url(${val.result_user_id?.profile_images})`,
+              }}
             >
               <Box className={`${classes.swipeContainer}`}>
                 <Box>
                   <Typography className={`f-22-bold mb-10 ${classes.name}`}>
-                    {val.name}, {val.age}
+                    {`${val.result_user_id?.first_name} ${val.result_user_id?.last_name}`}
+                    , {calculateAge(val.result_user_id?.dob)}
                   </Typography>
                   <Typography className={`p-12 ${classes.desg}`}>
-                    {val.desg}
+                    {val.result_user_id?.user_details?.profession}
                   </Typography>
                 </Box>
               </Box>

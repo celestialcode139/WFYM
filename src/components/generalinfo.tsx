@@ -48,7 +48,7 @@ function Generalinfo(props: any) {
     setbody({ ...body, religion: e.target.value });
   };
   useEffect(() => {
-    // props.onChange(body)
+    props.onChange(body);
   }, [body]);
   useEffect(() => {
     setbody({
@@ -65,7 +65,7 @@ function Generalinfo(props: any) {
       weight: props.body.weight,
       highestDegree: props.body.highestDegree,
     });
-  }, [props.body]);
+  }, []);
 
   return (
     <Box>
@@ -111,9 +111,11 @@ function Generalinfo(props: any) {
                 },
               }}
             >
-              <MenuItem value="principled">Principled</MenuItem>
-              <MenuItem value="creative">Creative</MenuItem>
-              <MenuItem value="caring">Caring</MenuItem>
+              <MenuItem value="Islam">Islam</MenuItem>
+              <MenuItem value="Christianity">Christianity</MenuItem>
+              <MenuItem value="Buddhism">Buddhism</MenuItem>
+              <MenuItem value="Hinduism">Hinduism</MenuItem>
+              <MenuItem value="Judaism">Judaism</MenuItem>
             </TextField>
           </Box>
         </Grid>

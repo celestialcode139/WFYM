@@ -15,14 +15,14 @@ const useStyles = makeStyles(() => {
     sidebar: {
       width: "260px",
     },
-  
+
     h100: {
       width: "100%",
     },
     plr20: {
       paddingLeft: "20px",
       paddingRight: "20px",
-    },  
+    },
     deactiveBtn: {
       backgroundColor: "#EAF6F7",
       color: "black",
@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => {
   };
 });
 function Sidebar() {
-  const classes = useStyles();   
+  const classes = useStyles();
   const [activeBtn, setactiveBtn] = useState("settings");
 
   return (
@@ -67,14 +67,6 @@ function Sidebar() {
         }`}
       >
         Bio
-      </Button>
-      <Button
-        onClick={() => setactiveBtn("changepass")}
-        className={`${
-          activeBtn == "changepass" ? classes.activeBtn : classes.deactiveBtn
-        }`}
-      >
-        Change Password
       </Button>
     </Box>
   );

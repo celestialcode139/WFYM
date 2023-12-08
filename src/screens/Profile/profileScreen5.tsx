@@ -79,19 +79,7 @@ function profileScreen5() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [Token, setToken] = useState("");
-  const [body, setbody] = useState({
-    occupation: "",
-    religion: "principled",
-    political_Party: "",
-    childrens: "",
-    planForChildren: false,
-    smookingHabit: false,
-    drinkingHabit: false,
-    dealBracker: "",
-    height: "",
-    weight: "",
-    highestDegree: "",
-  });
+  const [body, setbody] = useState<any>({});
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
@@ -102,14 +90,9 @@ function profileScreen5() {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       (result: any) => {
         if (result.status == "success") {
-          console.log(result.data);
-          setbody(
-            result?.data?.user_details?.personality
-              ? result.data.user_details.personality
-              : ""
-          );
+          // console.log("Response:", result?.data?.user_details?.religion);
+
           setbody({
-            ...body,
             occupation: result?.data?.user_details?.profession,
             religion: result?.data?.user_details?.religion,
             political_Party: result?.data?.user_details?.political_party,
@@ -132,17 +115,19 @@ function profileScreen5() {
 
   const UpdateBio = () => {
     const data = {
-      profession:body.occupation,
-      religion:body.religion,
-      political_party:body.political_Party,
-      children_before:body.childrens,
-      smoking_habits:body.smookingHabit,
-      drink_habits:body.drinkingHabit,
-      deal_breaker:body.dealBracker,
-      height:body.height,
-      weight:body.weight,
-      highest_degree:body.highestDegree,
+      profession: body.occupation,
+      religion: body.religion,
+      political_party: body.political_Party,
+      children_before: body.childrens,
+      smoking_habits: body.smookingHabit,
+      drink_habits: body.drinkingHabit,
+      deal_breaker: body.dealBracker,
+      height: body.height,
+      weight: body.weight,
+      highest_degree: body.highestDegree,
     };
+    console.log("data", data);
+
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
         if (result.status == "success") {
@@ -165,17 +150,25 @@ function profileScreen5() {
       featchToken();
     }
   }, [Token]);
+
+  useEffect(() => {
+    console.log("Body:", Object.keys(body).length);
+  }, [body]);
+
   return (
     <>
       <Box>
         <Box className={`${classes.pageContainer}`}>
-          <Generalinfo
-            key={body}
-            body={body}
-            onChange={(e: any) => {
-              setbody(e);
-            }}
-          />
+          {Object.keys(body).length > 0 ? (
+            <Generalinfo
+              body={body}
+              key={body}
+              onChange={(e: any) => {
+                console.log("qwerqwer", e);
+                setbody(e);
+              }}
+            />
+          ) : null}
         </Box>
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>

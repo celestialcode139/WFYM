@@ -117,25 +117,25 @@ function Dashboard() {
   const classes = useStyles();
   const [matchMessage, setmatchMessage] = useState("match");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [matchHistory, setmatchHistory] = useState([])
-  const [matchFavourite, setmatchFavourite] = useState([])
+  const [matchHistory, setmatchHistory] = useState([]);
+  const [matchFavourite, setmatchFavourite] = useState([]);
   const [matches, setmatches] = useState<any[]>([
     {
-      _id:"q3452346263",
+      _id: "q3452346263",
       image: image,
       name: "Jessica Parker",
       age: 23,
       desg: "Proffesional model",
     },
     {
-      _id:"5637456",
+      _id: "5637456",
       image: image1,
       name: "Jacqueline",
       age: 26,
       desg: "Artist",
     },
     {
-      _id:"756857354",
+      _id: "756857354",
       image: image2,
       name: "Sophia",
       age: 31,
@@ -150,33 +150,102 @@ function Dashboard() {
       setToken(String(result.data));
     }
   };
-  const GetMatchHistory = (Token: string) => {
-    let data={
-      use_auth_user_id:true
-    };
-    APIHelper.CallApi(config.Endpoints.Match.GetMatches, {}, "?use_auth_user_id=true", Token).then(
-      (result: any) => {
-        if (result.status == "success") {
-          
-          debugger
-
-          console.log(result.data);
-          // setGender(result?.data?.gender ? result.data.gender : "");
-        } else {
-          console.log(result.message);
-          GeneralHelper.ShowToast(String(result.message));
-        }
+  const GetLatestMatch = () => {
+    APIHelper.CallApi(
+      config.Endpoints.Match.GetLatestMatch,
+      {},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log("Matches:", result.data[0].match_result);
+        setmatches(result.data[0].match_result);
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
       }
-    );
+    });
+  };
+  const GetMatchHistory = () => {
+    let data = {
+      use_auth_user_id: true,
+    };
+    APIHelper.CallApi(
+      config.Endpoints.Match.GetMatches,
+      {},
+      "?use_auth_user_id=true&is_discard=false",
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log(result.data[0].match_result);
+        setmatchHistory(result.data[0].match_result);
+        // setGender(result?.data?.gender ? result.data.gender : "");
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const GetFavourites = () => {
+    APIHelper.CallApi(
+      config.Endpoints.Match.GetMatches,
+      {},
+      "?use_auth_user_id=true&is_fav=true",
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log(result.data);
+        setmatchFavourite(result.data[0].match_result);
+        // setmatchHistory(result.data[0].match_result);
+        // setGender(result?.data?.gender ? result.data.gender : "");
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const FavDecline = (body: any) => {
+    let data = { ...body };
+    APIHelper.CallApi(
+      config.Endpoints.Match.FavDecline,
+      data,
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log(result.data);
+        init();
+        // setmatchHistory(result.data[0].match_result);
+        // setGender(result?.data?.gender ? result.data.gender : "");
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+
+  const init = () => {
+    GetMatchHistory();
+    GetFavourites();
+    GetLatestMatch();
   };
 
   useEffect(() => {
     if (Token != "") {
-      GetMatchHistory(Token);
+      init();
     } else {
       featchToken();
     }
   }, [Token]);
+
+  const calculateAge = (birthDate: any) => {
+    var birthDateObject: any = new Date(birthDate);
+    var currentDate: any = new Date();
+    var timeDifference = currentDate - birthDateObject;
+    var age = Math.floor(timeDifference / (365.25 * 24 * 60 * 60 * 1000));
+
+    return age;
+  };
 
   return (
     <Box className={`${classes.appheader}`}>
@@ -277,9 +346,39 @@ function Dashboard() {
                 </Box>
               ) : (
                 <Grid container spacing={1} sx={{ marginTop: "1px" }}>
-                  <Grid item xs={6}>
-                    <MatchCards name="Leilani" age={19} img={MatchImg} />
-                  </Grid>
+                  {matchMessage == "match"
+                    ? matchHistory.map((history: any, i: number) => (
+                        <Grid item xs={6} key={i}>
+                          <MatchCards
+                            FavDecline={(e: any) => FavDecline(e)}
+                            name={`${history.result_user_id.first_name} ${history.result_user_id.last_name}`}
+                            age={calculateAge(history.result_user_id.dob)}
+                            img={history.result_user_id?.profile_images}
+                            _id={history.result_user_id._id}
+                            request_id={history._id}
+                            is_fav={history?.is_fav}
+                            is_discard={history?.is_discard}
+                          />
+                        </Grid>
+                      ))
+                    : matchFavourite.map((favourite: any, i: number) => (
+                        <Grid item xs={6} key={i}>
+                          <MatchCards
+                            FavDecline={(e: any) => FavDecline(e)}
+                            name={`${favourite.result_user_id.first_name} ${favourite.result_user_id.last_name}`}
+                            age={calculateAge(favourite.result_user_id.dob)}
+                            img={
+                              favourite.result_user_id?.profile_images
+                                ? favourite.result_user_id.profile_images
+                                : "https://i.pravatar.cc/150"
+                            }
+                            _id={favourite.result_user_id._id}
+                            request_id={favourite._id}
+                            is_fav={favourite?.is_fav}
+                            is_discard={favourite?.is_discard}
+                          />
+                        </Grid>
+                      ))}
                 </Grid>
               )}
             </Box>

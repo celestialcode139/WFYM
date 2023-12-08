@@ -8,7 +8,11 @@ import Video from "../components/video";
 import IntroVideo from "../assets/videos/intro.mp4";
 import BodyShort from "../assets/videos/bodyshort.mp4";
 import Lightbox from "../components/lightbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import GeneralHelper from "../Helpers/GeneralHelper";
+import APIHelper from "../Helpers/APIHelper";
+import config from "../../config";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -49,7 +53,45 @@ const useStyles = makeStyles(() => {
 });
 function Media() {
   const classes = useStyles();
+  const params = useParams();
+
   const [isOpen, setisOpen] = useState(false);
+  const [User, setUser] = useState<any>({});
+  const [Token, setToken] = useState("");
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+    }
+  };
+  const GetLatestMatch = () => {
+    APIHelper.CallApi(
+      config.Endpoints.user.GetMyProfile,
+      {},
+      params.id,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log("Matches:", result.data);
+        setUser(result.data);
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const init = () => {
+    GetLatestMatch();
+  };
+
+  useEffect(() => {
+    if (Token != "") {
+      init();
+    } else {
+      featchToken();
+    }
+  }, [Token]);
 
   return (
     <>
@@ -58,7 +100,7 @@ function Media() {
           <Box
             component="img"
             className={`${classes.profileImage}`}
-            src={ProfileImage1}
+            src={User?.profile_images}
           ></Box>
         </Grid>
         <Grid item md={7} xs={12}>
@@ -67,17 +109,17 @@ function Media() {
               <Box className={`${classes.quickProfileContainer}`}>
                 <Box>
                   <Typography className={`f-22-bold mb-10 ${classes.name}`}>
-                    Jessica Parker, 23
+                    {`${User?.first_name}`}, 23
                   </Typography>
-                  <Typography className={`p-12`}>Proffesional model</Typography>
+                  <Typography className={`p-12`}>
+                    {User?.user_details?.profession}
+                  </Typography>
                 </Box>
 
                 <Box className={`${classes.pt20}`}>
                   <Typography className={`f-15-bold mb-10`}>About</Typography>
                   <Typography className={`p-12`}>
-                    My name is Jessica Parker and I enjoy meeting new people and
-                    finding ways to help them have an uplifting experience. I
-                    enjoy reading..
+                    {User?.user_details?.description}
                   </Typography>
                 </Box>
               </Box>
@@ -86,7 +128,7 @@ function Media() {
               <Box className={`${classes.pt20}`}>
                 <Typography className={`f-15-bold mb-10`}>Location</Typography>
                 <Typography className={`p-12`}>
-                  Chicago, IL United States
+                  {User?.user_details?.location}
                 </Typography>
               </Box>
               <Box className={`${classes.pt20}`}>
@@ -97,21 +139,11 @@ function Media() {
                   Interests
                 </Typography>
                 <Box>
-                  <Box className={`${classes.badge} v-center`}>
-                    <Box component="img"></Box> Travelling
-                  </Box>
-                  <Box className={`${classes.badge} v-center`}>
-                    <Box component="img"></Box> Books
-                  </Box>
-                  <Box className={`${classes.badge} v-center`}>
-                    <Box component="img"></Box> Music
-                  </Box>
-                  <Box className={`${classes.badge} v-center`}>
-                    <Box component="img"></Box> Dancing
-                  </Box>
-                  <Box className={`${classes.badge} v-center`}>
-                    <Box component="img"></Box> Modeling
-                  </Box>
+                  {User?.user_details?.hobbies.map((hoby: any, i: number) => (
+                    <Box className={`${classes.badge} v-center`} key={i}>
+                      <Box component="img"></Box> {hoby.Title}
+                    </Box>
+                  ))}
                 </Box>
               </Box>
             </Grid>
@@ -131,43 +163,73 @@ function Media() {
               <Typography className={`p-12 ${classes.detailHeading}`}>
                 Religion
               </Typography>
-              <Typography className={`p-12`}>Judaism</Typography>
+              <Typography className={`p-12`}>
+                {User?.user_details?.religion}
+              </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
               <Typography className={`p-12 ${classes.detailHeading}`}>
                 Look
               </Typography>
-              <Typography className={`p-12`}>Hourglass figure</Typography>
+              <Typography className={`p-12`}>
+                {User?.user_details?.personality}
+              </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
               <Typography className={`p-12 ${classes.detailHeading}`}>
                 Race
               </Typography>
-              <Typography className={`p-12`}>White Caucasian</Typography>
+              <Typography className={`p-12`}>
+                {User?.user_details?.race}
+              </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
               <Typography className={`p-12 ${classes.detailHeading}`}>
                 Occupations
               </Typography>
-              <Typography className={`p-12`}>Product Designer</Typography>
+              <Typography className={`p-12`}>
+                {User?.user_details?.profession}
+              </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
               <Typography className={`p-12 ${classes.detailHeading}`}>
                 Political Party
               </Typography>
-              <Typography className={`p-12`}>RNC</Typography>
+              <Typography className={`p-12`}>
+                {User?.user_details?.political_party}
+              </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
               <Typography className={`p-12 ${classes.detailHeading}`}>
                 Children’s
               </Typography>
-              <Typography className={`p-12`}>No</Typography>
+              <Typography className={`p-12`}>
+                {User?.user_details?.children_before}
+              </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
               <Typography className={`p-12 ${classes.detailHeading}`}>
-                Want to have Children’s
+                Highest Degree
               </Typography>
-              <Typography className={`p-12`}>Yes</Typography>
+              <Typography className={`p-12`}>
+                {User?.user_details?.highest_degree}
+              </Typography>
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <Typography className={`p-12 ${classes.detailHeading}`}>
+                Smoking Habits
+              </Typography>
+              <Typography className={`p-12`}>
+                {User?.user_details?.smoking_habits == true ? "True" : "False"}
+              </Typography>
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <Typography className={`p-12 ${classes.detailHeading}`}>
+                Drinking Habits
+              </Typography>
+              <Typography className={`p-12`}>
+                {User?.user_details?.drink_habits == true ? "True" : "False"}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -188,54 +250,16 @@ function Media() {
           <Box className={`${classes.pt20}`}>
             <Typography className={`f-15-bold mb-10`}>Gallery</Typography>
             <Grid container spacing={1}>
-              <Grid item xs={4}>
-                <Box
-                  onClick={() => setisOpen(true)}
-                  component="img"
-                  className={`${classes.galleryImage}`}
-                  src={image}
-                ></Box>
-              </Grid>
-              <Grid item xs={4}>
-                <Box
-                  onClick={() => setisOpen(true)}
-                  component="img"
-                  className={`${classes.galleryImage}`}
-                  src={image}
-                ></Box>
-              </Grid>
-              <Grid item xs={4}>
-                <Box
-                  onClick={() => setisOpen(true)}
-                  component="img"
-                  className={`${classes.galleryImage}`}
-                  src={image}
-                ></Box>
-              </Grid>
-              <Grid item xs={4}>
-                <Box
-                  onClick={() => setisOpen(true)}
-                  component="img"
-                  className={`${classes.galleryImage}`}
-                  src={image}
-                ></Box>
-              </Grid>
-              <Grid item xs={4}>
-                <Box
-                  onClick={() => setisOpen(true)}
-                  component="img"
-                  className={`${classes.galleryImage}`}
-                  src={image}
-                ></Box>
-              </Grid>
-              <Grid item xs={4}>
-                <Box
-                  onClick={() => setisOpen(true)}
-                  component="img"
-                  className={`${classes.galleryImage}`}
-                  src={image}
-                ></Box>
-              </Grid>
+              {User?.user_details?.images.map((img: string, i: number) => (
+                <Grid item xs={4} key={i}>
+                  <Box
+                    onClick={() => setisOpen(true)}
+                    component="img"
+                    className={`${classes.galleryImage}`}
+                    src={img}
+                  ></Box>
+                </Grid>
+              ))}
             </Grid>
             <Lightbox
               isOpen={isOpen}

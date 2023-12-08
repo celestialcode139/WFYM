@@ -5,7 +5,8 @@ import "../App.css";
 import dislike from "../assets/images/dislike.svg";
 import like from "../assets/images/like.svg";
 import Fav from "../assets/icons/fav.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -46,9 +47,16 @@ const useStyles = makeStyles(() => {
 });
 function MatchCards(props: any) {
   const classes = useStyles();
-  const [Favourite, setFavourite] = useState(false);
+  const navigate = useNavigate();
+  const [Favourite, setFavourite] = useState(props.is_fav);
+  const [Discard, setDiscard] = useState(props.is_discard);
+  useEffect(() => {
+    setFavourite(props.is_fav);
+  }, [props.is_fav]);
+
   return (
     <Box
+      // onClick={() => navigate(`/dash/view-matchprofile/${props._id}`)}
       className={`${classes.MatchContainer}`}
       sx={{ backgroundImage: `url(${props.img})` }}
     >
@@ -61,6 +69,14 @@ function MatchCards(props: any) {
           xs={6}
           sx={{ padding: "9px" }}
           className={`h-center v-center ${classes.borderRight}`}
+          onClick={() => {
+            setDiscard(!Discard);
+            props.FavDecline({
+              _id:props.request_id,
+              is_fav:Favourite,
+              is_discard:!Discard,
+            })
+          }}
         >
           <Box
             component="img"
@@ -75,12 +91,17 @@ function MatchCards(props: any) {
           className={`h-center v-center ${classes.borderLeft}`}
           onClick={() => {
             setFavourite(!Favourite);
+            props.FavDecline({
+              _id:props.request_id,
+              is_fav:!Favourite,
+              is_discard:Discard,
+            })
           }}
         >
           <Box
             component="img"
             className={`${classes.likeDislikeImg}`}
-            src={Favourite?Fav:like}
+            src={Favourite ? Fav : like}
           ></Box>
         </Grid>
       </Grid>

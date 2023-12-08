@@ -70,12 +70,20 @@ const Endpoints = {
     },
     AssignSubsecription: {
       url: `${Base_Url.url}user-subscription/create`,
-      method: "GET",
+      method: "POST",
     },
   },
   Match: {
     GetMatches: {
       url: `${Base_Url.url}match/match-request`,
+      method: "GET",
+    },
+    FavDecline: {
+      url: `${Base_Url.url}match/match-result`,
+      method: "PUT",
+    },
+    GetLatestMatch: {
+      url: `${Base_Url.url}match/latest-match-request`,
       method: "GET",
     },
   },

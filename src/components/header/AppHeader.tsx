@@ -7,6 +7,8 @@ import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
 import ProfileDropdown from "../../assets/images/ProfileDropdown.svg";
+import Menu from "../../components/menu";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -43,32 +45,36 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function AppHeader(props:any) {
+function AppHeader(props: any) {
   const classes = useStyles();
 
   return (
-    <Box className={`${classes.header}`} sx={{...props.sx}}>
+    <Box className={`${classes.header}`} sx={{ ...props.sx }}>
       <Grid container className={`${classes.headerContainer}`}>
         <Grid item xs={6} className="d-flex">
-          <Box component="img" src={Logo} className={`${classes.logo}`}></Box>
+          <Link to="/dashboard">
+            <Box component="img" src={Logo} className={`${classes.logo}`}></Box>
+          </Link>
         </Grid>
         <Grid item xs={6}>
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Box className="v-center">
-              <Box
-                component="img"
-                src={Avatar}
-                className={`${classes.profileImage}`}
-              ></Box>
-              <Box sx={{ height: "40px", marginLeft: "10px" }}>
-                <Typography className={`${classes.profileName}`}>
-                  Rahul
-                </Typography>
-                <Typography className={`${classes.profileLocation}`}>
-                  Delhi NCR
-                </Typography>
-              </Box>
-              <Box component="img" src={ProfileDropdown}></Box>
+              <Menu>
+                <Box
+                  component="img"
+                  src={Avatar}
+                  className={`${classes.profileImage}`}
+                ></Box>
+                <Box sx={{ height: "40px", marginLeft: "10px" }}>
+                  <Typography className={`${classes.profileName}`}>
+                    Rahul
+                  </Typography>
+                  <Typography className={`${classes.profileLocation}`}>
+                    Delhi NCR
+                  </Typography>
+                </Box>
+                <Box component="img" src={ProfileDropdown}></Box>
+              </Menu>
             </Box>
           </Box>
         </Grid>
