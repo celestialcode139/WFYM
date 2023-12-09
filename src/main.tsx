@@ -31,6 +31,8 @@ import Media from "./screens/media.tsx";
 import Admin_Dashboard from "./screens/Admin/dashboard.tsx";
 import BuyMatches from "./screens/BuyMatches.tsx";
 import Paypal from "./screens/paypal.tsx";
+import Chat from "./screens/chat.tsx";
+import VideoCall from "./screens/videoCall.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "./index.css";
@@ -53,6 +55,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/dashboard" Component={Dashboard} />
         <Route path="buy-matches" Component={BuyMatches} />
         <Route path="paypal" Component={Paypal} />
+        <Route path="chat/:myId/:matchId" Component={Chat} />
+        <Route path="video-call/:myId/:matchId" Component={VideoCall} />
       </Routes>
       <Routes>
         <Route path="/ideal-personality">

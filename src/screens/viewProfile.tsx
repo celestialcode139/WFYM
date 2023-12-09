@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import ProfileImage1 from "../assets/images/profileimages/1.png";
+import SendMessage from "../assets/icons/sendMessage.svg";
 import image from "../assets/icons/image.png";
 import Video from "../components/video";
 import IntroVideo from "../assets/videos/intro.mp4";
@@ -13,6 +14,8 @@ import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import VideoCallIcon from "../assets/icons/videoicon.png";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -58,11 +61,18 @@ function Media() {
   const [isOpen, setisOpen] = useState(false);
   const [User, setUser] = useState<any>({});
   const [Token, setToken] = useState("");
+  const [userId, setuserId] = useState("");
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
       setToken(String(result.data));
+    }
+  };
+  const featchUserId = async () => {
+    const result: any = await GeneralHelper.retrieveData("UserId");
+    if (result.status == 1) {
+      setuserId(String(result.data));
     }
   };
   const GetLatestMatch = () => {
@@ -82,6 +92,7 @@ function Media() {
     });
   };
   const init = () => {
+    featchUserId();
     GetLatestMatch();
   };
 
@@ -107,13 +118,33 @@ function Media() {
           <Grid container spacing={2}>
             <Grid item md={6} xs={12}>
               <Box className={`${classes.quickProfileContainer}`}>
-                <Box>
-                  <Typography className={`f-22-bold mb-10 ${classes.name}`}>
-                    {`${User?.first_name}`}, 23
-                  </Typography>
-                  <Typography className={`p-12`}>
-                    {User?.user_details?.profession}
-                  </Typography>
+                <Box sx={{ display: "flex" }}>
+                  <Box>
+                    <Typography className={`f-22-bold mb-10 ${classes.name}`}>
+                      {`${User?.first_name}`}, 23
+                    </Typography>
+                    <Typography className={`p-12`}>
+                      {User?.user_details?.profession}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Link to={{ pathname: `/chat/${userId}/${User._id}` }}>
+                      <Box
+                        component="img"
+                        className="hover"
+                        src={SendMessage}
+                        sx={{ marginLeft: "15px", width: "50px" }}
+                      ></Box>
+                    </Link>
+                    <Link to={{ pathname: `/video-call/${userId}/${User._id}` }}>
+                      <Box
+                        component="img"
+                        className="hover"
+                        src={VideoCallIcon}
+                        sx={{ marginLeft: "10px", width: "50px" }}
+                      ></Box>
+                    </Link>
+                  </Box>
                 </Box>
 
                 <Box className={`${classes.pt20}`}>
