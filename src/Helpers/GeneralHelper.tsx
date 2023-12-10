@@ -1,7 +1,12 @@
 import Cookies from 'js-cookie';
+// import { useAlert } from 'react-alert'
+
 
 const ShowToast = (msg:string) => {
-    alert(msg)
+    // const alert = useAlert();
+    // if (type=="success") {
+        alert(msg)
+    // }
 };
 const storeData = (label:string, data:any) => {
     return new Promise((resolve) => {

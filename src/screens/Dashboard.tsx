@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, CircularProgress, Container, Grid, Skeleton, Typography } from "@mui/material";
 import Logo from "../../assets/logo/logo-w.svg";
 import Avatar from "../../assets/images/avatar.png";
 import { useTheme } from "@mui/material/styles";
@@ -115,6 +115,7 @@ const useStyles = makeStyles(() => {
 });
 function Dashboard() {
   const classes = useStyles();
+  const [Loading, setLoading] = useState(false);
   const [matchMessage, setmatchMessage] = useState("match");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matchHistory, setmatchHistory] = useState([]);
@@ -151,6 +152,7 @@ function Dashboard() {
     }
   };
   const GetLatestMatch = () => {
+    setLoading(true)
     APIHelper.CallApi(
       config.Endpoints.Match.GetLatestMatch,
       {},
@@ -158,15 +160,18 @@ function Dashboard() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        console.log("Matches:", result.data[0].match_result);
-        setmatches(result.data[0].match_result);
+        console.log("Matches:", result.data[0]?.match_result);
+        setmatches(result.data[0]?.match_result);
+        setLoading(false)
       } else {
+        setLoading(false)
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
       }
     });
   };
   const GetMatchHistory = () => {
+    setLoading(true)
     let data = {
       use_auth_user_id: true,
     };
@@ -177,16 +182,19 @@ function Dashboard() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        console.log(result.data[0].match_result);
-        setmatchHistory(result.data[0].match_result);
+        console.log(result?.data[0]?.match_result);
+        setmatchHistory(result?.data[0]?.match_result);
+        setLoading(false)
         // setGender(result?.data?.gender ? result.data.gender : "");
       } else {
+        setLoading(false)
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
       }
     });
   };
   const GetFavourites = () => {
+    setLoading(true)
     APIHelper.CallApi(
       config.Endpoints.Match.GetMatches,
       {},
@@ -195,10 +203,12 @@ function Dashboard() {
     ).then((result: any) => {
       if (result.status == "success") {
         console.log(result.data);
-        setmatchFavourite(result.data[0].match_result);
+        setmatchFavourite(result?.data[0]?.match_result);
+        setLoading(false)
         // setmatchHistory(result.data[0].match_result);
         // setGender(result?.data?.gender ? result.data.gender : "");
       } else {
+        setLoading(false)
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
       }
@@ -261,9 +271,8 @@ function Dashboard() {
                 <Grid container spacing={1}>
                   <Grid item xs={6} onClick={() => setmatchMessage("match")}>
                     <Box
-                      className={`${classes.toggleBtn} ${
-                        matchMessage == "match" ? classes.activeToggleBtn : null
-                      }`}
+                      className={`${classes.toggleBtn} ${matchMessage == "match" ? classes.activeToggleBtn : null
+                        }`}
                     >
                       <Box className={`d-flex`}>
                         <Box
@@ -288,15 +297,14 @@ function Dashboard() {
                         }}
                         className={`${classes.circleBadge}`}
                       >
-                        {matchHistory.length}
+                        {matchHistory?.length}
                       </Box>
                     </Box>
                   </Grid>
                   <Grid item xs={6} onClick={() => setmatchMessage("message")}>
                     <Box
-                      className={`${classes.toggleBtn} ${
-                        matchMessage != "match" ? classes.activeToggleBtn : null
-                      }`}
+                      className={`${classes.toggleBtn} ${matchMessage != "match" ? classes.activeToggleBtn : null
+                        }`}
                     >
                       <Box className={`d-flex`}>
                         <Box
@@ -321,7 +329,7 @@ function Dashboard() {
                         }}
                         className={`${classes.circleBadge}`}
                       >
-                        {matchFavourite.length}
+                        {matchFavourite?.length}
                       </Box>
                     </Box>
                   </Grid>
@@ -336,7 +344,7 @@ function Dashboard() {
                   Today
                 </Typography> */}
               </Box>
-              {matches.length <= 0 ? (
+              {matches?.length <= 0 ? (
                 <Box className="h-center">
                   <Box
                     sx={{ width: "80%" }}
@@ -346,8 +354,11 @@ function Dashboard() {
                 </Box>
               ) : (
                 <Grid container spacing={1} sx={{ marginTop: "1px" }}>
-                  {matchMessage == "match"
-                    ? matchHistory.map((history: any, i: number) => (
+                  {Loading ?
+                    <CircularProgress color="inherit" size={20} />
+                    :
+                    matchMessage == "match"
+                      ? matchHistory?.map((history: any, i: number) => (
                         <Grid item xs={6} key={i}>
                           <MatchCards
                             FavDecline={(e: any) => FavDecline(e)}
@@ -361,7 +372,7 @@ function Dashboard() {
                           />
                         </Grid>
                       ))
-                    : matchFavourite.map((favourite: any, i: number) => (
+                      : matchFavourite.map((favourite: any, i: number) => (
                         <Grid item xs={6} key={i}>
                           <MatchCards
                             FavDecline={(e: any) => FavDecline(e)}
@@ -378,19 +389,20 @@ function Dashboard() {
                             is_discard={favourite?.is_discard}
                           />
                         </Grid>
-                      ))}
+                      ))
+                  }
                 </Grid>
               )}
             </Box>
           </Grid>
-          <Grid item xs={12} md={matches.length > 0 ? 5 : 8.5}>
+          <Grid item xs={12} md={matches?.length > 0 ? 5 : 8.5}>
             <Box
               className={`blurBg h100  ${classes.BorderedBG} `}
               sx={{ minHeight: "400px", padding: "15px" }}
             >
               <Box
                 className="sticky"
-                sx={{ display: matches.length > 0 ? "block" : "none" }}
+                sx={{ display: matches?.length > 0 ? "block" : "none" }}
               >
                 <Box>
                   <Typography
@@ -400,7 +412,7 @@ function Dashboard() {
                     Discover
                   </Typography>
                   <Typography className={`p-12`}>
-                    {matches.length} matches found
+                    {matches?.length} matches found
                   </Typography>
                 </Box>
                 <Carousel
@@ -410,7 +422,7 @@ function Dashboard() {
               </Box>
               <Box
                 className={`${classes.prt200}`}
-                sx={{ display: matches.length > 0 ? "none" : "block" }}
+                sx={{ display: matches?.length > 0 ? "none" : "block" }}
               >
                 <Box>
                   <Typography className={`f-35-bold mb-10 pText text-center`}>
@@ -456,7 +468,7 @@ function Dashboard() {
             item
             xs={12}
             md={3.5}
-            sx={{ display: matches.length <= 0 ? "none" : null }}
+            sx={{ display: matches?.length <= 0 ? "none" : null }}
           >
             <Box
               className={`blurBg h100 ${classes.BorderedBG}`}
