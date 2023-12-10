@@ -1,10 +1,8 @@
-import { Box, Container, Grid, TextField } from "@mui/material";
+import { Box} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import AdminSignature from "../assets/images/adminSignature.svg";
 import Button from "../components/buttonSm";
-import avatar from "../assets/images/avatar.png";
 import { useState } from "react";
 
 // import $ from "jquery";

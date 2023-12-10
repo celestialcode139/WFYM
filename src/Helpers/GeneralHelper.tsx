@@ -4,7 +4,7 @@ const ShowToast = (msg:string) => {
     alert(msg)
 };
 const storeData = (label:string, data:any) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         try {
             Cookies.set(label, data)
             resolve({ status: 1, message: "Stored" })
@@ -16,7 +16,7 @@ const storeData = (label:string, data:any) => {
     })
 };
 const retrieveData = (label:string) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         try {
             const storedData = Cookies.get(label);
             resolve({ status: 1, data: storedData })
@@ -27,7 +27,7 @@ const retrieveData = (label:string) => {
     })
 };
 const ClearData = (label:string) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         try {
             Cookies.remove(label);
             resolve({ status: 1 })

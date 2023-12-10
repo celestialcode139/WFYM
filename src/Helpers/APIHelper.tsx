@@ -14,7 +14,7 @@ const CallApi = ({ url, method }:Options, body:{},Id:any,Tokken:any):Promise<Res
     const headers :Record<string, string> = {
         "Content-Type": "application/json",
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         try {
             if (Tokken) {
                 headers.Authorization=Tokken;

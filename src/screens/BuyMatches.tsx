@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Container, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import AdminSignature from "../assets/images/adminSignature.svg";
@@ -9,9 +8,6 @@ import matchicon1 from "../assets/icons/matchicon1.svg";
 import matchicon2 from "../assets/icons/matchicon2.png";
 import matchicon3 from "../assets/icons/matchicon3.png";
 import HeaderApp from "../components/header/AppHeader";
-import Button from "../components/buttonSm";
-import RangeSlider from "../components/RangeSlider";
-import AgeRace from "../components/race";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
@@ -20,7 +16,6 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -62,7 +57,6 @@ const useStyles = makeStyles(() => {
 });
 function Race() {
   const classes = useStyles();
-  const navigate = useNavigate();
   const [subscriptions, setsubscriptions] = useState<any>([]);
   const [Token, setToken] = useState("");
   const [paymentButton, setpaymentButton] = useState(false);
@@ -128,6 +122,8 @@ function Race() {
   const CLIENT_ID =
     "AYoh8drAroRtRyeLuk8M8Wsp0rqFgdHehZsmpnWYPn19VifykjiZ8nt9Qs8rY3W5NdJ0AZqBcmELdzX9";
   const createOrder = (data: any, actions: any) => {
+    console.log(data);
+    
     return actions.order
       .create({
         purchase_units: [

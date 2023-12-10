@@ -23,7 +23,6 @@ import profileScreen2 from "./screens/Profile/profileScreen2.tsx";
 import profileScreen3 from "./screens/Profile/profileScreen3.tsx";
 import profileScreen4 from "./screens/Profile/profileScreen4.tsx";
 import profileScreen5 from "./screens/Profile/profileScreen5.tsx";
-import Generalinfo from "./screens/IdealPersonality/generalinfo.tsx";
 import ProfileGeneralinfo from "./screens/Profile/generalinfo.tsx";
 import ChangePassword from "./screens/changePassword.tsx";
 import Media from "./screens/media.tsx";

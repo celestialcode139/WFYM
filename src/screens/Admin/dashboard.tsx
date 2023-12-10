@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
@@ -20,7 +19,6 @@ const options = {
 };
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -111,8 +109,6 @@ const useStyles = makeStyles(() => {
 });
 function Dashboard() {
   const classes = useStyles();
-  const [matchMessage, setmatchMessage] = useState("match");
-  const [matches, setmatches] = useState<any[]>([]);
   const data = [
     [
       "Joe James",

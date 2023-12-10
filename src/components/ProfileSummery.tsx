@@ -1,15 +1,10 @@
-import { Box, Typography, Container, Link, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Typography, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import dislike from "../assets/images/dislike.svg";
-import like from "../assets/images/like.svg";
 import DoubleTic from "../assets/icons/doubleTic.svg";
-import image from "../assets/icons/image.png";
 import { useEffect } from "react";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
 
   return {
     quickProfileContainer: {
@@ -84,7 +79,7 @@ function ProfileSummery(props: any) {
           {props.data?.result_user_id?.user_details?.hobbies?.map(
             (hoby: any, i: number) => {
               return hoby?.Title ? (
-                <Box className={`${classes.badge} v-center`}>
+                <Box className={`${classes.badge} v-center`} key={i}>
                   <Box component="img" src={DoubleTic}></Box> {hoby?.Title}
                 </Box>
               ) : null;

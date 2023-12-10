@@ -7,7 +7,7 @@ function valuetext(value: any) {
   return `${value}°C`;
 }
 
-const CustomRangeSlider = styled(Slider)(({ theme }) => ({
+const CustomRangeSlider = styled(Slider)(() => ({
   color: "#065BCE",
   width: "100%",
   "& .css-eg0mwd-MuiSlider-thumb":{

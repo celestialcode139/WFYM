@@ -13,7 +13,7 @@ const CallApi = ({ url, method }:Options, body:{}):Promise<Response> => {
     const headers = {
         "Content-Type": "application/json",
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         try {
             console.log("API url :", url,
                 "\n Method :", method,
