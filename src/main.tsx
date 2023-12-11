@@ -32,10 +32,11 @@ import BuyMatches from "./screens/BuyMatches.tsx";
 import Paypal from "./screens/paypal.tsx";
 import Chat from "./screens/chat.tsx";
 import VideoCall from "./screens/videoCall.tsx";
+import PrivateRoute from "./components/PrivateRoute.tsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { transitions, positions, Provider as AlertProvider } from 'react-alert'
-import AlertTemplate from 'react-alert-template-basic'
+import { transitions, positions, Provider as AlertProvider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
 
 import "./index.css";
 
@@ -43,11 +44,10 @@ const options = {
   // you can also just use 'bottom center'
   position: positions.TOP_RIGHT,
   timeout: 5000,
-  offset: '30px',
+  offset: "30px",
   // you can also just use 'scale'
   transition: transitions.SCALE,
-  
-}
+};
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -65,11 +65,13 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/otpresetpassword" Component={OTPResetPass} />
           <Route path="/interests" Component={Interests} />
           <Route path="/SetNewPassword" Component={SetNewPass} />
-          <Route path="/dashboard" Component={Dashboard} />
-          <Route path="buy-matches" Component={BuyMatches} />
-          <Route path="paypal" Component={Paypal} />
-          <Route path="chat/:myId/:matchId" Component={Chat} />
-          <Route path="video-call/:myId/:matchId" Component={VideoCall} />
+          <Route path="/" Component={PrivateRoute}>
+            <Route path="/dashboard" Component={Dashboard} />
+            <Route path="buy-matches" Component={BuyMatches} />
+            <Route path="paypal" Component={Paypal} />
+            <Route path="chat/:myId/:matchId" Component={Chat} />
+            <Route path="video-call/:myId/:matchId" Component={VideoCall} />
+          </Route>
         </Routes>
         <Routes>
           <Route path="/ideal-personality">

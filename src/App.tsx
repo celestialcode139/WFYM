@@ -3,15 +3,15 @@ import Header from "./components/header/header";
 import Footer from "./components/header/footer";
 import HeroSection from "./components/heroSection";
 import "./App.css";
-function App() {
 
+function App() {
   return (
     <Box className={`landingPage`}>
-      <Header/>
-        <HeroSection/>
-      <Footer/>
+      <Header />
+      <HeroSection />
+      <Footer />
     </Box>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -11,6 +11,9 @@ import { useNavigate } from "react-router-dom";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
+import { ToastContainer } from "react-toastify";
+import Alert from "../../Helpers/Alert";
+
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -131,7 +134,7 @@ function profileScreen5() {
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
         if (result.status == "success") {
-          GeneralHelper.ShowToast(String("Profile Updated"));
+          Alert.notify("Profile Updated");
         } else {
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));
@@ -179,6 +182,7 @@ function profileScreen5() {
           <Button className={`${classes.cancelBtn}`}>Cancel</Button>
         </Grid>
       </Grid>
+      <ToastContainer/>
     </>
   );
 }

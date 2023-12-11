@@ -48,6 +48,7 @@ function Race() {
   const navigate = useNavigate();
   const [Race, setRace] = useState<string>("");
   const [Token, setToken] = useState("");
+  const [races, setraces] = useState([]);
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -56,44 +57,65 @@ function Race() {
     }
   };
   const GetProfile = (Token: string) => {
-    APIHelper.CallApi(config.Endpoints.user.GetIdealPersonality, {}, null, Token).then(
-      (result: any) => {
-        if (result.status == "success") {
-          console.log(result.data);
-          setRace(result?.data?.race);
-        } else {
-          console.log(result.message);
-          GeneralHelper.ShowToast(String(result.message));
-        }
+    APIHelper.CallApi(
+      config.Endpoints.user.GetIdealPersonality,
+      {},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log(result.data);
+        setRace(result?.data?.race);
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
       }
-    );
+    });
   };
-  // Updating Profile Details
-
   const UpdateBio = () => {
     const data = {
       race: Race,
     };
     console.log(data);
-    
-    APIHelper.CallApi(config.Endpoints.user.UpdateIdealPersonality, data, null, Token).then(
-      (result) => {
-        if (result.status == "success") {
-          navigate("/ideal-personality/looks");
-        } else {
-          console.log(result.message);
-          GeneralHelper.ShowToast(String(result.message));
-        }
+
+    APIHelper.CallApi(
+      config.Endpoints.user.UpdateIdealPersonality,
+      data,
+      null,
+      Token
+    ).then((result) => {
+      if (result.status == "success") {
+        navigate("/ideal-personality/looks");
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
       }
-    );
+    });
   };
   const handleNext = () => {
     UpdateBio();
+  };
+  const GetRace = () => {
+    APIHelper.CallApi(
+      config.Endpoints.Init.GetMetaDataRace,
+      {},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        // console.log(result.data);
+        setraces(result.data);
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
   };
   // Other functions
   useEffect(() => {
     if (Token != "") {
       GetProfile(Token);
+      GetRace();
     } else {
       featchToken();
     }
@@ -112,8 +134,9 @@ function Race() {
             sx={{ marginTop: { md: "100px", sm: "60px", xs: "30px" } }}
           >
             <AgeRace
+              data={races}
+              key={races}
               race={Race}
-              key={Race}
               onChange={(e: any) => setRace(e)}
             />
             <Button

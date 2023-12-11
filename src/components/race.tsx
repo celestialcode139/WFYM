@@ -3,7 +3,9 @@ import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import AdminSignature from "../assets/images/adminSignature.svg";
-
+import GeneralHelper from "../Helpers/GeneralHelper";
+import APIHelper from "../Helpers/APIHelper";
+import config from "../../config";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -36,10 +38,15 @@ const useStyles = makeStyles(() => {
 });
 function Race(props: any) {
   const classes = useStyles();
+  const [activeInterest, setActiveInterest] = useState("");
 
   useEffect(() => {
-    console.log(props.race);
+    setActiveInterest(props.race);
   }, [props.race]);
+
+  useEffect(() => {
+    console.log(props.data);
+  }, []);
 
   return (
     <Box>
@@ -51,18 +58,18 @@ function Race(props: any) {
           Race
         </Typography>
         <Grid container spacing={2}>
-          {interest.map((val: any, i) => (
+          {props.data?.map((val: any, i: number) => (
             <Grid item key={i}>
               <Typography
                 onClick={() => {
-                  setActiveInterest(val.value);
-                  props.onChange(val.value);
+                  setActiveInterest(val.title);
+                  props.onChange(val.title);
                 }}
                 className={`${classes.badge} ${
-                  activeInterest == val.value ? classes.activeBadge : null
+                  activeInterest == val.title ? classes.activeBadge : null
                 }`}
               >
-                {val.text}
+                {val.value}
               </Typography>
             </Grid>
           ))}

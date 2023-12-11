@@ -56,7 +56,7 @@ function MatchCards(props: any) {
 
   return (
     <Box
-      // onClick={() => navigate(`/dash/view-matchprofile/${props._id}`)}
+      onClick={() => navigate(`/dash/view-matchprofile/${props._id}`)}
       className={`${classes.MatchContainer}`}
       sx={{ backgroundImage: `url(${props.img})` }}
     >

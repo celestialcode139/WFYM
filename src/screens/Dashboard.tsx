@@ -1,36 +1,34 @@
 import { useState, useEffect } from "react";
-import { Box, CircularProgress, Container, Grid, Skeleton, Typography } from "@mui/material";
-import Logo from "../../assets/logo/logo-w.svg";
-import Avatar from "../../assets/images/avatar.png";
-import { useTheme } from "@mui/material/styles";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import AdminSignature from "../assets/images/adminSignature.svg";
-import ProfileDropdown from "../../assets/images/ProfileDropdown.svg";
 import HeaderApp from "../components/header/AppHeader";
 import BorderedBG from "../assets/images/borderedBG.png";
 import matchBlue from "../assets/icons/matchBlue.svg";
 import matchWhite from "../assets/icons/matchWhite.svg";
-import Fav from "../assets/icons/fav.svg";
 import msgBlue from "../assets/icons/msgBlue.svg";
 import msgWhite from "../assets/icons/msgWhite.svg";
 import MatchCards from "../components/matchCards";
-import MatchImg from "../assets/images/matchImg.png";
 import ProfileSummery from "../components/ProfileSummery";
+import Alert from "../Helpers/Alert";
 import Carousel from "../components/Carousel";
-import Button from "../components/button";
 import ButtonSm from "../components/buttonSm";
-import image from "../assets/icons/image.png";
-import image1 from "../assets/icons/image1.png";
-import image2 from "../assets/icons/image2.png";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
 import NoMatches from "../assets/images/no_matches.svg";
+import { ToastContainer } from "react-toastify";
+
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -120,29 +118,8 @@ function Dashboard() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matchHistory, setmatchHistory] = useState([]);
   const [matchFavourite, setmatchFavourite] = useState([]);
-  const [matches, setmatches] = useState<any[]>([
-    {
-      _id: "q3452346263",
-      image: image,
-      name: "Jessica Parker",
-      age: 23,
-      desg: "Proffesional model",
-    },
-    {
-      _id: "5637456",
-      image: image1,
-      name: "Jacqueline",
-      age: 26,
-      desg: "Artist",
-    },
-    {
-      _id: "756857354",
-      image: image2,
-      name: "Sophia",
-      age: 31,
-      desg: "CEO",
-    },
-  ]);
+  const [matches, setmatches] = useState<any[]>([]);
+  const [matchStatus, setmatchStatus] = useState<String>("");
   const [Token, setToken] = useState("");
 
   const featchToken = async () => {
@@ -152,7 +129,7 @@ function Dashboard() {
     }
   };
   const GetLatestMatch = () => {
-    setLoading(true)
+    setLoading(true);
     APIHelper.CallApi(
       config.Endpoints.Match.GetLatestMatch,
       {},
@@ -160,21 +137,41 @@ function Dashboard() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        console.log("Matches:", result.data[0]?.match_result);
-        setmatches(result.data[0]?.match_result);
-        setLoading(false)
+        console.log("Matches:", result.data[0]);
+        setmatches(result.data[0]?.match_result ?? []);
+        setmatchStatus(result.data[0]?.status ?? "");
+        setLoading(false);
       } else {
-        setLoading(false)
+        setLoading(false);
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const RequestMatch = () => {
+    setLoading(true);
+    APIHelper.CallApi(
+      config.Endpoints.Match.RequestMatch,
+      {},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        Alert.notify("Match Requested");
+        console.log("Request Matches:", result.data);
+        // setmatches(result.data[0]?.match_result ?? []);
+        setLoading(false);
+        GetLatestMatch();
+      } else {
+        setLoading(false);
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
       }
     });
   };
   const GetMatchHistory = () => {
-    setLoading(true)
-    let data = {
-      use_auth_user_id: true,
-    };
+    setLoading(true);
+    
     APIHelper.CallApi(
       config.Endpoints.Match.GetMatches,
       {},
@@ -183,18 +180,18 @@ function Dashboard() {
     ).then((result: any) => {
       if (result.status == "success") {
         console.log(result?.data[0]?.match_result);
-        setmatchHistory(result?.data[0]?.match_result);
-        setLoading(false)
+        setmatchHistory(result?.data[0]?.match_result ?? []);
+        setLoading(false);
         // setGender(result?.data?.gender ? result.data.gender : "");
       } else {
-        setLoading(false)
+        setLoading(false);
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
       }
     });
   };
   const GetFavourites = () => {
-    setLoading(true)
+    setLoading(true);
     APIHelper.CallApi(
       config.Endpoints.Match.GetMatches,
       {},
@@ -203,12 +200,12 @@ function Dashboard() {
     ).then((result: any) => {
       if (result.status == "success") {
         console.log(result.data);
-        setmatchFavourite(result?.data[0]?.match_result);
-        setLoading(false)
+        setmatchFavourite(result?.data[0]?.match_result ?? []);
+        setLoading(false);
         // setmatchHistory(result.data[0].match_result);
         // setGender(result?.data?.gender ? result.data.gender : "");
       } else {
-        setLoading(false)
+        setLoading(false);
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
       }
@@ -271,8 +268,9 @@ function Dashboard() {
                 <Grid container spacing={1}>
                   <Grid item xs={6} onClick={() => setmatchMessage("match")}>
                     <Box
-                      className={`${classes.toggleBtn} ${matchMessage == "match" ? classes.activeToggleBtn : null
-                        }`}
+                      className={`${classes.toggleBtn} ${
+                        matchMessage == "match" ? classes.activeToggleBtn : null
+                      }`}
                     >
                       <Box className={`d-flex`}>
                         <Box
@@ -303,8 +301,9 @@ function Dashboard() {
                   </Grid>
                   <Grid item xs={6} onClick={() => setmatchMessage("message")}>
                     <Box
-                      className={`${classes.toggleBtn} ${matchMessage != "match" ? classes.activeToggleBtn : null
-                        }`}
+                      className={`${classes.toggleBtn} ${
+                        matchMessage != "match" ? classes.activeToggleBtn : null
+                      }`}
                     >
                       <Box className={`d-flex`}>
                         <Box
@@ -344,7 +343,7 @@ function Dashboard() {
                   Today
                 </Typography> */}
               </Box>
-              {matches?.length <= 0 ? (
+              {matchHistory?.length <= 0 ? (
                 <Box className="h-center">
                   <Box
                     sx={{ width: "80%" }}
@@ -354,43 +353,43 @@ function Dashboard() {
                 </Box>
               ) : (
                 <Grid container spacing={1} sx={{ marginTop: "1px" }}>
-                  {Loading ?
+                  {Loading ? (
                     <CircularProgress color="inherit" size={20} />
-                    :
-                    matchMessage == "match"
-                      ? matchHistory?.map((history: any, i: number) => (
-                        <Grid item xs={6} key={i}>
-                          <MatchCards
-                            FavDecline={(e: any) => FavDecline(e)}
-                            name={`${history.result_user_id.first_name} ${history.result_user_id.last_name}`}
-                            age={calculateAge(history.result_user_id.dob)}
-                            img={history.result_user_id?.profile_images}
-                            _id={history.result_user_id._id}
-                            request_id={history._id}
-                            is_fav={history?.is_fav}
-                            is_discard={history?.is_discard}
-                          />
-                        </Grid>
-                      ))
-                      : matchFavourite.map((favourite: any, i: number) => (
-                        <Grid item xs={6} key={i}>
-                          <MatchCards
-                            FavDecline={(e: any) => FavDecline(e)}
-                            name={`${favourite.result_user_id.first_name} ${favourite.result_user_id.last_name}`}
-                            age={calculateAge(favourite.result_user_id.dob)}
-                            img={
-                              favourite.result_user_id?.profile_images
-                                ? favourite.result_user_id.profile_images
-                                : "https://i.pravatar.cc/150"
-                            }
-                            _id={favourite.result_user_id._id}
-                            request_id={favourite._id}
-                            is_fav={favourite?.is_fav}
-                            is_discard={favourite?.is_discard}
-                          />
-                        </Grid>
-                      ))
-                  }
+                  ) : matchMessage == "match" ? (
+                    matchHistory?.map((history: any, i: number) => (
+                      <Grid item xs={6} key={i}>
+                        <MatchCards
+                          FavDecline={(e: any) => FavDecline(e)}
+                          name={`${history.result_user_id.first_name} ${history.result_user_id.last_name}`}
+                          age={calculateAge(history.result_user_id.dob)}
+                          img={history.result_user_id?.profile_images}
+                          _id={history.result_user_id._id}
+                          request_id={history._id}
+                          is_fav={history?.is_fav}
+                          is_discard={history?.is_discard}
+                        />
+                      </Grid>
+                    ))
+                  ) : (
+                    matchFavourite.map((favourite: any, i: number) => (
+                      <Grid item xs={6} key={i}>
+                        <MatchCards
+                          FavDecline={(e: any) => FavDecline(e)}
+                          name={`${favourite.result_user_id.first_name} ${favourite.result_user_id.last_name}`}
+                          age={calculateAge(favourite.result_user_id.dob)}
+                          img={
+                            favourite.result_user_id?.profile_images
+                              ? favourite.result_user_id.profile_images
+                              : "https://i.pravatar.cc/150"
+                          }
+                          _id={favourite.result_user_id._id}
+                          request_id={favourite._id}
+                          is_fav={favourite?.is_fav}
+                          is_discard={favourite?.is_discard}
+                        />
+                      </Grid>
+                    ))
+                  )}
                 </Grid>
               )}
             </Box>
@@ -404,17 +403,30 @@ function Dashboard() {
                 className="sticky"
                 sx={{ display: matches?.length > 0 ? "block" : "none" }}
               >
-                <Box>
-                  <Typography
-                    className={`f-22-bold mb-10`}
-                    sx={{ marginTop: "10px" }}
-                  >
-                    Discover
-                  </Typography>
-                  <Typography className={`p-12`}>
-                    {matches?.length} matches found
-                  </Typography>
+                <Box className="space-between v-center">
+                  <Box>
+                    <Typography
+                      className={`f-22-bold mb-10`}
+                      sx={{ marginTop: "10px" }}
+                    >
+                      Discover
+                    </Typography>
+                    <Typography className={`p-12`}>
+                      {matches?.length} matches found
+                    </Typography>
+                  </Box>
+                  <Box>
+                    {matchStatus == "completed" ? (
+                      <ButtonSm
+                        onClick={() => RequestMatch()}
+                        sx={{ maxWidth: "150px", margin: "0 auto!important" }}
+                      >
+                        Request Matches
+                      </ButtonSm>
+                    ) : null}
+                  </Box>
                 </Box>
+
                 <Carousel
                   data={matches}
                   currentIndex={(e: any) => setCurrentIndex(e)}
@@ -426,39 +438,25 @@ function Dashboard() {
               >
                 <Box>
                   <Typography className={`f-35-bold mb-10 pText text-center`}>
-                    Start matching
+                    {matchStatus == ""
+                      ? "Start matching"
+                      : matchStatus == "pending"
+                      ? "Waiting for admin response!"
+                      : ""}
                   </Typography>
+
                   <Typography className={`p-12 text-center`}>
                     Start a conversation now with each other
                   </Typography>
                   <Box sx={{ marginTop: "35px" }}>
-                    <ButtonSm
-                      onClick={() => {
-                        setmatches([
-                          {
-                            image: image,
-                            name: "Jessica Parker",
-                            age: 23,
-                            desg: "Proffesional model",
-                          },
-                          {
-                            image: image1,
-                            name: "Jacqueline",
-                            age: 26,
-                            desg: "Artist",
-                          },
-                          {
-                            image: image2,
-                            name: "Sophia",
-                            age: 31,
-                            desg: "CEO",
-                          },
-                        ]);
-                      }}
-                      sx={{ maxWidth: "150px", margin: "0 auto!important" }}
-                    >
-                      Request Matches
-                    </ButtonSm>
+                    {matchStatus == "" ? (
+                      <ButtonSm
+                        onClick={() => RequestMatch()}
+                        sx={{ maxWidth: "150px", margin: "0 auto!important" }}
+                      >
+                        Request Matches
+                      </ButtonSm>
+                    ) : null}
                   </Box>
                 </Box>
               </Box>
@@ -479,6 +477,7 @@ function Dashboard() {
           </Grid>
         </Grid>
       </Container>
+      <ToastContainer />
     </Box>
   );
 }

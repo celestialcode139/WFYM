@@ -11,6 +11,9 @@ import { useNavigate } from "react-router-dom";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
+import { ToastContainer } from "react-toastify";
+import Alert from "../../Helpers/Alert";
+
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -88,7 +91,7 @@ function Generalinfo() {
       Token
     ).then((result) => {
       if (result.status == "success") {
-        GeneralHelper.ShowToast(String("Profile Updated"));
+        Alert.notify("Questioner updated!");
       } else {
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
@@ -144,6 +147,7 @@ function Generalinfo() {
           </Box>
         </Box>
       </Container>
+      <ToastContainer />
     </Box>
   );
 }

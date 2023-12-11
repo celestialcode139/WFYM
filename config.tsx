@@ -58,8 +58,8 @@ const Endpoints = {
     },
   },
   Init: {
-    GetMetaData: {
-      url: `${Base_Url.url}init/get-metadata/`,
+    GetMetaDataRace: {
+      url: `${Base_Url.url}init/get-metadata/race`,
       method: "GET",
     },
   },
@@ -85,6 +85,10 @@ const Endpoints = {
     GetLatestMatch: {
       url: `${Base_Url.url}match/latest-match-request`,
       method: "GET",
+    },
+    RequestMatch: {
+      url: `${Base_Url.url}match/match-request`,
+      method: "POST",
     },
   },
 };

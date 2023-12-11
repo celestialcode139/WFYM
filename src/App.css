@@ -228,10 +228,14 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
   height: 220px;
   border-radius: 7px;
 }
-.prelative{
+.prelative {
   position: relative;
 }
-.pabsolute{
+.pabsolute {
   position: absolute;
   top: 0px;
+}
+.space-between {
+  justify-content: space-between;
+  display: flex;
 }

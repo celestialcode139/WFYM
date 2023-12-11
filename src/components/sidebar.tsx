@@ -1,9 +1,10 @@
-import { Box} from "@mui/material";
+import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import Button from "../components/buttonSm";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 // import $ from "jquery";
 
@@ -42,30 +43,36 @@ function Sidebar() {
       className={`${classes.plr20} ${classes.h100}`}
       sx={{ marginTop: "50px" }}
     >
-      <Button
-        onClick={() => setactiveBtn("settings")}
-        className={`${
-          activeBtn == "settings" ? classes.activeBtn : classes.deactiveBtn
-        }`}
-      >
-        Profile
-      </Button>
-      <Button
-        onClick={() => setactiveBtn("media")}
-        className={`${
-          activeBtn == "media" ? classes.activeBtn : classes.deactiveBtn
-        }`}
-      >
-        Media
-      </Button>
-      <Button
-        onClick={() => setactiveBtn("bio")}
-        className={`${
-          activeBtn == "bio" ? classes.activeBtn : classes.deactiveBtn
-        }`}
-      >
-        Bio
-      </Button>
+      <Link to={{ pathname: "/profile/page-1" }}>
+        <Button
+          onClick={() => setactiveBtn("settings")}
+          className={`${
+            activeBtn == "settings" ? classes.activeBtn : classes.deactiveBtn
+          }`}
+        >
+          Profile
+        </Button>
+      </Link>
+      <Link to={{ pathname: "/ideal-personality/race" }}>
+        <Button
+          onClick={() => setactiveBtn("bio")}
+          className={`${
+            activeBtn == "bio" ? classes.activeBtn : classes.deactiveBtn
+          }`}
+        >
+          Ideal Personality
+        </Button>
+      </Link>
+      <Link to={{ pathname: "/profile/media" }}>
+        <Button
+          onClick={() => setactiveBtn("media")}
+          className={`${
+            activeBtn == "media" ? classes.activeBtn : classes.deactiveBtn
+          }`}
+        >
+          Media
+        </Button>
+      </Link>
     </Box>
   );
 }

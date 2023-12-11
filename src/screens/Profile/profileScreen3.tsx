@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
@@ -77,8 +77,9 @@ const useStyles = makeStyles(() => {
   };
 });
 function profileScreen2() {
+  const [races, setraces] = useState([]);
   const [activeInterest, setActiveInterest] = useState("");
-  
+
   const [Token, setToken] = useState("");
 
   const classes = useStyles();
@@ -94,14 +95,34 @@ function profileScreen2() {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       (result: any) => {
         if (result.status == "success") {
-          console.log(result.data);
-          setActiveInterest(result?.data?.user_details?.race ? result.data.user_details.race : "");
+          // console.log(result.data);
+          setActiveInterest(
+            result?.data?.user_details?.race
+              ? result.data.user_details.race
+              : ""
+          );
         } else {
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));
         }
       }
     );
+  };
+  const GetRace = () => {
+    APIHelper.CallApi(
+      config.Endpoints.Init.GetMetaDataRace,
+      {},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        // console.log(result.data);
+        setraces(result.data);
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
   };
   // Updating Profile Details
 
@@ -127,17 +148,21 @@ function profileScreen2() {
   useEffect(() => {
     if (Token != "") {
       GetProfile(Token);
+      GetRace();
     } else {
       featchToken();
     }
   }, [Token]);
+
+
 
   return (
     <>
       <Box className={`h-center`}>
         <Box className={`${classes.pageContainer}`}>
           <AgeRace
-            key={activeInterest}
+            data={races}
+            key={races}
             race={activeInterest}
             onChange={(data: any) => setActiveInterest(data)}
           />
@@ -145,7 +170,7 @@ function profileScreen2() {
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button onClick={()=>handleNext()}>Save Changes</Button>
+          <Button onClick={() => handleNext()}>Save Changes</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
           <Button className={`${classes.cancelBtn}`}>Cancel</Button>
