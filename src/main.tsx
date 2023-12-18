@@ -41,6 +41,7 @@ import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
 import "./index.css";
+import AllUsers from "./screens/Admin/AllUsers.tsx";
 
 const options = {
   // you can also just use 'bottom center'
@@ -102,6 +103,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/admin" Component={AdminLayout}>
             <Route path="dashboard" Component={Admin_Dashboard} />
             <Route path="match-requests" Component={MatchRequests} />
+            <Route path="all-users" Component={AllUsers} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -15,6 +15,8 @@ import Team from "../../assets/icons/team.png";
 import Role from "../../assets/icons/role.png";
 import Logout from "../../assets/icons/logout.png";
 import Subscription from "../../assets/icons/subscription.png";
+import { useNavigate } from "react-router-dom";
+
 
 const useStyles = makeStyles(() => {
   return {
@@ -28,8 +30,22 @@ const useStyles = makeStyles(() => {
   };
 });
 export default function Sidebar(props: any) {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [active, setactive] = useState(props.route);
+
+  const handleSelectingPage = (e:number) => {
+    console.log(e);
+    setactive(e)
+    if (e == 0) {
+      navigate("/admin/dashboard")
+    }else if (e == 1) {
+      navigate("/admin/all-users")
+    }else if (e == 2) {
+      navigate("/admin/match-requests")
+    }
+    
+  } 
 
   return (
     <Box sx={{ width: "100%", maxWidth: 360 }}>
@@ -37,8 +53,10 @@ export default function Sidebar(props: any) {
         <List>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => setactive(0)}
-              selected={active === "/admin/dashboard"}
+              
+              onClick={() => handleSelectingPage(0)}
+              // onClick={() => setactive(0)}
+              selected={active === 0}
             >
               <Box
                 className={`${classes.icon}`}
@@ -50,8 +68,9 @@ export default function Sidebar(props: any) {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => setactive(1)}
-              selected={active === "/admin/users"}
+              onClick={() => handleSelectingPage(1)}
+              // onClick={() => setactive(1)}
+              selected={active === 1}
             >
               <ListItemIcon>
                 <Box
@@ -65,8 +84,9 @@ export default function Sidebar(props: any) {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => setactive(2)}
-              selected={active === "/admin/match-requests"}
+              onClick={() => handleSelectingPage(2)}
+              // onClick={() => setactive(2)}
+              selected={active === 2}
             >
               <ListItemIcon>
                 <Box
@@ -78,10 +98,10 @@ export default function Sidebar(props: any) {
               <ListItemText primary="Match Requests" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton
-              onClick={() => setactive(3)}
-              selected={active === "/admin/team"}
+              onClick={() => handleSelectingPage(3)}
+              selected={active === 3}
             >
               <ListItemIcon>
                 <Box
@@ -95,8 +115,8 @@ export default function Sidebar(props: any) {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => setactive(4)}
-              selected={active === "/admin/roles"}
+              onClick={() => handleSelectingPage(4)}
+              selected={active === 4}
             >
               <ListItemIcon>
                 <Box
@@ -107,7 +127,7 @@ export default function Sidebar(props: any) {
               </ListItemIcon>
               <ListItemText primary="Role" />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
       </nav>
       <Divider />
@@ -115,7 +135,7 @@ export default function Sidebar(props: any) {
         <List>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => setactive(5)}
+              onClick={() => handleSelectingPage(5)}
               selected={active === 5}
             >
               <ListItemIcon>

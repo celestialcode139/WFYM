@@ -1,18 +1,19 @@
 import { useState, useEffect, useMemo } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Switch } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
 import BorderedBG from "../../assets/images/borderedBG.png";
+import ViewProfileIcon from "../../assets/icons/ViewIcon.png";
 import MUIDataTable from "mui-datatables";
-import Avatar from "../../assets/icons/image1.png";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-import ViewProfileIcon from "../../assets/icons/ViewIcon.png";
+import { useNavigate } from "react-router-dom";
 
 
-const columns = ["Name", "Image", "Email", "Gender", "Subscription", "Matches Left", "Action"];
+
+const columns = ["Name", "Image", "Email", "Gender", "Status", "Action"];
 
 const options = {
   filterType: "checkbox",
@@ -119,24 +120,11 @@ const useStyles = makeStyles(() => {
       justifyContent: "center",
       alignItems: "center",
       display: "flex"
-    },
-    SubscriptionBadge: {
-      border: "1px solid #065BCE",
-      width: 100,
-      height: 25,
-      justifyContent: "center",
-      alignItems: "center",
-      display: "flex",
-      borderRadius:20
-    },
-    SubscriptionText: {
-      fontSize: 15,
-      fontWeight: "400",
-      color: "#065BCE"
     }
   };
 });
-function MatchRequests() {
+function AllUsers() {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [Token, setToken] = useState("");
   const [Loading, setLoading] = useState(false);
@@ -151,15 +139,14 @@ function MatchRequests() {
   const GetAllMatches = () => {
     setLoading(true);
     APIHelper.CallApi(
-      config.Endpoints.Match.GetMatches,
+      config.Endpoints.user.GetAllUsers,
       {},
-      "?use_auth_user_id=true&is_discard=false",
+      null,
       Token
     ).then((result: any) => {
       if (result.status == "success") {
         console.log("Matches:", result.data);
         setmatches(result.data);
-
         // setmatchStatus(result.data[0]?.status ?? "");
         setLoading(false);
       } else {
@@ -171,6 +158,7 @@ function MatchRequests() {
   };
   const handleViewProfile = (e: number) => {
     navigate(`/dash/view-matchprofile/${e}`)
+
   }
 
   useEffect(() => {
@@ -185,35 +173,28 @@ function MatchRequests() {
     return matches.map((val) => {
       return [
         <Box className={`${classes.Parent}`}>
-          {"Joe James"}
+          {`${val?.first_name} ${val?.last_name}`}
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box
             className={`${classes.avatarImage}`}
             component="img"
-            src={Avatar}
+            src={`${val?.profile_images}`}
           ></Box>
         </Box>,
         <Box className={`${classes.Parent}`}>
-          {"joe.james@gmail.com"}
+          {val?.email}
         </Box>,
         <Box className={`${classes.Parent}`}>
-          {"Male"}
+          {val?.gender.charAt(0).toUpperCase() + val?.gender.slice(1)}
         </Box>,
         <Box className={`${classes.Parent}`}>
-          <Box className={`${classes.SubscriptionBadge}`}>
-            <Typography className={`${classes.SubscriptionText}`}>
-              Silver
-            </Typography>
-          </Box>
-        </Box>,
-        <Box className={`${classes.Parent}`}>
-          {"3"}
+          <Switch defaultChecked={val?.status == "active" ? true : false} />
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box
             className={`${classes.ViewIcon}`}
-            onClick={() => { handleViewProfile(val?.user_id?._id) }}
+            onClick={() => { handleViewProfile(val?._id) }}
           >
             <img src={ViewProfileIcon} style={{ width: 20, height: 20, objectFit: "cover" }} />
           </Box>
@@ -228,7 +209,7 @@ function MatchRequests() {
   return (
     <>
       <MUIDataTable
-        title={"Match Requests"}
+        title={"Users"}
         data={tableData}
         columns={columns}
         options={{
@@ -239,4 +220,4 @@ function MatchRequests() {
   );
 }
 
-export default MatchRequests;
+export default AllUsers;

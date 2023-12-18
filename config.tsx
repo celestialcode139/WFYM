@@ -36,6 +36,10 @@ const Endpoints = {
       url: `${Base_Url.url}user/get-my-profile/`,
       method: "GET",
     },
+    GetAllUsers:{
+      url: `${Base_Url.url}user/get-all-users`,
+      method: "GET",
+    },
     GetIdealPersonality: {
       url: `${Base_Url.url}user/get-ideal-person`,
       method: "GET",
