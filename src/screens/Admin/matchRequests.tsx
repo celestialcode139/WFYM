@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
-import { Box, Container, Grid } from "@mui/material";
+import { useState, useEffect ,useMemo} from "react";
+import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
-import HeaderApp from "../../components/header/AppHeader";
 import BorderedBG from "../../assets/images/borderedBG.png";
-import Sidebar from "./sidebar";
 import MUIDataTable from "mui-datatables";
 import Button from "../../components/buttonSm";
 import Avatar from "../../assets/icons/image1.png";
-
-// import $ from "jquery";
+import GeneralHelper from "../../Helpers/GeneralHelper";
+import APIHelper from "../../Helpers/APIHelper";
+import config from "../../../config";
+import NoMatches from "../assets/images/no_matches.svg";
+import { ToastContainer } from "react-toastify";
 
 const columns = ["Name", "Image", "Email", "Gender", "Action"];
 
@@ -109,6 +110,65 @@ const useStyles = makeStyles(() => {
 });
 function Dashboard() {
   const classes = useStyles();
+  const [Token, setToken] = useState("");
+  const [Loading, setLoading] = useState(false);
+  const [matches, setmatches] = useState([]);
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+    }
+  };
+  const GetAllMatches = () => {
+    setLoading(true);
+    APIHelper.CallApi(
+      config.Endpoints.Match.GetMatches,
+      {},
+      "?use_auth_user_id=true&is_discard=false",
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log("Matches:", result.data);
+        setmatches(result.data);
+
+        // setmatchStatus(result.data[0]?.status ?? "");
+        setLoading(false);
+      } else {
+        setLoading(false);
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (Token != "") {
+      GetAllMatches();
+    } else {
+      featchToken();
+    }
+  }, [Token]);
+
+  const tableData = useMemo(()=>{
+    return matches.map((val)=>{
+      return [
+        "Joe James",
+        <Box
+          className={`${classes.avatarImage}`}
+          component="img"
+          src={Avatar}
+        ></Box>,
+        "joe.james@gmail.com",
+        "Male",
+        <Box>
+          <Button>Active</Button>
+        </Box>,
+      ]
+    })
+
+
+  },[matches])
 
   const data = [
     [
@@ -127,12 +187,14 @@ function Dashboard() {
   ];
   return (
     <>
-      {/* <MUIDataTable
-        title={"Users"}
-        data={data}
+      <MUIDataTable
+        title={"Match Requests"}
+        data={tableData}
         columns={columns}
-        options={options}
-      /> */}
+        options={{
+          filterType:"checkbox"
+        }}
+      />
     </>
   );
 }

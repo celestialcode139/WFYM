@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Box, Container, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
@@ -9,6 +9,8 @@ import Sidebar from "./sidebar";
 import MUIDataTable from "mui-datatables";
 import Button from "../../components/buttonSm";
 import Avatar from "../../assets/icons/image1.png";
+import { Outlet } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 // import $ from "jquery";
 
@@ -109,6 +111,8 @@ const useStyles = makeStyles(() => {
 });
 function Dashboard() {
   const classes = useStyles();
+  const location = useLocation();
+  const { pathname } = location;
 
   const data = [
     [
@@ -126,14 +130,35 @@ function Dashboard() {
     ],
   ];
   return (
-    <>
-      {/* <MUIDataTable
-        title={"Users"}
-        data={data}
-        columns={columns}
-        options={options}
-      /> */}
-    </>
+    <Box className={`${classes.appheader}`}>
+      <Container maxWidth="xl">
+        <HeaderApp sx={{ position: "relative", top: "15px" }} />
+        <Grid container sx={{ marginTop: "20px" }} spacing={2}>
+          <Grid
+            item
+            xs={12}
+            md={3}
+            lg={2.5}
+            sx={{ display: { xs: "none", md: "block" } }}
+          >
+            <Box
+              className={`blurBg h100 ${classes.BorderedBG}`}
+              sx={{ minHeight: "400px" }}
+            >
+              <Sidebar route={pathname} />
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={9} lg={9.5}>
+            <Box
+              className={`blurBg h100 ${classes.BorderedBG}`}
+              sx={{ minHeight: "400px" }}
+            >
+              <Outlet />
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 }
 

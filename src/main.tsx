@@ -28,6 +28,8 @@ import ChangePassword from "./screens/changePassword.tsx";
 import Media from "./screens/media.tsx";
 
 import Admin_Dashboard from "./screens/Admin/dashboard.tsx";
+import MatchRequests from "./screens/Admin/matchRequests.tsx";
+import AdminLayout from "./screens/Admin/layout.tsx";
 import BuyMatches from "./screens/BuyMatches.tsx";
 import Paypal from "./screens/paypal.tsx";
 import Chat from "./screens/chat.tsx";
@@ -97,7 +99,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           </Route>
         </Routes>
         <Routes>
-          <Route path="admin-dashboard" Component={Admin_Dashboard} />
+          <Route path="/admin" Component={AdminLayout}>
+            <Route path="dashboard" Component={Admin_Dashboard} />
+            <Route path="match-requests" Component={MatchRequests} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AlertProvider>

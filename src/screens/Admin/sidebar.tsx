@@ -27,16 +27,19 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-export default function Sidebar() {
+export default function Sidebar(props: any) {
   const classes = useStyles();
-  const [active, setactive] = useState(0)
+  const [active, setactive] = useState(props.route);
 
   return (
     <Box sx={{ width: "100%", maxWidth: 360 }}>
       <nav aria-label="main mailbox folders">
         <List>
           <ListItem disablePadding>
-            <ListItemButton onClick={()=>setactive(0)} selected={active===0}>
+            <ListItemButton
+              onClick={() => setactive(0)}
+              selected={active === "/admin/dashboard"}
+            >
               <Box
                 className={`${classes.icon}`}
                 component="img"
@@ -46,7 +49,10 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={()=>setactive(1)} selected={active===1}>
+            <ListItemButton
+              onClick={() => setactive(1)}
+              selected={active === "/admin/users"}
+            >
               <ListItemIcon>
                 <Box
                   className={`${classes.icon}`}
@@ -58,7 +64,10 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={()=>setactive(2)} selected={active===2}>
+            <ListItemButton
+              onClick={() => setactive(2)}
+              selected={active === "/admin/match-requests"}
+            >
               <ListItemIcon>
                 <Box
                   className={`${classes.icon}`}
@@ -70,7 +79,10 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={()=>setactive(3)} selected={active===3}>
+            <ListItemButton
+              onClick={() => setactive(3)}
+              selected={active === "/admin/team"}
+            >
               <ListItemIcon>
                 <Box
                   className={`${classes.icon}`}
@@ -82,7 +94,10 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={()=>setactive(4)} selected={active===4}>
+            <ListItemButton
+              onClick={() => setactive(4)}
+              selected={active === "/admin/roles"}
+            >
               <ListItemIcon>
                 <Box
                   className={`${classes.icon}`}
@@ -99,7 +114,10 @@ export default function Sidebar() {
       <nav>
         <List>
           <ListItem disablePadding>
-            <ListItemButton onClick={()=>setactive(5)} selected={active===5}>
+            <ListItemButton
+              onClick={() => setactive(5)}
+              selected={active === 5}
+            >
               <ListItemIcon>
                 <Box
                   className={`${classes.icon}`}
@@ -111,7 +129,10 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={()=>setactive(6)} selected={active===6}>
+            <ListItemButton
+              onClick={() => setactive(6)}
+              selected={active === 6}
+            >
               <ListItemIcon>
                 <Box
                   className={`${classes.icon}`}
