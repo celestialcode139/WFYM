@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -15,7 +14,8 @@ import Team from "../../assets/icons/team.png";
 import Role from "../../assets/icons/role.png";
 import Logout from "../../assets/icons/logout.png";
 import Subscription from "../../assets/icons/subscription.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
 
 
 const useStyles = makeStyles(() => {
@@ -30,22 +30,40 @@ const useStyles = makeStyles(() => {
   };
 });
 export default function Sidebar(props: any) {
+  const location = useLocation();
   const navigate = useNavigate();
   const classes = useStyles();
   const [active, setactive] = useState(props.route);
 
-  const handleSelectingPage = (e:number) => {
-    console.log(e);
+  const handleSelectingPage = (e: number) => {
     setactive(e)
     if (e == 0) {
       navigate("/admin/dashboard")
-    }else if (e == 1) {
+    } else if (e == 1) {
       navigate("/admin/all-users")
-    }else if (e == 2) {
+    } else if (e == 2) {
       navigate("/admin/match-requests")
+    } else if (e == 3) {
+      navigate("/admin/team")
+    }
+
+  }
+
+  useEffect(() => {
+    const { pathname} = location;
+    if (String(pathname).includes("admin/dashboard")) {
+      handleSelectingPage(0)
+    }else if(String(pathname).includes("admin/all-users")){
+      handleSelectingPage(1)
+    }else if(String(pathname).includes("admin/match-requests")){
+      handleSelectingPage(2)
+    }else if(String(pathname).includes("admin/team")){
+      handleSelectingPage(3)
     }
     
-  } 
+    
+  }, [])
+  
 
   return (
     <Box sx={{ width: "100%", maxWidth: 360 }}>
@@ -53,7 +71,7 @@ export default function Sidebar(props: any) {
         <List>
           <ListItem disablePadding>
             <ListItemButton
-              
+
               onClick={() => handleSelectingPage(0)}
               // onClick={() => setactive(0)}
               selected={active === 0}
@@ -98,7 +116,7 @@ export default function Sidebar(props: any) {
               <ListItemText primary="Match Requests" />
             </ListItemButton>
           </ListItem>
-          {/* <ListItem disablePadding>
+          <ListItem disablePadding>
             <ListItemButton
               onClick={() => handleSelectingPage(3)}
               selected={active === 3}
@@ -113,7 +131,7 @@ export default function Sidebar(props: any) {
               <ListItemText primary="Team" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton
               onClick={() => handleSelectingPage(4)}
               selected={active === 4}

@@ -10,10 +10,9 @@ import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 import ViewProfileIcon from "../../assets/icons/ViewIcon.png";
-import AssignMatchDiloag from "./AssignMatchDiloag";
 
 
-const columns = ["Name", "Image", "Email", "Gender", "Subscription", "Matches Left", "Action"];
+const columns = ["Name", "Image", "Email", "Gender", "Role", "Action"];
 
 const options = {
   filterType: "checkbox",
@@ -128,7 +127,7 @@ const useStyles = makeStyles(() => {
       justifyContent: "center",
       alignItems: "center",
       display: "flex",
-      borderRadius: 20
+      borderRadius:20
     },
     SubscriptionText: {
       fontSize: 15,
@@ -137,11 +136,9 @@ const useStyles = makeStyles(() => {
     }
   };
 });
-function MatchRequests() {
+function TeamMembers() {
   const classes = useStyles();
   const [Token, setToken] = useState("");
-  const [DiloagOpen, setDiloagOpen] = useState(false);
-  const [UserId, setUserId] = useState("");
   const [Loading, setLoading] = useState(false);
   const [matches, setmatches] = useState([]);
 
@@ -154,9 +151,9 @@ function MatchRequests() {
   const GetAllMatches = () => {
     setLoading(true);
     APIHelper.CallApi(
-      config.Endpoints.Match.GetAllMatches,
+      config.Endpoints.Match.GetMatches,
       {},
-      null,
+      "?use_auth_user_id=true&is_discard=false",
       Token
     ).then((result: any) => {
       if (result.status == "success") {
@@ -175,12 +172,6 @@ function MatchRequests() {
   const handleViewProfile = (e: number) => {
     navigate(`/dash/view-matchprofile/${e}`)
   }
-  const handleOpenDiloag = () => {
-    setDiloagOpen(true)
-  }
-  const handleCloseDiloag = () => {
-    setDiloagOpen(false)
-  }
 
   useEffect(() => {
     if (Token != "") {
@@ -190,51 +181,32 @@ function MatchRequests() {
     }
   }, [Token]);
 
-  useEffect(() => {
-    if (matches.length != 0) {
-      const pendingRecord = matches.find(record => record.status === 'pending');
-      console.log("PendingRecord ",pendingRecord)
-      console.log("All Records ",matches.length)
-      
-      const firstNameOfPending = pendingRecord ? pendingRecord.user_id.first_name : null;
-
-      console.log("First Name Of Pending ",firstNameOfPending);
-    }
-  }, [matches]);
-
   const tableData = useMemo(() => {
     return matches.map((val) => {
       return [
         <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.first_name} ${val?.user_id?.last_name}`}
+          {"Joe James"}
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box
             className={`${classes.avatarImage}`}
             component="img"
-            src={`${val?.user_id?.profile_images}`}
+            src={Avatar}
           ></Box>
         </Box>,
         <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.email}`}
+          {"joe.james@gmail.com"}
         </Box>,
         <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.gender.charAt(0).toUpperCase() + val?.user_id?.gender.slice(1)}`}
+          {"Male"}
         </Box>,
         <Box className={`${classes.Parent}`}>
-          <Box className={`${classes.SubscriptionBadge}`}>
-            <Typography className={`${classes.SubscriptionText}`}>
-              {`${val?.user_id?.user_subscriptions?.subscription_id?.title == undefined ? "Don't have" : val?.user_id?.user_subscriptions?.subscription_id?.title}`}
-            </Typography>
-          </Box>
-        </Box>,
-        <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.user_subscriptions?.remaining_matches == undefined ? 0 : val?.user_id?.user_subscriptions?.remaining_matches}`}
+          {"Admin"}
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box
             className={`${classes.ViewIcon}`}
-            onClick={() => { handleOpenDiloag() }}
+            onClick={() => { handleViewProfile(val?.user_id?._id) }}
           >
             <img src={ViewProfileIcon} style={{ width: 20, height: 20, objectFit: "cover" }} />
           </Box>
@@ -249,16 +221,15 @@ function MatchRequests() {
   return (
     <>
       <MUIDataTable
-        title={"Match Requests"}
+        title={"Team"}
         data={tableData}
         columns={columns}
         options={{
           filterType: "checkbox"
         }}
       />
-      <AssignMatchDiloag handleClose={handleCloseDiloag} open={DiloagOpen} />
     </>
   );
 }
 
-export default MatchRequests;
+export default TeamMembers;

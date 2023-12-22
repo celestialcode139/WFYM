@@ -82,6 +82,10 @@ const Endpoints = {
       url: `${Base_Url.url}match/match-request`,
       method: "GET",
     },
+    GetAllMatches: {
+      url: `${Base_Url.url}match/match-request?use_auth_user_id=false`,
+      method: "GET",
+    },
     FavDecline: {
       url: `${Base_Url.url}match/match-result`,
       method: "PUT",
