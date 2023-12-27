@@ -27,6 +27,9 @@ const useStyles = makeStyles(() => {
       padding: "6px",
       borderRadius: "6px",
     },
+    Text: {
+      color:"black"
+    }
   };
 });
 export default function Sidebar(props: any) {
@@ -45,6 +48,8 @@ export default function Sidebar(props: any) {
       navigate("/admin/match-requests")
     } else if (e == 3) {
       navigate("/admin/team")
+    }else if (e == 5) {
+      navigate("/admin/subscriptions")
     }
 
   }
@@ -57,8 +62,8 @@ export default function Sidebar(props: any) {
       handleSelectingPage(1)
     }else if(String(pathname).includes("admin/match-requests")){
       handleSelectingPage(2)
-    }else if(String(pathname).includes("admin/team")){
-      handleSelectingPage(3)
+    }else if(String(pathname).includes("admin/subscriptions")){
+      handleSelectingPage(5)
     }
     
     
@@ -81,7 +86,7 @@ export default function Sidebar(props: any) {
                 component="img"
                 src={Dashboard}
               ></Box>
-              <ListItemText primary="Dashboard" />
+              <ListItemText className={`${classes.Text}`} primary="Dashboard" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -97,7 +102,7 @@ export default function Sidebar(props: any) {
                   src={Users}
                 ></Box>
               </ListItemIcon>
-              <ListItemText primary="Users" />
+              <ListItemText className={`${classes.Text}`} primary="Users" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -113,10 +118,10 @@ export default function Sidebar(props: any) {
                   src={Match}
                 ></Box>
               </ListItemIcon>
-              <ListItemText primary="Match Requests" />
+              <ListItemText className={`${classes.Text}`} primary="Match Requests" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton
               onClick={() => handleSelectingPage(3)}
               selected={active === 3}
@@ -128,9 +133,9 @@ export default function Sidebar(props: any) {
                   src={Team}
                 ></Box>
               </ListItemIcon>
-              <ListItemText primary="Team" />
+              <ListItemText className={`${classes.Text}`} primary="Team" />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
           {/* <ListItem disablePadding>
             <ListItemButton
               onClick={() => handleSelectingPage(4)}
@@ -143,7 +148,7 @@ export default function Sidebar(props: any) {
                   src={Role}
                 ></Box>
               </ListItemIcon>
-              <ListItemText primary="Role" />
+              <ListItemText className={`${classes.Text}`} primary="Role" />
             </ListItemButton>
           </ListItem> */}
         </List>
@@ -163,7 +168,7 @@ export default function Sidebar(props: any) {
                   src={Subscription}
                 ></Box>
               </ListItemIcon>
-              <ListItemText primary="Subscription" />
+              <ListItemText className={`${classes.Text}`} primary="Subscription" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -178,7 +183,7 @@ export default function Sidebar(props: any) {
                   src={Logout}
                 ></Box>
               </ListItemIcon>
-              <ListItemText primary="Logout" />
+              <ListItemText className={`${classes.Text}`} primary="Logout" />
             </ListItemButton>
           </ListItem>
         </List>

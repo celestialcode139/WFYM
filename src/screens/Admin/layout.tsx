@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect,useState } from "react";
 import { Box, Container, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
@@ -6,11 +6,12 @@ import AdminSignature from "../../assets/images/adminSignature.svg";
 import HeaderApp from "../../components/header/AppHeader";
 import BorderedBG from "../../assets/images/borderedBG.png";
 import Sidebar from "./sidebar";
-import MUIDataTable from "mui-datatables";
-import Button from "../../components/buttonSm";
-import Avatar from "../../assets/icons/image1.png";
 import { Outlet } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
+import AdminSigninForm from "./AdminSigninForm";
+import GeneralHelper from "../../Helpers/GeneralHelper";
+import TeamAppHeader from "../../components/header/TeamAppHeader";
+
 
 // import $ from "jquery";
 
@@ -112,27 +113,38 @@ const useStyles = makeStyles(() => {
 function Dashboard() {
   const classes = useStyles();
   const location = useLocation();
-  const { pathname } = location;
+  const navigate = useNavigate();
 
-  const data = [
-    [
-      "Joe James",
-      <Box
-        className={`${classes.avatarImage}`}
-        component="img"
-        src={Avatar}
-      ></Box>,
-      "joe.james@gmail.com",
-      "Male",
-      <Box>
-        <Button>Active</Button>
-      </Box>,
-    ],
-  ];
+  const { pathname } = location;
+  const [Loading, setLoading] = useState(false);
+  const [LogedIn, setLogedIn] = useState(false);
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1 && result.data != undefined) {
+      setLogedIn(true)
+      setLoading(false)
+      // navigate("/admin/dashboard")
+    }else{
+      navigate("/admin")
+      setLoading(false)
+    }
+  };
+
+  useEffect(() => {
+    console.log("PathName ",pathname);
+    if (pathname == "/admin" || pathname == "/admin/dashboard" || pathname == "/admin/all-users" || pathname == "/admin/match-requests" || pathname == "/admin/match-requests" || pathname == "/admin/subscriptions") {
+      featchToken()
+    }
+  }, [pathname])
+  
+
   return (
+    Loading == false&&
+    LogedIn == true?
     <Box className={`${classes.appheader}`}>
       <Container maxWidth="xl">
-        <HeaderApp sx={{ position: "relative", top: "15px" }} />
+        <TeamAppHeader sx={{ position: "relative", top: "15px" }} />
         <Grid container sx={{ marginTop: "20px" }} spacing={2}>
           <Grid
             item
@@ -159,6 +171,8 @@ function Dashboard() {
         </Grid>
       </Container>
     </Box>
+    :
+    <AdminSigninForm/>
   );
 }
 

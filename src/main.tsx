@@ -43,6 +43,7 @@ import AlertTemplate from "react-alert-template-basic";
 import "./index.css";
 import AllUsers from "./screens/Admin/AllUsers.tsx";
 import TeamMembers from "./screens/Admin/TeamMembers.tsx";
+import Matches from "./screens/Admin/Matches.tsx";
 
 const options = {
   // you can also just use 'bottom center'
@@ -106,6 +107,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="all-users" Component={AllUsers} />
             <Route path="match-requests" Component={MatchRequests} />
             <Route path="team" Component={TeamMembers} />
+            <Route path="subscriptions" Component={Matches} />
           </Route>
         </Routes>
       </BrowserRouter>

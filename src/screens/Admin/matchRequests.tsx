@@ -144,6 +144,7 @@ function MatchRequests() {
   const [UserId, setUserId] = useState("");
   const [Loading, setLoading] = useState(false);
   const [matches, setmatches] = useState([]);
+  const [AllAvailableMatches, setAllAvailableMatches] = useState([]);
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -192,13 +193,19 @@ function MatchRequests() {
 
   useEffect(() => {
     if (matches.length != 0) {
-      const pendingRecord = matches.find(record => record.status === 'pending');
+      const pendingRecord = matches.filter(record => record.status === 'pending')
       console.log("PendingRecord ",pendingRecord)
       console.log("All Records ",matches.length)
       
-      const firstNameOfPending = pendingRecord ? pendingRecord.user_id.first_name : null;
+      
+      const UsersName = pendingRecord.map(item => ({
+        first_name: item?.user_id?.first_name,
+        _id: item?._id,
+        SubscriptionId: item?.user_id?.user_subscriptions,
+    }));
+    setAllAvailableMatches(UsersName)
 
-      console.log("First Name Of Pending ",firstNameOfPending);
+      console.log("Available Matches ",UsersName);
     }
   }, [matches]);
 
@@ -256,7 +263,7 @@ function MatchRequests() {
           filterType: "checkbox"
         }}
       />
-      <AssignMatchDiloag handleClose={handleCloseDiloag} open={DiloagOpen} />
+      <AssignMatchDiloag Matches={AllAvailableMatches} handleClose={handleCloseDiloag} open={DiloagOpen} />
     </>
   );
 }
