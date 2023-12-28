@@ -15,6 +15,7 @@ import Role from "../../assets/icons/role.png";
 import Logout from "../../assets/icons/logout.png";
 import Subscription from "../../assets/icons/subscription.png";
 import { useNavigate, useLocation } from "react-router-dom";
+import GeneralHelper from "../../Helpers/GeneralHelper";
 
 
 
@@ -68,6 +69,13 @@ export default function Sidebar(props: any) {
     
     
   }, [])
+
+  const Signout = () =>{
+    GeneralHelper.ClearData("Token")
+    GeneralHelper.ClearData("UserId")
+    window.location.reload();
+
+  }
   
 
   return (
@@ -173,8 +181,7 @@ export default function Sidebar(props: any) {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => setactive(6)}
-              selected={active === 6}
+              onClick={() => Signout()}
             >
               <ListItemIcon>
                 <Box

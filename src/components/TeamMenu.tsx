@@ -2,17 +2,14 @@ import * as React from "react";
 import { Box } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
-import Paper from "@mui/material/Paper";
 import MenuList from "@mui/material/MenuList";
 import ListItemText from "@mui/material/ListItemText";
-import { Link } from "react-router-dom";
 import GeneralHelper from "../Helpers/GeneralHelper";
-import APIHelper from "../Helpers/APIHelper";
-import config from "../../config";
+import { useNavigate } from "react-router-dom";
 
 export default function TeamMenu(props: any) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -23,6 +20,8 @@ export default function TeamMenu(props: any) {
   const Logout = () =>{
     GeneralHelper.ClearData("Token")
     GeneralHelper.ClearData("UserId")
+    window.location.reload();
+
   }
 
   return (

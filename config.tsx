@@ -76,6 +76,10 @@ const Endpoints = {
       url: `${Base_Url.url}user-subscription/create`,
       method: "POST",
     },
+    Update: {
+      url: `${Base_Url.url}subscription/update`,
+      method: "POST",
+    },
   },
   Match: {
     GetMatches: {

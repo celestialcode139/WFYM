@@ -97,6 +97,8 @@ function AdminSigninForm() {
       if (result.status == "success") {
         console.log("Success", result.data.token);
         GeneralHelper.storeData("Token", result.data.token)
+        console.log("Token ",result.data.token);
+        
         GeneralHelper.storeData("UserId", result.data.user_id)
         setLoading(false)
         navigate("/admin/dashboard")

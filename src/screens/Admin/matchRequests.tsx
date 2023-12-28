@@ -200,7 +200,7 @@ function MatchRequests() {
       
       const UsersName = pendingRecord.map(item => ({
         first_name: item?.user_id?.first_name,
-        _id: item?._id,
+        _id: item?.user_id?._id,
         SubscriptionId: item?.user_id?.user_subscriptions,
     }));
     setAllAvailableMatches(UsersName)

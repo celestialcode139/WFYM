@@ -6,6 +6,7 @@ import Select from "@mui/material/Select";
 import { Box, InputLabel } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import { useEffect } from "react";
+import ViewProfile from "./viewProfile";
 
 export default function AssignMatchDiloag(props: any) {
   const [SelectedMatch, setSelectedMatch] = React.useState("");
@@ -19,22 +20,24 @@ export default function AssignMatchDiloag(props: any) {
     setSelectedMatch(event.target.value);
   };
   useEffect(() => {
+    console.log("Matches ",props.Matches);
+    
     setMatches(props.Matches)
   }, [props])
   
   return (
-    <Dialog onClose={props.handleClose} open={props.open}>
+    <Dialog onClose={props.handleClose} open={props.open}  maxWidth={false} maxHeight={false}>
       <DialogTitle>Assign Match</DialogTitle>
       <Box
         sx={{
-          minWidth: 120,
-          paddingRight: 30,
-          paddingLeft: 30,
-          paddingBottom: 20,
+          // minWidth: window.innerWidth,
+          paddingRight: "30px",
+          paddingLeft: "30px",
+          paddingBottom: "20px",
         }}
       >
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Mathces</InputLabel>
+        <FormControl  style={{width:"200px",marginBottom:"50px"}}>
+          <InputLabel id="demo-simple-select-label">Select Match</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -51,6 +54,10 @@ export default function AssignMatchDiloag(props: any) {
             <MenuItem value={30}>Thirty</MenuItem> */}
           </Select>
         </FormControl>
+        {
+          SelectedMatch != "" &&
+        <ViewProfile Id={SelectedMatch}/>
+        }
       </Box>
     </Dialog>
   );

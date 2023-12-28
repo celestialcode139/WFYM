@@ -45,26 +45,92 @@ const useStyles = makeStyles(() => {
     saveAmount: {
       color: "#ffffff",
     },
+    UpdateInput: {
+      outline: "none",
+      border: "none",
+      fontSize: "35px!important",
+      // marginBottom: "45px!important",
+      color: "#065BCE",
+      backgroundColor: "transparent"
+
+    },
+    UpdateInputSelected: {
+      outline: "none",
+      border: "none",
+      fontSize: "35px!important",
+      // marginBottom: "45px!important",
+      color: "#ffffff",
+      backgroundColor: "transparent"
+
+    },
+    AmountUpdateInput: {
+      outline: "none",
+      border: "none",
+      fontSize: "50px!important",
+      // marginBottom: "45px!important",
+      color: "#065BCE",
+      backgroundColor: "transparent"
+
+    },
+    AmountUpdateInputSelected: {
+      outline: "none",
+      border: "none",
+      fontSize: "50px!important",
+      // marginBottom: "45px!important",
+      color: "#ffffff",
+      backgroundColor: "transparent"
+
+    },
   };
 });
 function Matches() {
   const classes = useStyles();
   const [subscriptions, setsubscriptions] = useState<any>([]);
   const [Token, setToken] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState("40");
+  const [ToUpdate, setToUpdate] = useState("");
+  const [SubscriptionDetails, setSubscriptionDetails] = useState({
+    "id": "",
+    "amount": "",
+    "matches_per_months": ""
+  })
+  const UpdateSubscription = (body: object) => {
+    APIHelper.CallApi(config.Endpoints.Subscription.Update, body, null, Token).then((result: any) => {
+      if (result.status == "success") {
+        console.log("Success", result.data);
+        setSubscriptionDetails(prevDetails => ({
+          ...prevDetails,
+          "id": "",
+          "amount": "",
+          "matches_per_months": ""
+        }))
+        GetSubscription()
 
-  const handleDoubleClick = () => {
-    setIsEditing(true);
+
+      } else {
+        alert.error(String(result.message))
+        console.log(result.message);
+      }
+
+    })
+  }
+
+  const handleDoubleClick = (subscription: object, ToUpdate: string) => {
+    setToUpdate(ToUpdate)
+    setSubscriptionDetails(prevDetails => ({
+      ...prevDetails,
+      "id": subscription._id,
+      "amount": subscription.amount,
+      "matches_per_months": subscription.matches_per_months
+    }))
   };
-
   const handleBlur = () => {
-    setIsEditing(false);
-  };
+    UpdateSubscription(SubscriptionDetails)
 
+  };
   const handleChange = (e) => {
     setText(e.target.value);
   };
+
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -114,42 +180,89 @@ function Matches() {
           return (
             <Grid item md={4} xs={12} key={i}>
               <Box
-                className={`${
-                  i == 1 ? classes.paymentCardSelected : classes.paymentCard
-                }`}
+                className={`${i == 1 ? classes.paymentCardSelected : classes.paymentCard
+                  }`}
               >
                 <Box
                   className={`${classes.paymentIcon}`}
                   component="img"
                   src={matchicon[i]}
                 ></Box>
-                <Typography
-                  className={`${classes.matchNumber}`}
-                  sx={{ color: i == 1 ? "#ffffff" : "#9B9B9B" }}
-                >
-                  {subscription.matches_per_months}
-                  <Typography>matches</Typography>
-                </Typography>
+                {SubscriptionDetails.id == subscription._id && ToUpdate == "Matches" ? (
+                  <div style={{ marginBottom: "20px" }}>
+                    <input
+                      type="number"
+                      className={`${i == 1 ? classes.UpdateInputSelected : classes.UpdateInput}`}
+                      value={SubscriptionDetails.matches_per_months}
+                      onChange={(e) => {
+                        setSubscriptionDetails(prevDetails => ({
+                          ...prevDetails,
+                          "matches_per_months": e.target.value,
+                        }))
+                      }}
+                      name="fname"
+                      onBlur={() => { handleBlur() }}
+                    >
+                    </input>
+                    <Typography style={{ color: i == 1 ? "#ffffff" : "#065BCE" }}>matches</Typography>
+
+                  </div>
+                ) : (
+                  <Typography
+                    className={`${classes.matchNumber}`}
+                    onClick={() => { handleDoubleClick(subscription, "Matches") }}
+                    sx={{ color: i == 1 ? "#ffffff" : "#9B9B9B" }}
+                  >
+                    {subscription.matches_per_months}
+                    <Typography>matches</Typography>
+                  </Typography>
+                )}
                 <Typography
                   className={`${classes.saveAmount}`}
                   sx={{ color: i == 1 ? "#ffffff" : "#9B9B9B" }}
                 ></Typography>
                 <Box>
-                <TextField id="filled-basic" label="Filled" variant="filled" />
-                  {isEditing ? (
-                    <TextField
-                    value={text}
-                    onChange={()=>{}}
-                    InputLabelProps={{ shrink: false }} // Remove the label
-                    InputProps={{ style: {borderBottom: 'none'} }}
-                  />
+                  {SubscriptionDetails.id == subscription._id && ToUpdate == "Amount" ? (
+                    <div style={{ flexDirection: "row", display: "flex" }}>
+                      <Typography
+                        className={`${i == 1 ? classes.AmountUpdateInputSelected : classes.AmountUpdateInput}`}
+                      >
+                        $
+                      </Typography>
+                      <input
+                        type="number"
+                        className={`${i == 1 ? classes.AmountUpdateInputSelected : classes.AmountUpdateInput}`}
+                        value={SubscriptionDetails.amount}
+                        onChange={(e) => {
+                          setSubscriptionDetails(prevDetails => ({
+                            ...prevDetails,
+                            "amount": e.target.value,
+                          }))
+                        }}
+                        name="fname"
+                        onBlur={() => { handleBlur() }}
+                      >
+                      </input>
+                    </div>
+                    // <TextField
+                    //   value={SubscriptionDetails.amount}
+                    //   onChange={(e) => {
+                    //     setSubscriptionDetails(prevDetails => ({
+                    //       ...prevDetails,
+                    //       "amount": e.target.value,
+                    //     }))
+                    //   }}
+                    //   onBlur={() => { handleBlur() }}
+                    //   InputLabelProps={{ shrink: false }} // Remove the label
+                    //   InputProps={{ style: { borderBottom: 'none' } }}
+                    // />
                   ) : (
                     <Typography
                       className={`${classes.subscriptionAmount}`}
                       sx={{ color: i == 1 ? "#ffffff" : "#9B9B9B" }}
-                      onDoubleClick={()=>{handleDoubleClick()}}
+                      onClick={() => { handleDoubleClick(subscription, "Amount") }}
                     >
-                      {text}
+                      ${subscription.amount}
                     </Typography>
                   )}
                 </Box>
