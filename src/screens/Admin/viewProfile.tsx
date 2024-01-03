@@ -102,6 +102,33 @@ function ViewProfile(props: any) {
     featchUserId();
     GetLatestMatch();
   };
+
+  const handleAssignMatch = () =>{
+    const body = {
+      "result_user_id":props.Id,
+      "match_req_id":props.MatchRequestId,
+      "user_subscription_id":props.RequesterSubscriptionId
+    }
+    console.log("Body To Send In Assign Matches ",body);
+
+    APIHelper.CallApi(
+      config.Endpoints.Match.AssignMatches,
+      body,
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log("Assigned Successfully:", result.data);
+        alert("Success!!")
+        
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+    
+  }
+
   useEffect(() => {
     if (Token != "") {
       init();
@@ -178,7 +205,7 @@ function ViewProfile(props: any) {
                 <Box>
                   {User?.user_details?.hobbies.map((hoby: any, i: number) => (
                     <Box className={`${classes.badge} v-center`} key={i}>
-                      <Box component="img"></Box> {hoby.Title}
+                      <Box component="img"></Box> {hoby}
                     </Box>
                   ))}
                 </Box>
@@ -310,6 +337,7 @@ function ViewProfile(props: any) {
       <Box>
         <Box
           className={`${classes.AssignMatchButton}`}
+          onClick={()=>{handleAssignMatch()}}
         >
           <Typography style={{color:"#ffffff",fontSize:"18px"}}>Assign Match</Typography>
         </Box>

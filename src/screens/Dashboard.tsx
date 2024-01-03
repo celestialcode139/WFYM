@@ -17,6 +17,7 @@ import msgBlue from "../assets/icons/msgBlue.svg";
 import msgWhite from "../assets/icons/msgWhite.svg";
 import MatchCards from "../components/matchCards";
 import ProfileSummery from "../components/ProfileSummery";
+import { useNavigate } from "react-router-dom";
 import Alert from "../Helpers/Alert";
 import Carousel from "../components/Carousel";
 import ButtonSm from "../components/buttonSm";
@@ -113,7 +114,9 @@ const useStyles = makeStyles(() => {
 });
 function Dashboard() {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [Loading, setLoading] = useState(false);
+  const [RequestMatchLoading, setRequestMatchLoading] = useState(false);
   const [matchMessage, setmatchMessage] = useState("match");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matchHistory, setmatchHistory] = useState([]);
@@ -148,6 +151,43 @@ function Dashboard() {
       }
     });
   };
+
+  const VerifyAccountCompletion = () => {
+    setRequestMatchLoading(true);
+    APIHelper.CallApi(
+      config.Endpoints.user.GetProfileVerification,
+      {},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log("result ", result.data);
+        if (result.data.isProfileVerified == false) {
+          Alert.notify("Compleate Your Profile First.", 3000);
+          setRequestMatchLoading(false);
+          NavigateTo("/profile/page-1")
+        } else if (result.data.isIdealPersonVerified == false) {
+          Alert.notify("Compleate Your Ideal Personality Profile.", 3000);
+          setRequestMatchLoading(false);
+          NavigateTo("/ideal-personality/general-info")
+        } else if (result.data.isSubscriptionActive == false) {
+          Alert.notify("Please Buy A Subscription First.", 3000);
+          setRequestMatchLoading(false);
+          NavigateTo("/buy-matches")
+        } else {
+          RequestMatch();
+        }
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const NavigateTo = (Route:string) => {
+    setTimeout(() => {
+      navigate(Route)
+    }, 4000);
+  }
   const RequestMatch = () => {
     setLoading(true);
     APIHelper.CallApi(
@@ -157,13 +197,15 @@ function Dashboard() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        Alert.notify("Match Requested");
+        Alert.notify("Match Requested", 3000);
         console.log("Request Matches:", result.data);
         // setmatches(result.data[0]?.match_result ?? []);
         setLoading(false);
+        setRequestMatchLoading(false);
         GetLatestMatch();
       } else {
         setLoading(false);
+        setRequestMatchLoading(false);
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
       }
@@ -171,7 +213,7 @@ function Dashboard() {
   };
   const GetMatchHistory = () => {
     setLoading(true);
-    
+
     APIHelper.CallApi(
       config.Endpoints.Match.GetMatches,
       {},
@@ -407,7 +449,7 @@ function Dashboard() {
                   <Box>
                     <Typography
                       className={`f-22-bold mb-10`}
-                      sx={{ marginTop: "10px" }}
+                      sx={{ marginTop: "10px",color:"#000000" }}
                     >
                       Discover
                     </Typography>
@@ -420,8 +462,8 @@ function Dashboard() {
                       <ButtonSm
                         onClick={() => RequestMatch()}
                         sx={{ maxWidth: "150px", margin: "0 auto!important" }}
-                      >
-                        Request Matches
+                      > 
+                          Request Matches
                       </ButtonSm>
                     ) : null}
                   </Box>
@@ -451,7 +493,10 @@ function Dashboard() {
                   <Box sx={{ marginTop: "35px" }}>
                     {matchStatus == "" ? (
                       <ButtonSm
-                        onClick={() => RequestMatch()}
+                        onClick={() => VerifyAccountCompletion()}
+                        Loading={RequestMatchLoading}
+
+
                         sx={{ maxWidth: "150px", margin: "0 auto!important" }}
                       >
                         Request Matches

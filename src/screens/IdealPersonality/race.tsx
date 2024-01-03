@@ -12,6 +12,9 @@ import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 import { useNavigate } from "react-router-dom";
+import Alert from "../../Helpers/Alert";
+import { ToastContainer } from "react-toastify";
+
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -85,7 +88,10 @@ function Race() {
       Token
     ).then((result) => {
       if (result.status == "success") {
-        navigate("/ideal-personality/looks");
+        Alert.notify("Questioner Updated Successfully!");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 6000);
       } else {
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
@@ -97,19 +103,26 @@ function Race() {
   };
   const GetRace = () => {
     APIHelper.CallApi(
-      config.Endpoints.Init.GetMetaDataRace,
+      config.Endpoints.Init.GetMetaData,
       {},
-      null,
+      "race",
       Token
     ).then((result: any) => {
       if (result.status == "success") {
         // console.log(result.data);
-        setraces(result.data);
+        handleSort(result.data);
       } else {
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
       }
     });
+  };
+  const handleSort = (ArrayToSort: any) => {
+    const sortedArray = [...ArrayToSort].sort((a, b) =>
+      a.value.localeCompare(b.value)
+    );
+    console.log("sortedArray ", sortedArray);
+    setraces(sortedArray);
   };
   // Other functions
   useEffect(() => {
@@ -155,6 +168,7 @@ function Race() {
           </Box> */}
         </Box>
       </Container>
+      <ToastContainer />
     </Box>
   );
 }

@@ -9,6 +9,9 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import GeneralHelper from "../Helpers/GeneralHelper";
+import config from "../../config";
+import APIHelper from "../Helpers/APIHelper";
 
 // import $ from "jquery";
 
@@ -29,6 +32,7 @@ const useStyles = makeStyles(() => {
 });
 function Generalinfo(props: any) {
   const classes = useStyles();
+  const [AllReligion, setAllReligion] = useState([]);
   const [body, setbody] = useState({
     occupation: "",
     religion: "principled",
@@ -43,21 +47,46 @@ function Generalinfo(props: any) {
     highestDegree: "",
   });
 
+  const GetReligion = () => {
+    APIHelper.CallApi(
+      config.Endpoints.Init.GetMetaData,
+      {},
+      "religion",
+      props.Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        handleSort(result.data)
+        console.log("Religions ", result.data);
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const handleSort = (ArrayToSort: any) => {
+    const sortedArray = [...ArrayToSort].sort((a, b) =>
+      a.value.localeCompare(b.value)
+    );
+    console.log("sortedArray ", sortedArray);
+    setAllReligion(sortedArray);
+
+  };
   const religionHandler = (e: any) => {
-    console.log(e.target.value);
     setbody({ ...body, religion: e.target.value });
   };
   useEffect(() => {
     props.onChange(body);
   }, [body]);
+
   useEffect(() => {
+    GetReligion()
     setbody({
       ...body,
       occupation: props.body.occupation,
       religion: props.body.religion,
       political_Party: props.body.political_Party,
       childrens: props.body.childrens,
-      planForChildren: props.body.planForChildren,
+      // planForChildren: props.body.planForChildren,
       smookingHabit: props.body.smookingHabit,
       drinkingHabit: props.body.drinkingHabit,
       dealBracker: props.body.dealBracker,
@@ -66,6 +95,12 @@ function Generalinfo(props: any) {
       highestDegree: props.body.highestDegree,
     });
   }, []);
+
+  useEffect(() => {
+    console.log("Body ",body);
+    
+  }, [body])
+  
 
   return (
     <Box>
@@ -111,11 +146,10 @@ function Generalinfo(props: any) {
                 },
               }}
             >
-              <MenuItem value="Islam">Islam</MenuItem>
-              <MenuItem value="Christianity">Christianity</MenuItem>
-              <MenuItem value="Buddhism">Buddhism</MenuItem>
-              <MenuItem value="Hinduism">Hinduism</MenuItem>
-              <MenuItem value="Judaism">Judaism</MenuItem>
+              {
+                AllReligion.map((item,i)=>(
+                  <MenuItem value={item.value}>{item.value}</MenuItem>
+                ))}
             </TextField>
           </Box>
         </Grid>
@@ -191,15 +225,17 @@ function Generalinfo(props: any) {
           <Box className={`${classes.TextFieldParent}`}>
             <TextField
               fullWidth
+              type="number"
               sx={{
                 "& div": {
                   borderRadius: "15px!important",
                 },
               }}
-              label="Hight"
+              // type="number"
+              label="Hight (ft)"
               value={body.height}
               onChange={(e) => {
-                setbody({ ...body, height: e.target.value });
+                setbody({ ...body, height: (e.target.value) });
               }}
             />
           </Box>
@@ -208,13 +244,15 @@ function Generalinfo(props: any) {
           <Box className={`${classes.TextFieldParent}`}>
             <TextField
               fullWidth
+              type="number"
               sx={{
                 "& div": {
                   borderRadius: "15px!important",
                 },
               }}
-              label="Weight"
+              label="Weight (kg)"
               value={body.weight}
+              
               onChange={(e) => {
                 setbody({ ...body, weight: e.target.value });
               }}
@@ -222,12 +260,13 @@ function Generalinfo(props: any) {
           </Box>
         </Grid>
 
-        <Grid item md={4}>
+        {/* <Grid item md={4}>
           <Box className={`${classes.TextFieldParent}`}>
             <FormControl component="fieldset">
               <FormGroup aria-label="position" row>
                 <FormControlLabel
                   value="start"
+                  style={{color:"#000000"}}
                   control={
                     <Switch
                       checked={body.planForChildren}
@@ -242,13 +281,14 @@ function Generalinfo(props: any) {
               </FormGroup>
             </FormControl>
           </Box>
-        </Grid>
+        </Grid> */}
         <Grid item md={4}>
           <Box className={`${classes.TextFieldParent}`}>
             <FormControl component="fieldset">
               <FormGroup aria-label="position" row>
                 <FormControlLabel
                   value="start"
+                  style={{color:"#000000"}}
                   control={
                     <Switch
                       checked={body.smookingHabit}
@@ -270,6 +310,7 @@ function Generalinfo(props: any) {
               <FormGroup aria-label="position" row>
                 <FormControlLabel
                   value="start"
+                  style={{color:"#000000"}}
                   control={
                     <Switch
                       checked={body.drinkingHabit}

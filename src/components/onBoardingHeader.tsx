@@ -31,6 +31,7 @@ const useStyles = makeStyles(() => {
       fontFamily: "Mori-bold!important",
       textAlign: "center",
       marginTop: "35px!important",
+      color:"#000000"
     },
     p1: {
       fontSize: "12px!important",

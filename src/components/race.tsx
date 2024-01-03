@@ -25,6 +25,7 @@ const useStyles = makeStyles(() => {
       padding: "10px 16px",
       fontSize: "12px!important",
       cursor: "pointer",
+      color:"#000000"
     },
     activeBadge: {
       backgroundColor: "black",
@@ -46,7 +47,10 @@ function Race(props: any) {
 
   useEffect(() => {
     console.log(props.data);
-  }, []);
+  }, [props.data]);
+  useEffect(() => {
+    console.log("activeInterest ",activeInterest);
+  }, [activeInterest]);
 
   return (
     <Box>
@@ -54,7 +58,7 @@ function Race(props: any) {
         <RangeSlider title="Age" handleChange={(e: []) => console.log(e)} />
       </Box> */}
       <Box>
-        <Typography className={`f-bold v-center`} sx={{ marginBottom: "30px" }}>
+        <Typography className={`f-bold v-center`} sx={{ marginBottom: "30px",color:"#000000" }}>
           Race
         </Typography>
         <Grid container spacing={2}>
@@ -62,11 +66,11 @@ function Race(props: any) {
             <Grid item key={i}>
               <Typography
                 onClick={() => {
-                  setActiveInterest(val.title);
-                  props.onChange(val.title);
+                  setActiveInterest(val.value);
+                  props.onChange(val.value);
                 }}
                 className={`${classes.badge} ${
-                  activeInterest == val.title ? classes.activeBadge : null
+                  activeInterest == val.value ? classes.activeBadge : null
                 }`}
               >
                 {val.value}

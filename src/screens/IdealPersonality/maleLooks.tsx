@@ -63,7 +63,7 @@ function MaleLooks() {
     APIHelper.CallApi(config.Endpoints.user.UpdateIdealPersonality, data, null, Token).then(
       (result) => {
         if (result.status == "success") {
-          navigate("/ideal-personality/general-info");
+          navigate("/ideal-personality/race");
         } else {
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));

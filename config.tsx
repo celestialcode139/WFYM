@@ -66,6 +66,10 @@ const Endpoints = {
       url: `${Base_Url.url}init/get-metadata/race`,
       method: "GET",
     },
+    GetMetaData: {
+      url: `${Base_Url.url}init/get-metadata/`,
+      method: "GET",
+    },
   },
   Subscription: {
     GetAll: {
@@ -86,9 +90,17 @@ const Endpoints = {
       url: `${Base_Url.url}match/match-request`,
       method: "GET",
     },
+    AssignMatches: {
+      url: `${Base_Url.url}match/match-result`,
+      method: "POST",
+    },
     GetAllMatches: {
       url: `${Base_Url.url}match/match-request?use_auth_user_id=false`,
       method: "GET",
+    },
+    MarkAsCompleted: {
+      url: `${Base_Url.url}match/mark-as-done`,
+      method: "POST",
     },
     FavDecline: {
       url: `${Base_Url.url}match/match-result`,

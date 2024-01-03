@@ -2,8 +2,9 @@ import React from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const notify = (e:any) => {
-  console.log(13123);
-  toast(e);
+const notify = (Message:string,AlertTime:number) => {
+  toast(Message,{
+    autoClose:AlertTime?AlertTime:5000
+  });
 };
 export default { notify };

@@ -1,6 +1,7 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, LinearProgress, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
+import BouncingBallsLoading from "./BouncingBallsLoading";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -26,7 +27,14 @@ function Button(props: any) {
       sx={props?.sx}
       className={`${classes.button} ${props?.className}`}
     >
-      {props.children}
+      {/* {props.children} */}
+      {props.Loading == true?
+      <BouncingBallsLoading/>
+      // <CircularProgress size={24} style={{padding:0}} color="inherit" />
+      :
+      props.children
+
+      }
     </Box>
   );
 }

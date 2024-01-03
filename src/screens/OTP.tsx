@@ -35,6 +35,7 @@ const useStyles = makeStyles(() => {
       textAlign: "center",
       marginTop: "35px!important",
       lineHeight: "1.3!important",
+      color:"#000000"
     },
     otpMsg: {
       fontSize: "12px!important",
@@ -82,6 +83,7 @@ function OTP() {
     if (Resend == false) {
       APIHelper.CallApi(config.Endpoints.auth.OTP.VarifyOtp, { email: Email, otp: OTP }).then((result: any) => {
         console.log(result);
+        navigate("/signup-profile")
         if (result?.data.varify_otp != null) {
           console.log("Yupeeeee");
           navigate("/signup-profile")

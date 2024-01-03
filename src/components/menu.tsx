@@ -6,10 +6,13 @@ import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
 import MenuList from "@mui/material/MenuList";
 import ListItemText from "@mui/material/ListItemText";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
+import GeneralHelper from "../Helpers/GeneralHelper";
 
 export default function BasicMenu(props: any) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
+
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -17,6 +20,12 @@ export default function BasicMenu(props: any) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const Logout = () =>{
+    GeneralHelper.ClearData("Token")
+    GeneralHelper.ClearData("UserId")
+    navigate("/")
+
+  }
 
   return (
     <Box>
@@ -40,17 +49,17 @@ export default function BasicMenu(props: any) {
               <ListItemText>Profile</ListItemText>
             </MenuItem>
           </Link>
-          <Link style={{color:"black"}} to={{ pathname: "/ideal-personality/race" }}>
+          <Link style={{color:"black"}} to={{ pathname: "/ideal-personality/general-info" }}>
             <MenuItem>
               <ListItemText>Ideal Personality</ListItemText>
             </MenuItem>
           </Link>
-          <Link style={{color:"black"}} to={{ pathname: "/change-pass" }}>
+          <Link style={{color:"black"}} to={{ pathname: "/profile/change-password" }}>
             <MenuItem>
               <ListItemText>Change password</ListItemText>
             </MenuItem>
           </Link>
-          <MenuItem>
+          <MenuItem onClick={()=>{Logout()}}>
             <ListItemText>Logout</ListItemText>
           </MenuItem>
         </MenuList>

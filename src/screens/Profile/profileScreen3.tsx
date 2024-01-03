@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
@@ -7,11 +7,9 @@ import "../../App.css";
 import Button from "../../components/buttonSm";
 import AgeRace from "../../components/race";
 import avatar from "../../assets/images/avatar.png";
-import camera from "../../assets/icons/camera.svg";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-import moment from "moment";
 
 // import $ from "jquery";
 
@@ -76,9 +74,9 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function profileScreen2() {
+function ProfileScreen3() {
   const [races, setraces] = useState([]);
-  const [activeInterest, setActiveInterest] = useState("");
+  const [SelectedRace, setSelectedRace] = useState("");
 
   const [Token, setToken] = useState("");
 
@@ -96,7 +94,7 @@ function profileScreen2() {
       (result: any) => {
         if (result.status == "success") {
           // console.log(result.data);
-          setActiveInterest(
+          setSelectedRace(
             result?.data?.user_details?.race
               ? result.data.user_details.race
               : ""
@@ -110,14 +108,15 @@ function profileScreen2() {
   };
   const GetRace = () => {
     APIHelper.CallApi(
-      config.Endpoints.Init.GetMetaDataRace,
+      config.Endpoints.Init.GetMetaData,
       {},
-      null,
+      "race",
       Token
     ).then((result: any) => {
       if (result.status == "success") {
         // console.log(result.data);
-        setraces(result.data);
+        handleSort(result.data)
+
       } else {
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
@@ -125,10 +124,9 @@ function profileScreen2() {
     });
   };
   // Updating Profile Details
-
   const UpdateBio = () => {
     const data = {
-      race: activeInterest,
+      race: SelectedRace,
     };
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
@@ -145,6 +143,13 @@ function profileScreen2() {
     UpdateBio();
   };
   // Other functions
+  const handleSort = (ArrayToSort:any) => {
+    const sortedArray = [...ArrayToSort].sort((a, b) => a.value.localeCompare(b.value));
+    console.log("sortedArray ",sortedArray);
+    setraces(sortedArray);
+
+  };
+
   useEffect(() => {
     if (Token != "") {
       GetProfile(Token);
@@ -153,6 +158,9 @@ function profileScreen2() {
       featchToken();
     }
   }, [Token]);
+  useEffect(() => {
+    console.log("Selected Race ",SelectedRace);
+  }, [SelectedRace]);
 
 
 
@@ -163,8 +171,8 @@ function profileScreen2() {
           <AgeRace
             data={races}
             key={races}
-            race={activeInterest}
-            onChange={(data: any) => setActiveInterest(data)}
+            race={SelectedRace}
+            onChange={(data: any) => setSelectedRace(data)}
           />
         </Box>
       </Box>
@@ -180,4 +188,4 @@ function profileScreen2() {
   );
 }
 
-export default profileScreen2;
+export default ProfileScreen3;

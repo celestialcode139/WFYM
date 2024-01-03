@@ -17,19 +17,23 @@ const CustomRangeSlider = styled(Slider)(() => ({
   }
 }));
 export default function RangeSlider(props:any) {
-  const [value, setValue] = React.useState([20, 37]);
+  const [value, setValue] = React.useState([25, 35]);
 
   const handleChange = (event: any, newValue: any) => {
-    console.log("newValue:",newValue)
     setValue(newValue);
     props.handleChange(newValue);
   };
 
+  React.useEffect(() => {
+    setValue(props.DefaultValue)
+  }, [])
+  
+
   return (
     <Box>
       <Box className={"space-between"} sx={{marginBottom:"15px"}}>
-        <Typography className={`f-bold v-center`}>{props.title}</Typography>
-        <Typography className={`f-14 v-center`}>{value[0]}-{value[1]}</Typography>
+        <Typography className={`f-bold v-center`} sx={{color:"#000000"}}>{props.title}</Typography>
+        <Typography className={`f-14 v-center`} sx={{color:"#000000"}}>{value[0]}-{value[1]}</Typography>
       </Box>
       <CustomRangeSlider
         getAriaLabel={() => "Temperature range"}
@@ -37,6 +41,8 @@ export default function RangeSlider(props:any) {
         onChange={handleChange}
         valueLabelDisplay="auto"
         getAriaValueText={valuetext}
+        min={18}
+        max={60}
       />
     </Box>
   );

@@ -53,7 +53,7 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-let gender=[femaleLooks,maleLooks]
+const gender=[femaleLooks,maleLooks]
 function Looks(props: any) {
   const classes = useStyles();
   const [active, setactive] = useState(props.look);
@@ -64,13 +64,13 @@ function Looks(props: any) {
         {gender[props.gender=="female"?0:1].map((gender,i) => (
           <Grid item lg={2.4} key={i}>
             <Box
-              sx={{ width: "100%" }}
+              sx={{ width: "100%",maxHeight:"300px" }}
               onClick={() => {setactive(gender.value);props.onChange(gender.value)}}
               className={`${active == gender.value ? classes.active : null}`}
               component={"img"}
               src={gender.image}
             ></Box>
-            <Typography sx={{textAlign:"center",marginTop:"20px"}}>{gender.title}</Typography>
+            <Typography sx={{textAlign:"center",marginTop:"20px",color:"#000000"}}>{gender.title}</Typography>
           </Grid>
         ))}
       </Grid>

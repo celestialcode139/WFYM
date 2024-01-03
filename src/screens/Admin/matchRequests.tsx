@@ -1,5 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
@@ -11,9 +18,18 @@ import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 import ViewProfileIcon from "../../assets/icons/ViewIcon.png";
 import AssignMatchDiloag from "./AssignMatchDiloag";
+import { debounce } from "lodash";
 
-
-const columns = ["Name", "Image", "Email", "Gender", "Subscription", "Matches Left", "Action"];
+const columns = [
+  "Name",
+  "Image",
+  "Email",
+  "Gender",
+  "Subscription",
+  "Matches Left",
+  "Assign Match",
+  "Mark As Completed",
+];
 
 const options = {
   filterType: "checkbox",
@@ -119,7 +135,7 @@ const useStyles = makeStyles(() => {
     Parent: {
       justifyContent: "center",
       alignItems: "center",
-      display: "flex"
+      display: "flex",
     },
     SubscriptionBadge: {
       border: "1px solid #065BCE",
@@ -128,20 +144,21 @@ const useStyles = makeStyles(() => {
       justifyContent: "center",
       alignItems: "center",
       display: "flex",
-      borderRadius: 20
+      borderRadius: 20,
     },
     SubscriptionText: {
       fontSize: 15,
       fontWeight: "400",
-      color: "#065BCE"
-    }
+      color: "#065BCE",
+    },
   };
 });
 function MatchRequests() {
   const classes = useStyles();
   const [Token, setToken] = useState("");
   const [DiloagOpen, setDiloagOpen] = useState(false);
-  const [UserId, setUserId] = useState("");
+  const [RequesterMatchRequestId, setRequesterMatchRequestId] = useState("");
+  const [RequesterSubscriptionId, setRequesterSubscriptionId] = useState("");
   const [Loading, setLoading] = useState(false);
   const [matches, setmatches] = useState([]);
   const [AllAvailableMatches, setAllAvailableMatches] = useState([]);
@@ -157,7 +174,7 @@ function MatchRequests() {
     APIHelper.CallApi(
       config.Endpoints.Match.GetAllMatches,
       {},
-      null,
+      "&execpt=completed",
       Token
     ).then((result: any) => {
       if (result.status == "success") {
@@ -174,14 +191,45 @@ function MatchRequests() {
     });
   };
   const handleViewProfile = (e: number) => {
-    navigate(`/dash/view-matchprofile/${e}`)
-  }
-  const handleOpenDiloag = () => {
-    setDiloagOpen(true)
-  }
+    navigate(`/dash/view-matchprofile/${e}`);
+  };
+  const handleOpenDiloag = (
+    RequesterMatchRequestId: string,
+    RequesterSubscriptionId: string
+  ) => {
+    setRequesterMatchRequestId(RequesterMatchRequestId);
+    setRequesterSubscriptionId(RequesterSubscriptionId);
+    setDiloagOpen(true);
+  };
   const handleCloseDiloag = () => {
-    setDiloagOpen(false)
-  }
+    setDiloagOpen(false);
+    setRequesterMatchRequestId("");
+  };
+  const handleMarkAsCompleted = debounce(
+    (Completed: boolean, RequestId: string) => {
+      if (Completed == true) {
+        MarkAsCompleted(RequestId)
+      }
+    },
+    1500
+  );
+
+  const MarkAsCompleted = (RequestId: string) => {
+    APIHelper.CallApi(
+      config.Endpoints.Match.MarkAsCompleted,
+      {RequestId:RequestId},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        GetAllMatches()
+
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
 
   useEffect(() => {
     if (Token != "") {
@@ -193,19 +241,20 @@ function MatchRequests() {
 
   useEffect(() => {
     if (matches.length != 0) {
-      const pendingRecord = matches.filter(record => record.status === 'pending')
-      console.log("PendingRecord ",pendingRecord)
-      console.log("All Records ",matches.length)
-      
-      
-      const UsersName = pendingRecord.map(item => ({
+      const pendingRecord = matches.filter(
+        (record) => record.status === "pending"
+      );
+      console.log("PendingRecord ", pendingRecord);
+      console.log("All Records ", matches.length);
+
+      const UsersName = pendingRecord.map((item) => ({
         first_name: item?.user_id?.first_name,
         _id: item?.user_id?._id,
         SubscriptionId: item?.user_id?.user_subscriptions,
-    }));
-    setAllAvailableMatches(UsersName)
+      }));
+      setAllAvailableMatches(UsersName);
 
-      console.log("Available Matches ",UsersName);
+      console.log("Available Matches ", UsersName);
     }
   }, [matches]);
 
@@ -222,36 +271,55 @@ function MatchRequests() {
             src={`${val?.user_id?.profile_images}`}
           ></Box>
         </Box>,
+        <Box className={`${classes.Parent}`}>{`${val?.user_id?.email}`}</Box>,
         <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.email}`}
-        </Box>,
-        <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.gender.charAt(0).toUpperCase() + val?.user_id?.gender.slice(1)}`}
+          {`${
+            val?.user_id?.gender.charAt(0).toUpperCase() +
+            val?.user_id?.gender.slice(1)
+          }`}
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box className={`${classes.SubscriptionBadge}`}>
             <Typography className={`${classes.SubscriptionText}`}>
-              {`${val?.user_id?.user_subscriptions?.subscription_id?.title == undefined ? "Don't have" : val?.user_id?.user_subscriptions?.subscription_id?.title}`}
+              {`${
+                val?.user_id?.user_subscriptions?.subscription_id?.title ==
+                undefined
+                  ? "Don't have"
+                  : val?.user_id?.user_subscriptions?.subscription_id?.title
+              }`}
             </Typography>
           </Box>
         </Box>,
         <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.user_subscriptions?.remaining_matches == undefined ? 0 : val?.user_id?.user_subscriptions?.remaining_matches}`}
+          {`${
+            val?.user_id?.user_subscriptions?.remaining_matches == undefined
+              ? 0
+              : val?.user_id?.user_subscriptions?.remaining_matches
+          }`}
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box
             className={`${classes.ViewIcon}`}
-            onClick={() => { handleOpenDiloag() }}
+            onClick={() => {
+              handleOpenDiloag(val._id, val.user_id?.user_subscriptions?._id);
+            }}
           >
-            <img src={ViewProfileIcon} style={{ width: 20, height: 20, objectFit: "cover" }} />
+            <img
+              src={ViewProfileIcon}
+              style={{ width: 20, height: 20, objectFit: "cover" }}
+            />
           </Box>
         </Box>,
-      ]
-    })
-
-
-  }, [matches])
-
+        <Box className={`${classes.Parent}`}>
+          <Switch
+            onChange={(e: any) => {
+              handleMarkAsCompleted(e.target.checked,val._id);
+            }}
+          />
+        </Box>,
+      ];
+    });
+  }, [matches]);
 
   return (
     <>
@@ -260,10 +328,16 @@ function MatchRequests() {
         data={tableData}
         columns={columns}
         options={{
-          filterType: "checkbox"
+          filterType: "checkbox",
         }}
       />
-      <AssignMatchDiloag Matches={AllAvailableMatches} handleClose={handleCloseDiloag} open={DiloagOpen} />
+      <AssignMatchDiloag
+        Matches={AllAvailableMatches}
+        MatchRequestId={RequesterMatchRequestId}
+        RequesterSubscriptionId={RequesterSubscriptionId}
+        handleClose={handleCloseDiloag}
+        open={DiloagOpen}
+      />
     </>
   );
 }

@@ -1,17 +1,15 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
 import GenderComp from "../../components/gender";
 import avatar from "../../assets/images/avatar.png";
-import camera from "../../assets/icons/camera.svg";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-import moment from "moment";
 
 // import $ from "jquery";
 
@@ -48,16 +46,18 @@ const useStyles = makeStyles(() => {
     badge: {
       display: "flex",
       alignItems: "center",
+      justifyContent: "center",
       borderRadius: "10px",
       border: "1px solid #E8E6EA",
       padding: "10px 16px",
       fontSize: "12px!important",
       width: "100px",
       cursor: "pointer",
+      color: "#000000",
     },
     activeBadge: {
       backgroundColor: "black",
-      color: "white",
+      color: "#ffffff!important",
       boxShadow: "6px 8px 10px 0px rgba(103, 103, 103, 0.19)",
     },
     cancelBtn: {
@@ -73,71 +73,14 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function profileScreen2() {
+function ProfileScreen2() {
   const navigate = useNavigate();
   const classes = useStyles();
-  const [activeInterest, setActiveInterest] = useState<number[]>([]);
+  const [SelectedHobbies, setSelectedHobbies] = useState<string[]>([]);
   const [Gender, setGender] = useState("male");
   const [Token, setToken] = useState("");
+  const [AllHobbies, setAllHobbies] = useState([]);
 
-  const interest = [
-    {
-      text: "Photography",
-      img: camera,
-    },
-    {
-      text: "Shopping",
-      img: camera,
-    },
-    {
-      text: "Karaoke",
-      img: camera,
-    },
-    {
-      text: "Yoga",
-      img: camera,
-    },
-    {
-      text: "Cooking",
-      img: camera,
-    },
-    {
-      text: "Tennis",
-      img: camera,
-    },
-    {
-      text: "Run",
-      img: camera,
-    },
-    {
-      text: "Swimming",
-      img: camera,
-    },
-    {
-      text: "Art",
-      img: camera,
-    },
-    {
-      text: "Traveling",
-      img: camera,
-    },
-    {
-      text: "Extreme",
-      img: camera,
-    },
-    {
-      text: "Drink",
-      img: camera,
-    },
-    {
-      text: "Music",
-      img: camera,
-    },
-    {
-      text: "Video games",
-      img: camera,
-    },
-  ];
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
@@ -150,13 +93,34 @@ function profileScreen2() {
         if (result.status == "success") {
           console.log(result.data);
           setGender(result?.data?.gender ? result.data.gender : "");
-          setActiveInterest(result?.data?.user_details?.hobbies ? result.data.user_details.hobbies : "");
+          setSelectedHobbies(
+            result?.data?.user_details?.hobbies
+              ? result.data.user_details.hobbies
+              : ""
+          );
+          console.log("Selected Hobbies ", result?.data?.user_details?.hobbies);
         } else {
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));
         }
       }
     );
+  };
+  const GetHobbies = (Token: string) => {
+    APIHelper.CallApi(
+      config.Endpoints.Init.GetMetaData,
+      {},
+      "hobbies",
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        handleSort(result.data)
+        console.log("Hobbies ", result.data);
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
   };
   // Updating Profile Details
   const UpdateProfile = () => {
@@ -168,21 +132,22 @@ function profileScreen2() {
       data,
       null,
       Token
-    ).then((result) => {
-      if (result.status == "success") {
-        UpdateBio();
-      } else {
-        console.log(result.message);
-        GeneralHelper.ShowToast(String(result.message));
-      }
-    }).catch((error)=>{
-      console.log(error);
-      
-    });
+    )
+      .then((result) => {
+        if (result.status == "success") {
+          UpdateBio();
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   const UpdateBio = () => {
     const data = {
-      hobbies: activeInterest,
+      hobbies: SelectedHobbies,
     };
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
@@ -199,53 +164,73 @@ function profileScreen2() {
     UpdateProfile();
   };
   // Other functions
+  const handleSort = (ArrayToSort: any) => {
+    const sortedArray = [...ArrayToSort].sort((a, b) =>
+      a.value.localeCompare(b.value)
+    );
+    console.log("sortedArray ", sortedArray);
+    setAllHobbies(sortedArray);
+
+  };
+  const CheckIfSelected = (Id: string) => {
+    if (SelectedHobbies.includes(Id)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const HandleSelectHobbie = (Id: string) => {
+    const data = SelectedHobbies.filter((val) => val == Id);
+    if (data.length <= 0) {
+      setSelectedHobbies([...SelectedHobbies, Id]);
+    } else {
+      const updateData = SelectedHobbies.filter((val) => val !== Id);
+      setSelectedHobbies(updateData);
+    }
+  };
   useEffect(() => {
     if (Token != "") {
+      GetHobbies(Token);
       GetProfile(Token);
     } else {
       featchToken();
     }
   }, [Token]);
-  const GetInterest = (id: any): number[] => {
-    return activeInterest.filter((val) => {
-      return val == id;
-    });
-  };
-  const toggleFun = (i: number) => {
-    let data = activeInterest.filter((val) => val == i);
-    if (data.length <= 0) {
-      setActiveInterest([...activeInterest, i]);
-    } else {
-      let updateData = activeInterest.filter((val) => val !== i);
-      setActiveInterest(updateData);
-    }
-  };
+  useEffect(() => {
+    console.log("Selected Hobbies ", SelectedHobbies);
+  }, [SelectedHobbies]);
   return (
     <>
       <Grid container spacing={2} className="h-center">
         <Grid item sm={3} xs={12}>
-          <Typography className={`${classes.h1}`}>I am</Typography>
+          <Typography className={`${classes.h1}`} sx={{ color: "#000000" }}>
+            I am
+          </Typography>
           <GenderComp gender={Gender} onChange={(e: any) => setGender(e)} />
         </Grid>
         <Grid item sm={6} xs={12}>
-          <Typography className={`${classes.h1}`}>Your interests</Typography>
+          <Typography className={`${classes.h1}`} sx={{ color: "#000000" }}>
+            Your interests
+          </Typography>
           <Grid container spacing={2}>
-            {interest.map((val, i) => (
+            {AllHobbies.map((val, i) => (
               <Grid item key={i}>
                 <Typography
                   onClick={() => {
-                    toggleFun(i);
+                    HandleSelectHobbie(val.value);
                   }}
                   className={`${classes.badge} ${
-                    GetInterest(i)[0] == i ? classes.activeBadge : null
+                    CheckIfSelected(val.value) == true
+                      ? classes.activeBadge
+                      : null
                   }`}
                 >
-                  <Box
+                  {/* <Box
                     component="img"
                     src={camera}
                     sx={{ width: "18px", paddingRight: "5px" }}
-                  ></Box>{" "}
-                  {val.text}
+                  ></Box>{" "} */}
+                  {val.value}
                 </Typography>
               </Grid>
             ))}
@@ -264,4 +249,4 @@ function profileScreen2() {
   );
 }
 
-export default profileScreen2;
+export default ProfileScreen2;

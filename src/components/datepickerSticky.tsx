@@ -1,40 +1,13 @@
-// import * as React from 'react';
-// import dayjs from 'dayjs';
-// import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-
-// export default function ResponsiveDatePickers() {
-//   return (
-// <LocalizationProvider dateAdapter={AdapterDayjs}>
-//   <DemoContainer
-//     components={[
-//       'DatePicker',
-//       'MobileDatePicker',
-//       'DesktopDatePicker',
-//       'StaticDatePicker',
-//     ]}
-//   >
-//     <DemoItem label="Static variant">
-//       <StaticDatePicker defaultValue={dayjs('2022-04-17')} />
-//     </DemoItem>
-//   </DemoContainer>
-// </LocalizationProvider>
-//   );
-// }
-
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Menu, { MenuProps } from "@mui/material/Menu";
 import { Box } from "@mui/material";
 import dayjs from "dayjs";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "../App.css";
+import moment from "moment";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -85,8 +58,16 @@ export default function CustomizedMenus(props: any) {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClose = (date: string) => {
+    console.log(typeof date);
+    
+    
+    if (date != "2003-01-01") {
+      if (typeof date == "string") {
+        props.onChange(date);
+      }
+      setAnchorEl(null);
+    }
   };
 
   return (
@@ -104,9 +85,13 @@ export default function CustomizedMenus(props: any) {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <StaticDatePicker
             onChange={(e: any) => {
-              props.onChange(e);
+              const inputDate = new Date(e);
+              const formattedDate = moment(inputDate).format("YYYY-MM-DD");
+              console.log("On Change event call ", formattedDate);
+
+              handleClose(String(formattedDate));
             }}
-            defaultValue={dayjs()}
+            defaultValue={dayjs(props.Default == ""?"01-01-2000":props.Default)}
           />
         </LocalizationProvider>
       </StyledMenu>

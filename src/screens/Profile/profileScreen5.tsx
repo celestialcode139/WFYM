@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
-import AgeRace from "../../components/race";
 import avatar from "../../assets/images/avatar.png";
 import Generalinfo from "../../components/generalinfo";
 import { useNavigate } from "react-router-dom";
@@ -78,11 +77,12 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function profileScreen5() {
+function ProfileScreen5() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [Token, setToken] = useState("");
   const [body, setbody] = useState<any>({});
+
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
@@ -114,6 +114,7 @@ function profileScreen5() {
       }
     );
   };
+  
   // Updating Profile Details
 
   const UpdateBio = () => {
@@ -134,7 +135,10 @@ function profileScreen5() {
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
         if (result.status == "success") {
-          Alert.notify("Profile Updated");
+          Alert.notify("Profile Updated Successfully");
+          setTimeout(() => {
+            navigate("/dashboard")
+          }, 6000);
         } else {
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));
@@ -146,6 +150,8 @@ function profileScreen5() {
     UpdateBio();
   };
   // Other functions
+
+  
   useEffect(() => {
     if (Token != "") {
       GetProfile(Token);
@@ -166,6 +172,7 @@ function profileScreen5() {
             <Generalinfo
               body={body}
               key={body}
+              Token={Token}
               onChange={(e: any) => {
                 console.log("qwerqwer", e);
                 setbody(e);
@@ -187,4 +194,4 @@ function profileScreen5() {
   );
 }
 
-export default profileScreen5;
+export default ProfileScreen5;

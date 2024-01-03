@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
-import AgeRace from "../../components/race";
 import avatar from "../../assets/images/avatar.png";
 import { useNavigate } from "react-router-dom";
 import Looks from "../../components/looks";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-import moment from "moment";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -75,12 +73,12 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function profileScreen4() {
+function ProfileScreen4() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [activeLook, setactiveLook] = useState("");
-
   const [Token, setToken] = useState("");
+  const [Gender, setGender] = useState("male");
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -92,7 +90,8 @@ function profileScreen4() {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       (result: any) => {
         if (result.status == "success") {
-          console.log(result.data);
+          console.log("Profile Details ",result.data);
+          setGender(result.data.gender)
           setactiveLook(
             result?.data?.user_details?.personality
               ? result.data.user_details.personality
@@ -140,17 +139,24 @@ function profileScreen4() {
         <Box className={`${classes.pageContainer}`}>
           <Looks
             key={activeLook}
-            gender="female"
+            gender={Gender}
             look={activeLook}
             onChange={(look: any) => {
               setactiveLook(look);
-              handleNext();
             }}
           />
         </Box>
       </Box>
+      <Grid container className="h-center" sx={{ marginTop: "40px" }}>
+        <Grid item md={3} xs={12} sx={{ p: 1 }}>
+          <Button onClick={() => handleNext()}>Save Changes</Button>
+        </Grid>
+        <Grid item md={3} xs={12} sx={{ p: 1 }}>
+          <Button className={`${classes.cancelBtn}`}>Cancel</Button>
+        </Grid>
+      </Grid>
     </>
   );
 }
 
-export default profileScreen4;
+export default ProfileScreen4;

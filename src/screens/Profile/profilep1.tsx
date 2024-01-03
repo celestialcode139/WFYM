@@ -1,7 +1,7 @@
 import { Box, Grid, TextField, colors } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
@@ -93,8 +93,16 @@ function ProfileP1() {
               ? String(result?.data?.user_details?.location)
               : ""
           );
-          setDescription(result?.data?.user_details?.description ? result.data.user_details.description : "");
-          setCity(result?.data?.user_details?.city ? result.data.user_details.city : "");
+          setDescription(
+            result?.data?.user_details?.description
+              ? result.data.user_details.description
+              : ""
+          );
+          setCity(
+            result?.data?.user_details?.city
+              ? result.data.user_details.city
+              : ""
+          );
           if (result.data.dob) {
             const DateOfBirth = moment.utc(result?.data?.dob);
             setDOB(DateOfBirth.format("DD MMMM YYYY"));
@@ -134,7 +142,7 @@ function ProfileP1() {
       country: Country,
       location: Address,
       description: Description,
-      city: City
+      city: City,
     };
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
@@ -149,6 +157,9 @@ function ProfileP1() {
   };
   const handleNext = () => {
     UpdateProfile();
+  };
+  const handleDOBChange = (e: string) => {
+    setDOB(String(e));
   };
   // Other functions
   useEffect(() => {
@@ -235,11 +246,7 @@ function ProfileP1() {
             />
           </Grid>
           <Grid item md={6} xs={12} sx={{ p: 1 }}>
-            <DatepickerSticky
-              onChange={(e: any) =>
-                setDOB(moment(e["$d"]).format("DD MM YYYY"))
-              }
-            >
+            <DatepickerSticky Default={DOB} onChange={handleDOBChange}>
               <Button
                 onClick={() => {}}
                 sx={{
@@ -247,7 +254,13 @@ function ProfileP1() {
                   color: "#323232",
                 }}
               >
-                Choose birthday date
+                {/* Choose birthday date */}
+                {
+                  DOB == ""
+                    ? "Choose birthday date"
+                    : moment(DOB).format("D MMM YYYY")
+                  // DOB
+                }
               </Button>
             </DatepickerSticky>
           </Grid>

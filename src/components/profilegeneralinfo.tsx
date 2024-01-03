@@ -9,6 +9,11 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import RangeSlider from "./RangeSlider";
+import APIHelper from "../Helpers/APIHelper";
+import config from "../../config";
+import GeneralHelper from "../Helpers/GeneralHelper";
+import { debounce } from "lodash";
 
 // import $ from "jquery";
 
@@ -29,47 +34,68 @@ const useStyles = makeStyles(() => {
 });
 function Generalinfo(props: any) {
   const classes = useStyles();
+  const [AllReligion, setAllReligion] = useState([]);
+
   const [body, setbody] = useState({
+    minAge: props.body.minAge,
+    maxAge: props.body.maxAge,
     description: props.body.description,
     religion: props.body.religion,
     political_Party: props.body.political_Party,
     beforeChildren: props.body.beforeChildren,
   });
+// Getting Profile
+  const GetReligion = () => {
+    APIHelper.CallApi(
+      config.Endpoints.Init.GetMetaData,
+      {},
+      "religion",
+      props.Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        handleSort(result.data);
+        console.log("Religions ", result.data);
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const handleSort = (ArrayToSort: any) => {
+    const sortedArray = [...ArrayToSort].sort((a, b) =>
+      a.value.localeCompare(b.value)
+    );
+    console.log("sortedArray ", sortedArray);
+    setAllReligion(sortedArray);
+  };
+// Other Functions
+  const handleAgeSelection = debounce((MinAge,MaxAge)=>{
+    console.log("Setting MinAge ",MinAge);
+    
+    setbody({ ...body, minAge: MinAge,maxAge:MaxAge });
+  },1500)
 
   const religionHandler = (e: any) => {
-    console.log(e.target.value);
     setbody({ ...body, religion: e.target.value });
   };
   useEffect(() => {
-    console.log(props.body);
-    
+    console.log("On Change Body ",body);
     props.onChange(body);
   }, [body]);
+
+  useEffect(() => {
+    GetReligion();
+  }, []);
 
   return (
     <Box>
       <Grid container spacing={2}>
         <Grid item md={12}>
-          <Box className={`${classes.TextFieldParent}`}>
-            <TextField
-              sx={{
-                width: "100%",
-                "& div": {
-                  borderRadius: "12px!important",
-                  width: "100%",
-                },
-              }}
-              type="text"
-              label="Description"
-              multiline
-              rows={4}
-              value={body.description}
-              onChange={(e: any) =>
-                setbody({ ...body, description: e.target.value })
-              }
-            />
+          <Box sx={{ marginBottom: "30px" }}>
+            <RangeSlider title="Age" DefaultValue={[body.minAge,body.maxAge]} handleChange={([min,max]:Array<number>) => handleAgeSelection(min,max)} />
           </Box>
         </Grid>
+
         <Grid item md={12}>
           <Box className={`${classes.TextFieldParent}`}>
             <TextField
@@ -94,11 +120,9 @@ function Generalinfo(props: any) {
                 },
               }}
             >
-              <MenuItem value="Islam">Islam</MenuItem>
-              <MenuItem value="Christianity">Christianity</MenuItem>
-              <MenuItem value="Buddhism">Buddhism</MenuItem>
-              <MenuItem value="Hinduism">Hinduism</MenuItem>
-              <MenuItem value="Judaism">Judaism</MenuItem>
+              {AllReligion.map((item, i) => (
+                <MenuItem key={i} value={item.value}>{item.value}</MenuItem>
+              ))}
             </TextField>
           </Box>
         </Grid>
@@ -121,10 +145,32 @@ function Generalinfo(props: any) {
         </Grid>
         <Grid item md={12}>
           <Box className={`${classes.TextFieldParent}`}>
+            <TextField
+              sx={{
+                width: "100%",
+                "& div": {
+                  borderRadius: "12px!important",
+                  width: "100%",
+                },
+              }}
+              type="text"
+              label="Description"
+              multiline
+              rows={4}
+              value={body.description}
+              onChange={(e: any) =>
+                setbody({ ...body, description: e.target.value })
+              }
+            />
+          </Box>
+        </Grid>
+        <Grid item md={12}>
+          <Box className={`${classes.TextFieldParent}`}>
             <FormControl component="fieldset">
               <FormGroup aria-label="position" row>
                 <FormControlLabel
                   value="start"
+                  style={{ color: "#000000" }}
                   control={
                     <Switch
                       checked={body.beforeChildren}

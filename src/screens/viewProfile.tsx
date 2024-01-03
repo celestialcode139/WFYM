@@ -2,9 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import ProfileImage1 from "../assets/images/profileimages/1.png";
 import SendMessage from "../assets/icons/sendMessage.svg";
-import image from "../assets/icons/image.png";
 import Video from "../components/video";
 import IntroVideo from "../assets/videos/intro.mp4";
 import BodyShort from "../assets/videos/bodyshort.mp4";
@@ -16,6 +14,7 @@ import config from "../../config";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import VideoCallIcon from "../assets/icons/videoicon.png";
+import moment from "moment";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -62,6 +61,7 @@ function Media() {
   const [User, setUser] = useState<any>({});
   const [Token, setToken] = useState("");
   const [userId, setuserId] = useState("");
+  const [Age, setAge] = useState("");
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -75,7 +75,7 @@ function Media() {
       setuserId(String(result.data));
     }
   };
-  const GetLatestMatch = () => {
+  const GetProfileDetails = () => {
     APIHelper.CallApi(
       config.Endpoints.user.GetMyProfile,
       {},
@@ -85,6 +85,7 @@ function Media() {
       if (result.status == "success") {
         console.log("Matches:", result.data);
         setUser(result.data);
+        calculateAge(result.data.dob);
       } else {
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
@@ -93,7 +94,14 @@ function Media() {
   };
   const init = () => {
     featchUserId();
-    GetLatestMatch();
+    GetProfileDetails();
+  };
+
+  const calculateAge = (DOB: string) => {
+    const birthDate = moment(DOB);
+    const currentDate = moment();
+    const years = currentDate.diff(birthDate, "years");
+    setAge(String(years));
   };
 
   useEffect(() => {
@@ -121,7 +129,7 @@ function Media() {
                 <Box sx={{ display: "flex" }}>
                   <Box>
                     <Typography className={`f-22-bold mb-10 ${classes.name}`}>
-                      {`${User?.first_name}`}, 23
+                      {`${User?.first_name ? User?.first_name : ""}`}, {Age}
                     </Typography>
                     <Typography className={`p-12`}>
                       {User?.user_details?.profession}
@@ -136,7 +144,9 @@ function Media() {
                         sx={{ marginLeft: "15px", width: "50px" }}
                       ></Box>
                     </Link>
-                    <Link to={{ pathname: `/video-call/${userId}/${User._id}` }}>
+                    <Link
+                      to={{ pathname: `/video-call/${userId}/${User._id}` }}
+                    >
                       <Box
                         component="img"
                         className="hover"
@@ -148,7 +158,12 @@ function Media() {
                 </Box>
 
                 <Box className={`${classes.pt20}`}>
-                  <Typography className={`f-15-bold mb-10`}>About</Typography>
+                  <Typography
+                    className={`f-15-bold mb-10`}
+                    sx={{ color: "#000000" }}
+                  >
+                    About
+                  </Typography>
                   <Typography className={`p-12`}>
                     {User?.user_details?.description}
                   </Typography>
@@ -157,7 +172,12 @@ function Media() {
             </Grid>
             <Grid item md={6} xs={12}>
               <Box className={`${classes.pt20}`}>
-                <Typography className={`f-15-bold mb-10`}>Location</Typography>
+                <Typography
+                  className={`f-15-bold mb-10`}
+                  sx={{ color: "#000000" }}
+                >
+                  Location
+                </Typography>
                 <Typography className={`p-12`}>
                   {User?.user_details?.location}
                 </Typography>
@@ -165,7 +185,7 @@ function Media() {
               <Box className={`${classes.pt20}`}>
                 <Typography
                   className={`f-15-bold mb-10`}
-                  sx={{ marginBottom: "10px" }}
+                  sx={{ marginBottom: "10px", color: "#000000" }}
                 >
                   Interests
                 </Typography>
@@ -188,7 +208,9 @@ function Media() {
               <Typography className={`p-12 ${classes.detailHeading}`}>
                 Age
               </Typography>
-              <Typography className={`p-12`}>26 year</Typography>
+              {Age != "" && (
+                <Typography className={`p-12`}>{Age} year</Typography>
+              )}
             </Grid>
             <Grid item md={4} xs={12}>
               <Typography className={`p-12 ${classes.detailHeading}`}>
@@ -266,20 +288,22 @@ function Media() {
         </Grid>
         <Grid item md={3} xs={12}>
           <Box className={`${classes.pt20}`}>
-            <Typography className={`f-15-bold mb-10`}>
+            <Typography className={`f-15-bold mb-10`} sx={{ color: "#000000" }}>
               Intro & Body Short
             </Typography>
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <Video onClick={() => alert("Clicked")} src={IntroVideo} />
+                <Video  src={IntroVideo} />
               </Grid>
               <Grid item xs={6}>
-                <Video onClick={() => alert("Clicked")} src={BodyShort} />
+                <Video  src={BodyShort} />
               </Grid>
             </Grid>
           </Box>
           <Box className={`${classes.pt20}`}>
-            <Typography className={`f-15-bold mb-10`}>Gallery</Typography>
+            <Typography className={`f-15-bold mb-10`} sx={{ color: "#000000" }}>
+              Gallery
+            </Typography>
             <Grid container spacing={1}>
               {User?.user_details?.images.map((img: string, i: number) => (
                 <Grid item xs={4} key={i}>

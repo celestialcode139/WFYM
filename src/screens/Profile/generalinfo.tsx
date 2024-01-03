@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Container, TextField, MenuItem } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
@@ -11,8 +11,6 @@ import { useNavigate } from "react-router-dom";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-import { ToastContainer } from "react-toastify";
-import Alert from "../../Helpers/Alert";
 
 // import $ from "jquery";
 
@@ -40,8 +38,10 @@ function Generalinfo() {
   const navigate = useNavigate();
   const [Token, setToken] = useState("");
   const [body, setbody] = useState({
+    minAge:25,
+    maxAge:35,
     description: "",
-    religion: "principled",
+    religion: "",
     political_Party: "",
     beforeChildren: false,
   });
@@ -60,10 +60,12 @@ function Generalinfo() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        console.log(result.data);
+        console.log("Ideal Person Details ",result.data);
 
         setbody({
           ...body,
+          minAge:result?.data?.minAge,
+          maxAge:result?.data?.maxAge,
           description: result?.data?.description,
           religion: result?.data?.religion,
           political_Party: result?.data?.political_party,
@@ -79,10 +81,12 @@ function Generalinfo() {
 
   const UpdateBio = () => {
     const data = {
+      minAge:body.minAge,
+      maxAge:body.maxAge,
       description: body.description,
       religion: body.religion,
       political_party: body.political_Party,
-      children_before: body.beforeChildren,
+      children_before: body.beforeChildren == true? 1:0,
     };
     APIHelper.CallApi(
       config.Endpoints.user.UpdateIdealPersonality,
@@ -91,7 +95,10 @@ function Generalinfo() {
       Token
     ).then((result) => {
       if (result.status == "success") {
-        Alert.notify("Questioner updated!");
+        // Alert.notify("Questioner Updated Successfully!");
+        navigate("/ideal-personality/looking-for")
+        // setTimeout(() => {
+        // }, 6000);
       } else {
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
@@ -128,7 +135,6 @@ function Generalinfo() {
                 body={body}
                 onChange={(e: any) => {
                   console.log(e);
-
                   setbody(e);
                 }}
               />
@@ -147,7 +153,6 @@ function Generalinfo() {
           </Box>
         </Box>
       </Container>
-      <ToastContainer />
     </Box>
   );
 }

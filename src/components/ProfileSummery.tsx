@@ -40,13 +40,18 @@ function ProfileSummery(props: any) {
   }, []);
 
   const calculateAge = (birthDate: any) => {
-    var birthDateObject: any = new Date(birthDate);
-    var currentDate: any = new Date();
-    var timeDifference = currentDate - birthDateObject;
-    var age = Math.floor(timeDifference / (365.25 * 24 * 60 * 60 * 1000));
+    const birthDateObject: any = new Date(birthDate);
+    const currentDate: any = new Date();
+    const timeDifference = currentDate - birthDateObject;
+    const age = Math.floor(timeDifference / (365.25 * 24 * 60 * 60 * 1000));
 
     return age;
   };
+
+  useEffect(() => {
+    console.log("SUMMERY : ",props.data);
+    
+  }, []);
 
   return (
     <Box className={`${classes.quickProfileContainer}`}>
@@ -60,27 +65,27 @@ function ProfileSummery(props: any) {
         </Typography>
       </Box>
       <Box className={`${classes.pt20}`}>
-        <Typography className={`f-15-bold mb-10`}>Location</Typography>
+        <Typography className={`f-15-bold mb-10`} sx={{color:"#000000"}}>Location</Typography>
         <Typography className={`p-12`}>
-          {props.data?.result_user_id?.user_details?.location}
+          {`${props.data?.result_user_id?.user_details?.location} ${props.data?.result_user_id?.user_details?.city}  ${props.data?.result_user_id?.user_details?.country}`}
         </Typography>
       </Box>
       <Box className={`${classes.pt20}`}>
-        <Typography className={`f-15-bold mb-10`}>About</Typography>
+        <Typography className={`f-15-bold mb-10`} sx={{color:"#000000"}}>About</Typography>
         <Typography className={`p-12`}>
           {props.data?.result_user_id?.user_details?.description}
         </Typography>
       </Box>
       <Box className={`${classes.pt20}`}>
-        <Typography className={`f-15-bold mb-10`} sx={{ marginBottom: "10px" }}>
+        <Typography className={`f-15-bold mb-10`} sx={{ marginBottom: "10px", color:"#000000" }}>
           Interests
         </Typography>
         <Box>
           {props.data?.result_user_id?.user_details?.hobbies?.map(
             (hoby: any, i: number) => {
-              return hoby?.Title ? (
+              return hoby ? (
                 <Box className={`${classes.badge} v-center`} key={i}>
-                  <Box component="img" src={DoubleTic}></Box> {hoby?.Title}
+                  <Box component="img" src={DoubleTic}></Box> {hoby}
                 </Box>
               ) : null;
             }
@@ -88,7 +93,7 @@ function ProfileSummery(props: any) {
         </Box>
       </Box>
       <Box className={`${classes.pt20}`}>
-        <Typography className={`f-15-bold mb-10`}>Gallery</Typography>
+        <Typography className={`f-15-bold mb-10`} sx={{color:"#000000"}}>Gallery</Typography>
         <Grid container spacing={1}>
           {props.data?.result_user_id?.user_details?.images?.map(
             (image: any, i: number) => (

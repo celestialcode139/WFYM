@@ -17,12 +17,13 @@ import PLayout from "./screens/Profile/Layout.tsx";
 import DashLayout from "./screens/Profile/DashLayout.tsx";
 import Race from "./screens/IdealPersonality/race.tsx";
 import MaleLooks from "./screens/IdealPersonality/maleLooks.tsx";
+import GenderSelectionIdealPerson from "./screens/IdealPersonality/GenderSelectionIdealPerson.tsx";
 
 import profileScreen1 from "./screens/Profile/profilep1.tsx";
-import profileScreen2 from "./screens/Profile/profileScreen2.tsx";
-import profileScreen3 from "./screens/Profile/profileScreen3.tsx";
-import profileScreen4 from "./screens/Profile/profileScreen4.tsx";
-import profileScreen5 from "./screens/Profile/profileScreen5.tsx";
+import profileScreen2 from "./screens/Profile/ProfileScreen2.tsx";
+import profileScreen3 from "./screens/Profile/ProfileScreen3.tsx";
+import profileScreen4 from "./screens/Profile/ProfileScreen4.tsx";
+import profileScreen5 from "./screens/Profile/ProfileScreen5.tsx";
 import ProfileGeneralinfo from "./screens/Profile/generalinfo.tsx";
 import ChangePassword from "./screens/changePassword.tsx";
 import Media from "./screens/media.tsx";
@@ -80,9 +81,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Routes>
         <Routes>
           <Route path="/ideal-personality">
-            <Route path="race" Component={Race} />
-            <Route path="looks" Component={MaleLooks} />
             <Route path="general-info" Component={ProfileGeneralinfo} />
+            <Route path="looking-for" Component={GenderSelectionIdealPerson} />
+            <Route path="looks" Component={MaleLooks} />
+            <Route path="race" Component={Race} />
           </Route>
         </Routes>
         <Routes>

@@ -27,22 +27,20 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function ChangePassword() {
+function ChangePassword(props:any) {
   const classes = useStyles();
   const [body, setbody] = useState({
-    current_password: "",
+    // current_password: "",
     password: "",
     repassword: "",
   });
-
-  const personalityHandler = (e: any) => {
-    console.log(e.target.value);
-    setbody({ ...body, current_password: e.target.value });
-  };
+  useEffect(() => {
+    props.OnChange(body)
+  }, [body]);
 
   return (
     <Box>
-      <Box className={`${classes.TextFieldParent}`}>
+      {/* <Box className={`${classes.TextFieldParent}`}>
         <TextField
           fullWidth
           sx={{
@@ -56,7 +54,7 @@ function ChangePassword() {
             setbody({ ...body, current_password: e.target.value });
           }}
         />
-      </Box>
+      </Box> */}
       <Box className={`${classes.TextFieldParent}`}>
         <TextField
           fullWidth
@@ -80,7 +78,7 @@ function ChangePassword() {
               borderRadius: "15px!important",
             },
           }}
-          label="repassword"
+          label="Confirm Password"
           value={body.repassword}
           onChange={(e) => {
             setbody({ ...body, repassword: e.target.value });
