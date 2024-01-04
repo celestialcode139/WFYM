@@ -37,6 +37,7 @@ const useStyles = makeStyles(() => {
       backgroundImage: `url(${AdminSignature})`,
       backgroundSize: "100%",
       backgroundRepeat: "no-repeat",
+      overflow:"hidden"
     },
     logo: {
       width: "130px",
@@ -140,7 +141,7 @@ function Dashboard() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        console.log("Matches:", result.data[0]);
+        console.log("Setting Matches:", result.data);
         setmatches(result.data[0]?.match_result ?? []);
         setmatchStatus(result.data[0]?.status ?? "");
         setLoading(false);
@@ -165,15 +166,15 @@ function Dashboard() {
         if (result.data.isProfileVerified == false) {
           Alert.notify("Compleate Your Profile First.", 3000);
           setRequestMatchLoading(false);
-          NavigateTo("/profile/page-1")
+          NavigateTo("/profile/page-1");
         } else if (result.data.isIdealPersonVerified == false) {
           Alert.notify("Compleate Your Ideal Personality Profile.", 3000);
           setRequestMatchLoading(false);
-          NavigateTo("/ideal-personality/general-info")
+          NavigateTo("/ideal-personality/general-info");
         } else if (result.data.isSubscriptionActive == false) {
           Alert.notify("Please Buy A Subscription First.", 3000);
           setRequestMatchLoading(false);
-          NavigateTo("/buy-matches")
+          NavigateTo("/buy-matches");
         } else {
           RequestMatch();
         }
@@ -183,12 +184,14 @@ function Dashboard() {
       }
     });
   };
-  const NavigateTo = (Route:string) => {
+  const NavigateTo = (Route: string) => {
     setTimeout(() => {
-      navigate(Route)
+      navigate(Route);
     }, 4000);
-  }
+  };
   const RequestMatch = () => {
+    console.log("Click On Request Match");
+    
     setLoading(true);
     APIHelper.CallApi(
       config.Endpoints.Match.RequestMatch,
@@ -375,15 +378,6 @@ function Dashboard() {
                     </Box>
                   </Grid>
                 </Grid>
-                {/* <Typography sx={{ marginTop: "20px" }} className={`f-26-bold`}>
-                  {matchMessage == "match" ? "Matches History" : "Favourite"}
-                </Typography>
-                <Typography className="p-12">
-                  This is a list of people who have liked you and your matches.
-                </Typography>
-                <Typography className={`p12BA`} sx={{ marginTop: "15px" }}>
-                  Today
-                </Typography> */}
               </Box>
               {matchHistory?.length <= 0 ? (
                 <Box className="h-center">
@@ -436,88 +430,98 @@ function Dashboard() {
               )}
             </Box>
           </Grid>
-          <Grid item xs={12} md={matches?.length > 0 ? 5 : 8.5}>
+          <Grid item xs={12} md={matchHistory?.length > 0 ? 5 : 8.5}>
             <Box
               className={`blurBg h100  ${classes.BorderedBG} `}
               sx={{ minHeight: "400px", padding: "15px" }}
             >
               <Box
                 className="sticky"
-                sx={{ display: matches?.length > 0 ? "block" : "none" }}
+                sx={{ display: matchHistory?.length > 0 ? "block" : "none" }}
               >
                 <Box className="space-between v-center">
                   <Box>
                     <Typography
                       className={`f-22-bold mb-10`}
-                      sx={{ marginTop: "10px",color:"#000000" }}
+                      sx={{ marginTop: "10px", color: "#000000" }}
                     >
                       Discover
                     </Typography>
                     <Typography className={`p-12`}>
-                      {matches?.length} matches found
+                      {matchHistory?.length} matches found 
                     </Typography>
                   </Box>
                   <Box>
-                    {matchStatus == "completed" ? (
+                    {/* {matchStatus == "completed" || matchStatus == "" ? ( */}
                       <ButtonSm
-                        onClick={() => RequestMatch()}
+                        onClick={() => (matchStatus == "completed" || matchStatus == "") ? RequestMatch():null}
                         sx={{ maxWidth: "150px", margin: "0 auto!important" }}
-                      > 
-                          Request Matches
+                      >
+                        {
+                          matchStatus == "completed" || matchStatus == "" ?
+                          // "Request Matches"
+                          `Request Matches`
+
+                          :
+                          `Request Is ${String(matchStatus)}`
+                        }
                       </ButtonSm>
-                    ) : null}
+                    {/* ) : null} */}
                   </Box>
                 </Box>
 
                 <Carousel
-                  data={matches}
+                  data={matchHistory}
                   currentIndex={(e: any) => setCurrentIndex(e)}
                 />
               </Box>
-              <Box
-                className={`${classes.prt200}`}
-                sx={{ display: matches?.length > 0 ? "none" : "block" }}
-              >
-                <Box>
-                  <Typography className={`f-35-bold mb-10 pText text-center`}>
-                    {matchStatus == ""
-                      ? "Start matching"
-                      : matchStatus == "pending"
-                      ? "Waiting for admin response!"
-                      : ""}
-                  </Typography>
+              {matchHistory.length == 0 && (
+                <Box
+                  className={`${classes.prt200}`}
+                  sx={{ display: matches?.length > 0 ? "none" : "block" }}
+                >
+                  <Box>
+                    <Typography className={`f-35-bold mb-10 pText text-center`}>
+                      {matchStatus == ""
+                        ? "Start matching"
+                        : matchStatus == "pending"
+                        ? "Waiting for admin response!"
+                        : ""}
+                    </Typography>
 
-                  <Typography className={`p-12 text-center`}>
-                    Start a conversation now with each other
-                  </Typography>
-                  <Box sx={{ marginTop: "35px" }}>
-                    {matchStatus == "" ? (
-                      <ButtonSm
-                        onClick={() => VerifyAccountCompletion()}
-                        Loading={RequestMatchLoading}
-
-
-                        sx={{ maxWidth: "150px", margin: "0 auto!important" }}
-                      >
-                        Request Matches
-                      </ButtonSm>
-                    ) : null}
+                    <Typography className={`p-12 text-center`}>
+                      Start a conversation now with each other
+                    </Typography>
+                    <Box sx={{ marginTop: "35px" }}>
+                      {matchStatus == "" ? (
+                        <ButtonSm
+                          onClick={() => VerifyAccountCompletion()}
+                          Loading={RequestMatchLoading}
+                          sx={{ maxWidth: "150px", margin: "0 auto!important" }}
+                        >
+                          Request Matches
+                        </ButtonSm>
+                      ) : null}
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
+              )}
             </Box>
           </Grid>
           <Grid
             item
             xs={12}
             md={3.5}
-            sx={{ display: matches?.length <= 0 ? "none" : null }}
+            sx={{ display: matchHistory?.length <= 0 ? "none" : null }}
           >
             <Box
               className={`blurBg h100 ${classes.BorderedBG}`}
               sx={{ minHeight: "400px" }}
             >
-              <ProfileSummery data={matches[currentIndex]} key={currentIndex} />
+              <ProfileSummery
+                data={matchHistory[currentIndex]}
+                key={currentIndex}
+              />
             </Box>
           </Grid>
         </Grid>

@@ -157,6 +157,7 @@ function MatchRequests() {
   const classes = useStyles();
   const [Token, setToken] = useState("");
   const [DiloagOpen, setDiloagOpen] = useState(false);
+  const [RequesterId, setRequesterId] = useState("");
   const [RequesterMatchRequestId, setRequesterMatchRequestId] = useState("");
   const [RequesterSubscriptionId, setRequesterSubscriptionId] = useState("");
   const [Loading, setLoading] = useState(false);
@@ -178,7 +179,6 @@ function MatchRequests() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        console.log("Matches:", result.data);
         setmatches(result.data);
 
         // setmatchStatus(result.data[0]?.status ?? "");
@@ -195,15 +195,21 @@ function MatchRequests() {
   };
   const handleOpenDiloag = (
     RequesterMatchRequestId: string,
-    RequesterSubscriptionId: string
+    RequesterSubscriptionId: string,
+    RequesterId:string
   ) => {
     setRequesterMatchRequestId(RequesterMatchRequestId);
     setRequesterSubscriptionId(RequesterSubscriptionId);
+    setRequesterId(RequesterId)
+    console.log("Setting RequesterId ",RequesterId);
+    
     setDiloagOpen(true);
   };
   const handleCloseDiloag = () => {
     setDiloagOpen(false);
     setRequesterMatchRequestId("");
+    GetAllMatches()
+
   };
   const handleMarkAsCompleted = debounce(
     (Completed: boolean, RequestId: string) => {
@@ -242,11 +248,8 @@ function MatchRequests() {
   useEffect(() => {
     if (matches.length != 0) {
       const pendingRecord = matches.filter(
-        (record) => record.status === "pending"
+        (record) => record.status != "completed"
       );
-      console.log("PendingRecord ", pendingRecord);
-      console.log("All Records ", matches.length);
-
       const UsersName = pendingRecord.map((item) => ({
         first_name: item?.user_id?.first_name,
         _id: item?.user_id?._id,
@@ -254,7 +257,6 @@ function MatchRequests() {
       }));
       setAllAvailableMatches(UsersName);
 
-      console.log("Available Matches ", UsersName);
     }
   }, [matches]);
 
@@ -301,7 +303,7 @@ function MatchRequests() {
           <Box
             className={`${classes.ViewIcon}`}
             onClick={() => {
-              handleOpenDiloag(val._id, val.user_id?.user_subscriptions?._id);
+              handleOpenDiloag(val._id, val.user_id?.user_subscriptions?._id,val.user_id?._id);
             }}
           >
             <img
@@ -333,6 +335,7 @@ function MatchRequests() {
       />
       <AssignMatchDiloag
         Matches={AllAvailableMatches}
+        RequesterId={RequesterId}
         MatchRequestId={RequesterMatchRequestId}
         RequesterSubscriptionId={RequesterSubscriptionId}
         handleClose={handleCloseDiloag}

@@ -108,15 +108,15 @@ function TeamAppHeader(props: any) {
               <TeamMenu>
                 <Box
                   component="img"
-                  src={Data.profile_images}
+                  src={Data?.profile_images}
                   className={`${classes.profileImage}`}
                 ></Box>
                 <Box sx={{ height: "40px", marginLeft: "10px",marginRight:"10px" }}>
                   <Typography className={`${classes.profileName}`}>
-                    {Data.first_name}
+                    {Data?.first_name}
                   </Typography>
                   <Typography className={`${classes.profileLocation}`}>
-                    {Data.last_name}
+                    {Data?.last_name}
                   </Typography>
                 </Box>
                 <Box component="img" src={ProfileDropdown}></Box>

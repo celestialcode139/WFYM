@@ -61,11 +61,12 @@ function Generalinfo() {
     ).then((result: any) => {
       if (result.status == "success") {
         console.log("Ideal Person Details ",result.data);
+        console.log("Ideal Person Details Min age",result?.data?.minAge);
 
         setbody({
           ...body,
-          minAge:result?.data?.minAge,
-          maxAge:result?.data?.maxAge,
+          minAge:result?.data?.minAge != undefined?result?.data?.minAge:25,
+          maxAge:result?.data?.maxAge != undefined?result?.data?.maxAge:35,
           description: result?.data?.description,
           religion: result?.data?.religion,
           political_Party: result?.data?.political_party,

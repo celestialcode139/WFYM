@@ -27,8 +27,7 @@ body{
 }
 .animationHeight {
   height: 300vh;
-  position: relative !important;
-  margin-top: -40% !important;
+  margin-top: -35% !important;
 }
 div,
 span,
@@ -39,7 +38,7 @@ a {
 }
 .landingPage {
   position: relative;
-  background-color: #f0f1fa !important;
+  background-color: #ffffff !important;
   min-height: 100vh;
 }
 .h-center {
@@ -289,6 +288,9 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
   -webkit-animation-delay: 0.2s;
   -webkit-animation-duration: 1s;
   -webkit-animation-iteration-count: infinite;
+}
+.mgif{
+  width:50px
 }
 
 @-webkit-keyframes bounce {

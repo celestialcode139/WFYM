@@ -1,5 +1,4 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Video from "../../components/video";
@@ -10,14 +9,13 @@ import { useEffect, useState } from "react";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
 
   return {
     profileImage: {
       width: "100%",
+      borderRadius:"20px"
     },
     quickProfileContainer: {
       padding: "15px",
@@ -61,12 +59,10 @@ const useStyles = makeStyles(() => {
 });
 function ViewProfile(props: any) {
   const classes = useStyles();
-  const params = useParams();
 
   const [isOpen, setisOpen] = useState(false);
   const [User, setUser] = useState<any>({});
   const [Token, setToken] = useState("");
-  const [userId, setuserId] = useState("");
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -74,12 +70,7 @@ function ViewProfile(props: any) {
       setToken(String(result.data));
     }
   };
-  const featchUserId = async () => {
-    const result: any = await GeneralHelper.retrieveData("UserId");
-    if (result.status == 1) {
-      setuserId(String(result.data));
-    }
-  };
+  
   const GetLatestMatch = () => {
     console.log("Getting Latest Match With Token ", Token);
 
@@ -99,35 +90,10 @@ function ViewProfile(props: any) {
     });
   };
   const init = () => {
-    featchUserId();
     GetLatestMatch();
   };
 
-  const handleAssignMatch = () =>{
-    const body = {
-      "result_user_id":props.Id,
-      "match_req_id":props.MatchRequestId,
-      "user_subscription_id":props.RequesterSubscriptionId
-    }
-    console.log("Body To Send In Assign Matches ",body);
-
-    APIHelper.CallApi(
-      config.Endpoints.Match.AssignMatches,
-      body,
-      null,
-      Token
-    ).then((result: any) => {
-      if (result.status == "success") {
-        console.log("Assigned Successfully:", result.data);
-        alert("Success!!")
-        
-      } else {
-        console.log(result.message);
-        GeneralHelper.ShowToast(String(result.message));
-      }
-    });
-    
-  }
+  
 
   useEffect(() => {
     if (Token != "") {
@@ -136,6 +102,8 @@ function ViewProfile(props: any) {
       featchToken();
     }
   }, [Token, props]);
+
+  
 
   return (
     <>
@@ -154,7 +122,7 @@ function ViewProfile(props: any) {
                 <Box sx={{ display: "flex" }}>
                   <Box>
                     <Typography className={`f-22-bold mb-10 ${classes.name}`}>
-                      {`${User?.first_name}`}, 23
+                      {User?.first_name ?? ""}, 23
                     </Typography>
                     <Typography className={`p-12`}>
                       {User?.user_details?.profession}
@@ -192,7 +160,7 @@ function ViewProfile(props: any) {
               <Box className={`${classes.pt20}`}>
                 <Typography className={`f-15-bold mb-10`}>Location</Typography>
                 <Typography className={`p-12`}>
-                  {`${User?.user_details?.location}, ${User?.user_details?.city}, ${User?.user_details?.country}`}
+                  {`${User?.user_details?.location ?? ""}, ${User?.user_details?.city ?? ""}, ${User?.user_details?.country ?? ""}`}
                 </Typography>
               </Box>
               <Box className={`${classes.pt20}`}>
@@ -236,7 +204,7 @@ function ViewProfile(props: any) {
                 Look
               </Typography>
               <Typography className={`p-12`}>
-                {String(User?.user_details?.personality).replace("_", " ")}
+                {String(User?.user_details?.personality ?? "").replace("_", " ")}
               </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
@@ -334,14 +302,6 @@ function ViewProfile(props: any) {
           </Box>
         </Grid>
       </Grid>
-      <Box>
-        <Box
-          className={`${classes.AssignMatchButton}`}
-          onClick={()=>{handleAssignMatch()}}
-        >
-          <Typography style={{color:"#ffffff",fontSize:"18px"}}>Assign Match</Typography>
-        </Box>
-      </Box>
     </>
   );
 }

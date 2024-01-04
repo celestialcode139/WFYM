@@ -9,20 +9,76 @@ import { useEffect } from "react";
 import ViewProfile from "./viewProfile";
 import Button from "../../components/buttonSm";
 import crossIcon from "../../assets/icons/crossIcon.png";
-
+import APIHelper from "../../Helpers/APIHelper";
+import config from "../../../config";
+import GeneralHelper from "../../Helpers/GeneralHelper";
+import Alert from "../../Helpers/Alert";
+import { ToastContainer } from "react-toastify";
 
 export default function AssignMatchDiloag(props: any) {
   const [SelectedMatch, setSelectedMatch] = React.useState("");
   const [Matches, setMatches] = React.useState([]);
+  const [AssignMatchLoading, setAssignMatchLoading] = React.useState(false);
 
   const handleChange = (event: any) => {
     console.log("Setting ", event.target.value);
 
     setSelectedMatch(event.target.value);
   };
+
+  // const handleAssignMatch = () =>{
+  //   setAssignMatchLoading(true)
+  // }
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      if (SelectedMatch != undefined || SelectedMatch != "") {
+        Alert.notify("No Matches Available!", 3000);
+      } else {
+        console.log(String(SelectedMatch));
+        // handleAssignMatch(String(result.data));
+      }
+    }
+  };
+  const handleAssignMatch = (Token: string) => {
+    setAssignMatchLoading(true);
+    const body = {
+      result_user_id: SelectedMatch,
+      match_req_id: props.MatchRequestId,
+      user_subscription_id: props.RequesterSubscriptionId,
+    };
+    console.log("Body To Send In Assign Matches ", body);
+
+    APIHelper.CallApi(
+      config.Endpoints.Match.AssignMatches,
+      body,
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        Alert.notify("Match Assigned Successfully!", 3000);
+        setAssignMatchLoading(false);
+
+        props.handleClose();
+      } else {
+        setAssignMatchLoading(false);
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+
   useEffect(() => {
-    setMatches(props.Matches);
-    setSelectedMatch(props.Matches[0]?._id)
+    console.log("All Pending Records from Diloag ", props.Matches);
+    console.log("Requester Id from Diloag ", props.RequesterId);
+    const FilterAvailableMatches = props.Matches.filter(
+      (item) => item?._id !== props.RequesterId
+    );
+
+    setMatches(FilterAvailableMatches);
+    if (FilterAvailableMatches[0]?._id != undefined) {
+      setSelectedMatch(FilterAvailableMatches[0]?._id);
+    }
   }, [props]);
 
   return (
@@ -40,7 +96,7 @@ export default function AssignMatchDiloag(props: any) {
           right: "5px",
           top: "5px",
           cursor: "pointer",
-          zIndex: 99999999999,
+          zIndex: 99,
         }}
         onClick={() => {
           props.handleClose();
@@ -60,11 +116,13 @@ export default function AssignMatchDiloag(props: any) {
           paddingRight: "30px",
           paddingLeft: "30px",
           paddingBottom: "20px",
-          paddingTop:"20px"
+          paddingTop: "20px",
+          borderColor: "red",
+          borderWidth: "5px",
         }}
       >
         <Box sx={{ flexDirection: "row", display: "flex" }}>
-          <FormControl style={{ width: "200px", marginBottom: "50px" }}>
+          <FormControl style={{ width: "200px", marginBottom: "50px",borderColor:"red",borderWidth:"2px" }}>
             <InputLabel id="demo-simple-select-label">Select Match</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -72,6 +130,7 @@ export default function AssignMatchDiloag(props: any) {
               value={SelectedMatch}
               label="Matches"
               onChange={handleChange}
+              style={{border:"2px solid red"}}
             >
               {Matches.map((item) => (
                 <MenuItem key={item.first_name} value={item._id}>
@@ -84,7 +143,13 @@ export default function AssignMatchDiloag(props: any) {
             </Select>
           </FormControl>
           <Box>
-            <Button sx={{ width: "300px", marginLeft: "20px" }}>
+            <Button
+              Loading={AssignMatchLoading}
+              onClick={() => {
+                featchToken();
+              }}
+              sx={{ width: "300px", marginLeft: "20px" }}
+            >
               Assign Match
             </Button>
           </Box>
@@ -97,6 +162,7 @@ export default function AssignMatchDiloag(props: any) {
           />
         )}
       </Box>
+      <ToastContainer />
     </Dialog>
   );
 }

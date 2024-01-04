@@ -192,7 +192,7 @@ function Media() {
                 <Box>
                   {User?.user_details?.hobbies.map((hoby: any, i: number) => (
                     <Box className={`${classes.badge} v-center`} key={i}>
-                      <Box component="img"></Box> {hoby.Title}
+                      <Box component="img"></Box> {hoby}
                     </Box>
                   ))}
                 </Box>

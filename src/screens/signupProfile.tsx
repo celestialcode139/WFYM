@@ -206,7 +206,7 @@ function SignupProfile() {
                     />
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
-                    <DatepickerSticky onChange={handleDOBChange}>
+                    <DatepickerSticky Default={DOB} onChange={handleDOBChange}>
                       <Button
                         sx={{ backgroundColor: "#EFFBFC", color: "#323232" }}
                       >

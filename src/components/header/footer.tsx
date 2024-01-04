@@ -19,7 +19,8 @@ const useStyles = makeStyles(() => {
         },
     },
     footerItems:{
-        lineHeight:"26px"
+        lineHeight:"26px",
+        color:"black"
     },
     downloadText:{
       fontSize:"45px!important",
