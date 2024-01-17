@@ -53,7 +53,7 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-let gender=[femaleLooks,maleLooks]
+const gender=[femaleLooks,maleLooks]
 function Looks(props: any) {
   const classes = useStyles();
   const [active, setactive] = useState("hourglass");

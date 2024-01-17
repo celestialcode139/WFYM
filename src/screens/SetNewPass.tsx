@@ -78,8 +78,8 @@ function SetNewPass() {
     }
   }
   const retrieveData = async () => {
-    const Email = await GeneralHelper.retrieveData("Email")
-    const OTP_ID = await GeneralHelper.retrieveData("OTP_ID")
+    const Email = await GeneralHelper.retrieveData("Email") as any
+    const OTP_ID = await GeneralHelper.retrieveData("OTP_ID") as any
     if (Email.status == 1 && OTP_ID.status == 1) {
       handleUpdatePass(Email.data, OTP_ID.data, Password)
     }

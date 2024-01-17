@@ -138,11 +138,11 @@ function profileScreen2() {
     });
   };
   const toggleFun = (i: number) => {
-    let data = activeInterest.filter((val) => val == i);
+    const data = activeInterest.filter((val) => val == i);
     if (data.length <= 0) {
       setActiveInterest([...activeInterest, i]);
     } else {
-      let updateData = activeInterest.filter((val) => val !== i);
+      const updateData = activeInterest.filter((val) => val !== i);
       setActiveInterest(updateData);
     }
   };

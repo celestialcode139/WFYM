@@ -94,7 +94,7 @@ function ForgetPassForm() {
     })
   }
   const retrieveData = async () => {
-    const Email = await GeneralHelper.retrieveData("Email")
+    const Email = await GeneralHelper.retrieveData("Email") as any
     if (Email.status == 1) {
       setEmail(Email.data)
     }

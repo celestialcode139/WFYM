@@ -31,7 +31,7 @@ const CallApi = ({ url, method }:Options, body:{}):Promise<Response> => {
                 })
                 .catch((err) => {
                     console.log("failed", err);
-                    let error = err.toString()
+                    const error = err.toString()
                     resolve({message:"Something went wrong"})
                     if (error.includes("Network request failed")) {
                         GeneralHelper.ShowToast("Make Sure you have an active internet connection on your phone")

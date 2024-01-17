@@ -1,10 +1,8 @@
-import { Box,Typography } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
+import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
 
   return({
     button:{

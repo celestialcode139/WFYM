@@ -15,12 +15,9 @@ import Avatar from "../../assets/icons/image1.png";
 
 const columns = ["Name", "Image", "Email", "Gender", "Action"];
 
-const options = {
-  filterType: "checkbox",
-};
+
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -156,7 +153,7 @@ function Dashboard() {
                 title={"Users"}
                 data={data}
                 columns={columns}
-                options={options}
+                options={{filterType:"checkbox"}}
               />
             </Box>
           </Grid>

@@ -78,7 +78,7 @@ function OTPResetPass() {
   }
 
   const retrieveData = async (OTP: string, For: string) => {
-    const result = await GeneralHelper.retrieveData("Email")
+    const result = await GeneralHelper.retrieveData("Email") as any
     if (result.status == 1) {
       console.log(result);
       
