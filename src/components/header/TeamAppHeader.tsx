@@ -1,13 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import Logo from "../../assets/logo/logo-w.svg";
-import Avatar from "../../assets/images/avatar.png";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
-import AdminSignature from "../../assets/images/adminSignature.svg";
 import ProfileDropdown from "../../assets/images/ProfileDropdown.svg";
-import Menu from "../../components/menu";
 import { Link } from "react-router-dom";
 import TeamMenu from "../TeamMenu";
 import GeneralHelper from "../../Helpers/GeneralHelper";
@@ -15,7 +13,6 @@ import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     logo: {
       width: "130px",
@@ -34,18 +31,17 @@ const useStyles = makeStyles(() => {
       width: "50px",
       borderRadius: "50%",
       border: "2px solid #01A0E6",
-      objectFit:"cover"
+      objectFit: "cover",
     },
     profileName: {
       fontSize: "16px!important",
       fontWeight: "bold!important",
-      color:"#000000!important"
+      color: "#000000!important",
     },
     profileLocation: {
       fontSize: "10px!important",
       lineHeight: "10px!important",
-      color:"#000000"
-
+      color: "#000000",
     },
     ProfileDropdown: {
       marginLeft: "5px",
@@ -55,35 +51,31 @@ const useStyles = makeStyles(() => {
 });
 function TeamAppHeader(props: any) {
   const classes = useStyles();
-  const [Data, setData] = useState({});
+  const [Data, setData] = useState<any>({});
   const [Token, setToken] = useState("");
   const [UserId, setUserId] = useState("");
-
 
   const featchToken = async () => {
     const Token: any = await GeneralHelper.retrieveData("Token");
     const UserId: any = await GeneralHelper.retrieveData("UserId");
     if (Token.status == 1 && UserId.status == 1) {
       setToken(String(Token.data));
-      setUserId(String(UserId.data))
+      setUserId(String(UserId.data));
     }
   };
   const GetProfile = () => {
     console.log("Getting Profile.....");
-    APIHelper.CallApi(
-      config.Endpoints.Team.GetById,
-      {},
-      UserId,
-      Token
-    ).then((result: any) => {
-      if (result.status == "success") {
-        console.log(result.data);
-        setData(result?.data);
-      } else {
-        console.log(result.message);
-        GeneralHelper.ShowToast(String(result.message));
+    APIHelper.CallApi(config.Endpoints.Team.GetById, {}, UserId, Token).then(
+      (result: any) => {
+        if (result.status == "success") {
+          console.log(result.data);
+          setData(result?.data);
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
       }
-    });
+    );
   };
 
   useEffect(() => {
@@ -111,7 +103,13 @@ function TeamAppHeader(props: any) {
                   src={Data?.profile_images}
                   className={`${classes.profileImage}`}
                 ></Box>
-                <Box sx={{ height: "40px", marginLeft: "10px",marginRight:"10px" }}>
+                <Box
+                  sx={{
+                    height: "40px",
+                    marginLeft: "10px",
+                    marginRight: "10px",
+                  }}
+                >
                   <Typography className={`${classes.profileName}`}>
                     {Data?.first_name}
                   </Typography>

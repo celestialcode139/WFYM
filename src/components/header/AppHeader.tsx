@@ -1,11 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import Logo from "../../assets/logo/logo-w.svg";
-import Avatar from "../../assets/images/avatar.png";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
-import AdminSignature from "../../assets/images/adminSignature.svg";
 import ProfileDropdown from "../../assets/images/ProfileDropdown.svg";
 import Menu from "../../components/menu";
 import { Link } from "react-router-dom";
@@ -14,7 +12,6 @@ import config from "../../../config";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     logo: {
       width: "130px",
@@ -37,14 +34,12 @@ const useStyles = makeStyles(() => {
     profileName: {
       fontSize: "16px!important",
       fontWeight: "bold!important",
-      color:"#000000!important"
-
+      color: "#000000!important",
     },
     profileLocation: {
       fontSize: "10px!important",
       lineHeight: "10px!important",
-      color:"#000000"
-
+      color: "#000000",
     },
     ProfileDropdown: {
       marginLeft: "5px",
@@ -53,22 +48,21 @@ const useStyles = makeStyles(() => {
   };
 });
 
-
-
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function AppHeader(props: any) {
   const classes = useStyles();
-  const [Token, setToken] = useState("")
-  const [UserDetails, setUserDetails] = useState({})
+  const [Token, setToken] = useState("");
+  const [UserDetails, setUserDetails] = useState<any>({});
 
   const GetProfileDetails = async () => {
-      APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {},null,Token).then((result: any) => {
+    APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
+      (result: any) => {
         console.log("Profile Details ", result.data);
-        setUserDetails(result.data)
-       
-      })
-  }
-  
+        setUserDetails(result.data);
+      }
+    );
+  };
+
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
@@ -82,6 +76,7 @@ function AppHeader(props: any) {
     } else {
       featchToken();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Token]);
 
   return (
@@ -101,12 +96,19 @@ function AppHeader(props: any) {
                   src={UserDetails.profile_images && UserDetails.profile_images}
                   className={`${classes.profileImage}`}
                 ></Box>
-                <Box sx={{ height: "40px", marginLeft: "10px", marginRight:"10px" }}>
+                <Box
+                  sx={{
+                    height: "40px",
+                    marginLeft: "10px",
+                    marginRight: "10px",
+                  }}
+                >
                   <Typography className={`${classes.profileName}`}>
                     {UserDetails.first_name && UserDetails.first_name}
                   </Typography>
                   <Typography className={`${classes.profileLocation}`}>
-                    {UserDetails.user_details && `${UserDetails.user_details.country} ${UserDetails.user_details.city} ${UserDetails.user_details.location}`}
+                    {UserDetails.user_details &&
+                      `${UserDetails.user_details.country} ${UserDetails.user_details.city} ${UserDetails.user_details.location}`}
                   </Typography>
                 </Box>
                 <Box component="img" src={ProfileDropdown}></Box>

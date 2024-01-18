@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Box } from "@mui/material";
 import ProfileImage1 from "../assets/images/profileimages/1.png";
 import Lightbox from "lightbox-react";
 import "lightbox-react/style.css";
@@ -26,11 +26,4 @@ export default function MediaCover(props: any) {
       )}
     </div>
   );
-}
-function useEffect(arg0: () => void, arg1: never[]) {
-  throw new Error("Function not implemented.");
-}
-
-function useRef(arg0: null) {
-  throw new Error("Function not implemented.");
 }

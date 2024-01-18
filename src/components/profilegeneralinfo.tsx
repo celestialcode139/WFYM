@@ -43,8 +43,9 @@ function Generalinfo(props: any) {
     religion: props.body.religion,
     political_Party: props.body.political_Party,
     beforeChildren: props.body.beforeChildren,
+    location: props.body.location,
   });
-// Getting Profile
+  // Getting Profile
   const GetReligion = () => {
     APIHelper.CallApi(
       config.Endpoints.Init.GetMetaData,
@@ -68,18 +69,18 @@ function Generalinfo(props: any) {
     console.log("sortedArray ", sortedArray);
     setAllReligion(sortedArray);
   };
-// Other Functions
-  const handleAgeSelection = debounce((MinAge,MaxAge)=>{
-    console.log("Setting MinAge ",MinAge);
-    
-    setbody({ ...body, minAge: MinAge,maxAge:MaxAge });
-  },1500)
+  // Other Functions
+  const handleAgeSelection = debounce((MinAge, MaxAge) => {
+    console.log("Setting MinAge ", MinAge);
+
+    setbody({ ...body, minAge: MinAge, maxAge: MaxAge });
+  }, 1500);
 
   const religionHandler = (e: any) => {
     setbody({ ...body, religion: e.target.value });
   };
   useEffect(() => {
-    console.log("On Change Body ",body);
+    console.log("On Change Body ", body);
     props.onChange(body);
   }, [body]);
 
@@ -92,7 +93,13 @@ function Generalinfo(props: any) {
       <Grid container spacing={2}>
         <Grid item md={12}>
           <Box sx={{ marginBottom: "30px" }}>
-            <RangeSlider title="Age" DefaultValue={[body.minAge,body.maxAge]} handleChange={([min,max]:Array<number>) => handleAgeSelection(min,max)} />
+            <RangeSlider
+              title="Age"
+              DefaultValue={[body.minAge, body.maxAge]}
+              handleChange={([min, max]: Array<number>) =>
+                handleAgeSelection(min, max)
+              }
+            />
           </Box>
         </Grid>
 
@@ -121,9 +128,28 @@ function Generalinfo(props: any) {
               }}
             >
               {AllReligion.map((item, i) => (
-                <MenuItem key={i} value={item.value}>{item.value}</MenuItem>
+                <MenuItem key={i} value={item.value}>
+                  {item.value}
+                </MenuItem>
               ))}
             </TextField>
+          </Box>
+        </Grid>
+        <Grid item md={12}>
+          <Box className={`${classes.TextFieldParent}`}>
+            <TextField
+              fullWidth
+              sx={{
+                "& div": {
+                  borderRadius: "15px!important",
+                },
+              }}
+              label="Location"
+              value={body.location}
+              onChange={(e) => {
+                setbody({ ...body, location: e.target.value });
+              }}
+            />
           </Box>
         </Grid>
         <Grid item md={12}>
@@ -189,6 +215,25 @@ function Generalinfo(props: any) {
             </FormControl>
           </Box>
         </Grid>
+        {body.beforeChildren !== 0 && (
+          <Grid item md={12}>
+            <Box className={`${classes.TextFieldParent}`}>
+              <TextField
+                fullWidth
+                sx={{
+                  "& div": {
+                    borderRadius: "15px!important",
+                  },
+                }}
+                label="Children's"
+                value={String(body.beforeChildren)}
+                onChange={(e) => {
+                  setbody({ ...body, beforeChildren: parseInt(e.target.value) });
+                }}
+              />
+            </Box>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

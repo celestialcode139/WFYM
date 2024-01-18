@@ -1,19 +1,12 @@
 import { useState, useEffect } from "react";
-import { Box, Container, TextField, MenuItem } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import AdminSignature from "../assets/images/adminSignature.svg";
-import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -27,6 +20,7 @@ const useStyles = makeStyles(() => {
     },
   };
 });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ChangePassword(props:any) {
   const classes = useStyles();
   const [body, setbody] = useState({
@@ -36,7 +30,7 @@ function ChangePassword(props:any) {
   });
   useEffect(() => {
     props.OnChange(body)
-  }, [body]);
+  }, [body, props]);
 
   return (
     <Box>

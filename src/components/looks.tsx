@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
+import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
@@ -27,7 +28,7 @@ const femaleLooks = [
   { title: "Round", value: "round", image: FRound },
   { title: "Triangle", value: "triangle", image: FTriangle },
 ];
-const maleLooks= [
+const maleLooks = [
   { title: "Hourglass", value: "hourglass", image: MHourglass },
   {
     title: "Inverted Triangle",
@@ -36,7 +37,7 @@ const maleLooks= [
   },
   { title: "Rectangle", value: "rectangle", image: MRectangle },
   { title: "Round", value: "round", image: MRound },
-  { title: "Triangle", value: "triangle", image: MTriangle },
+  { title: "Pear", value: "pear", image: MTriangle },
 ];
 
 const useStyles = makeStyles(() => {
@@ -53,24 +54,31 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-const gender=[femaleLooks,maleLooks]
+const gender = [femaleLooks, maleLooks];
 function Looks(props: any) {
   const classes = useStyles();
   const [active, setactive] = useState(props.look);
-  
+
   return (
     <Box className={`${classes.looks}`}>
       <Grid container spacing={0}>
-        {gender[props.gender=="female"?0:1].map((gender,i) => (
+        {gender[props.gender == "female" ? 0 : 1].map((gender, i) => (
           <Grid item lg={2.4} key={i}>
             <Box
-              sx={{ width: "100%",maxHeight:"300px" }}
-              onClick={() => {setactive(gender.value);props.onChange(gender.value)}}
+              sx={{ width: "100%", maxHeight: "300px" }}
+              onClick={() => {
+                setactive(gender.value);
+                props.onChange(gender.value);
+              }}
               className={`${active == gender.value ? classes.active : null}`}
               component={"img"}
               src={gender.image}
             ></Box>
-            <Typography sx={{textAlign:"center",marginTop:"20px",color:"#000000"}}>{gender.title}</Typography>
+            <Typography
+              sx={{ textAlign: "center", marginTop: "20px", color: "#000000" }}
+            >
+              {gender.title}
+            </Typography>
           </Grid>
         ))}
       </Grid>

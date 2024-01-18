@@ -32,11 +32,13 @@ export default function AssignMatchDiloag(props: any) {
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
-      if (SelectedMatch != undefined || SelectedMatch != "") {
+      if (SelectedMatch == undefined || SelectedMatch == "") {
+        console.log("Selected Match ",SelectedMatch);
+        
         Alert.notify("No Matches Available!", 3000);
       } else {
         console.log(String(SelectedMatch));
-        // handleAssignMatch(String(result.data));
+        handleAssignMatch(String(result.data));
       }
     }
   };
@@ -122,7 +124,7 @@ export default function AssignMatchDiloag(props: any) {
         }}
       >
         <Box sx={{ flexDirection: "row", display: "flex" }}>
-          <FormControl style={{ width: "200px", marginBottom: "50px",borderColor:"red",borderWidth:"2px" }}>
+          <FormControl style={{ width: "200px", marginBottom: "50px" }}>
             <InputLabel id="demo-simple-select-label">Select Match</InputLabel>
             <Select
               labelId="demo-simple-select-label"

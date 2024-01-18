@@ -38,8 +38,8 @@ function Generalinfo() {
   const navigate = useNavigate();
   const [Token, setToken] = useState("");
   const [body, setbody] = useState({
-    minAge:25,
-    maxAge:35,
+    minAge: 25,
+    maxAge: 35,
     description: "",
     religion: "",
     political_Party: "",
@@ -60,17 +60,18 @@ function Generalinfo() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        console.log("Ideal Person Details ",result.data);
-        console.log("Ideal Person Details Min age",result?.data?.minAge);
+        console.log("Ideal Person Details ", result.data);
+        console.log("Ideal Person Details Min age", result?.data?.minAge);
 
         setbody({
           ...body,
-          minAge:result?.data?.minAge != undefined?result?.data?.minAge:25,
-          maxAge:result?.data?.maxAge != undefined?result?.data?.maxAge:35,
+          minAge: result?.data?.minAge != undefined ? result?.data?.minAge : 25,
+          maxAge: result?.data?.maxAge != undefined ? result?.data?.maxAge : 35,
           description: result?.data?.description,
           religion: result?.data?.religion,
           political_Party: result?.data?.political_party,
           beforeChildren: result?.data?.children_before,
+          location: result?.data?.location,
         });
       } else {
         console.log(result.message);
@@ -81,14 +82,32 @@ function Generalinfo() {
   // Updating Profile Details
 
   const UpdateBio = () => {
+    // const data = {
+    //   minAge: body.minAge,
+    //   maxAge: body.maxAge,
+    //   description: body.description,
+    //   religion: body.religion,
+    //   political_party: body.political_Party,
+    //   children_before: body.beforeChildren == true ? 1 : 0,
+    // };
     const data = {
-      minAge:body.minAge,
-      maxAge:body.maxAge,
-      description: body.description,
-      religion: body.religion,
-      political_party: body.political_Party,
-      children_before: body.beforeChildren == true? 1:0,
+      minAge: body.minAge,
+      maxAge: body.maxAge,
     };
+    if (body.description !== "") {
+      data.description = body.description;
+    }
+    if (body.religion !== "") {
+      data.religion = body.religion;
+    }
+    if (body.political_Party !== "") {
+      data.political_party = body.political_Party;
+    }
+    if (body.beforeChildren !== "") {
+      data.children_before = body.beforeChildren;
+    }
+    console.log("Sending ....", data);
+
     APIHelper.CallApi(
       config.Endpoints.user.UpdateIdealPersonality,
       data,
@@ -97,7 +116,7 @@ function Generalinfo() {
     ).then((result) => {
       if (result.status == "success") {
         // Alert.notify("Questioner Updated Successfully!");
-        navigate("/ideal-personality/looking-for")
+        navigate("/ideal-personality/looking-for");
         // setTimeout(() => {
         // }, 6000);
       } else {

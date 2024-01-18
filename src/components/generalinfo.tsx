@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { Box, Container, TextField, MenuItem, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, TextField, MenuItem, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import AdminSignature from "../assets/images/adminSignature.svg";
@@ -8,7 +8,6 @@ import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import config from "../../config";
 import APIHelper from "../Helpers/APIHelper";
@@ -16,7 +15,6 @@ import APIHelper from "../Helpers/APIHelper";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -30,6 +28,7 @@ const useStyles = makeStyles(() => {
     },
   };
 });
+
 function Generalinfo(props: any) {
   const classes = useStyles();
   const [AllReligion, setAllReligion] = useState([]);
@@ -55,7 +54,7 @@ function Generalinfo(props: any) {
       props.Token
     ).then((result: any) => {
       if (result.status == "success") {
-        handleSort(result.data)
+        handleSort(result.data);
         console.log("Religions ", result.data);
       } else {
         console.log(result.message);
@@ -64,22 +63,21 @@ function Generalinfo(props: any) {
     });
   };
   const handleSort = (ArrayToSort: any) => {
-    const sortedArray = [...ArrayToSort].sort((a, b) =>
+    const sortedArray: any = [...ArrayToSort].sort((a, b) =>
       a.value.localeCompare(b.value)
     );
     console.log("sortedArray ", sortedArray);
     setAllReligion(sortedArray);
-
   };
   const religionHandler = (e: any) => {
     setbody({ ...body, religion: e.target.value });
   };
   useEffect(() => {
     props.onChange(body);
-  }, [body]);
+  }, [body, props]);
 
   useEffect(() => {
-    GetReligion()
+    GetReligion();
     setbody({
       ...body,
       occupation: props.body.occupation,
@@ -94,13 +92,12 @@ function Generalinfo(props: any) {
       weight: props.body.weight,
       highestDegree: props.body.highestDegree,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    console.log("Body ",body);
-    
-  }, [body])
-  
+    console.log("Body ", body);
+  }, [body]);
 
   return (
     <Box>
@@ -146,10 +143,9 @@ function Generalinfo(props: any) {
                 },
               }}
             >
-              {
-                AllReligion.map((item,i)=>(
-                  <MenuItem value={item.value}>{item.value}</MenuItem>
-                ))}
+              {AllReligion.map((item: any) => (
+                <MenuItem value={item.value}>{item.value}</MenuItem>
+              ))}
             </TextField>
           </Box>
         </Grid>
@@ -235,7 +231,7 @@ function Generalinfo(props: any) {
               label="Hight (ft)"
               value={body.height}
               onChange={(e) => {
-                setbody({ ...body, height: (e.target.value) });
+                setbody({ ...body, height: e.target.value });
               }}
             />
           </Box>
@@ -252,7 +248,6 @@ function Generalinfo(props: any) {
               }}
               label="Weight (kg)"
               value={body.weight}
-              
               onChange={(e) => {
                 setbody({ ...body, weight: e.target.value });
               }}
@@ -288,7 +283,7 @@ function Generalinfo(props: any) {
               <FormGroup aria-label="position" row>
                 <FormControlLabel
                   value="start"
-                  style={{color:"#000000"}}
+                  style={{ color: "#000000" }}
                   control={
                     <Switch
                       checked={body.smookingHabit}
@@ -310,7 +305,7 @@ function Generalinfo(props: any) {
               <FormGroup aria-label="position" row>
                 <FormControlLabel
                   value="start"
-                  style={{color:"#000000"}}
+                  style={{ color: "#000000" }}
                   control={
                     <Switch
                       checked={body.drinkingHabit}

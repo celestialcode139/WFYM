@@ -1,4 +1,3 @@
-import * as React from "react";
 import { makeStyles } from "@mui/styles";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import HeroSectionSignature from "../assets/images/heroSectionSignature.svg";
@@ -6,8 +5,6 @@ import { useTheme } from "@mui/material/styles";
 import ChocolateIcon from "../assets/gifs/chocolate-bar.gif";
 import GreatPyrenees from "../assets/gifs/great-pyrenees.gif";
 import LoveYou from "../assets/gifs/i-love-you.gif";
-import Key from "../assets/gifs/key.gif";
-import LoveIdea from "../assets/gifs/love_idea.gif";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();

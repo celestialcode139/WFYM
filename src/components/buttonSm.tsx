@@ -1,11 +1,8 @@
-import { Box, CircularProgress, LinearProgress, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import BouncingBallsLoading from "./BouncingBallsLoading";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
-
   return {
     button: {
       backgroundColor: "#065BCE",
@@ -19,6 +16,7 @@ const useStyles = makeStyles(() => {
     },
   };
 });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Button(props: any) {
   const classes = useStyles();
   return (
@@ -28,13 +26,12 @@ function Button(props: any) {
       className={`${classes.button} ${props?.className}`}
     >
       {/* {props.children} */}
-      {props.Loading == true?
-      <BouncingBallsLoading/>
-      // <CircularProgress size={24} style={{padding:0}} color="inherit" />
-      :
-      props.children
-
-      }
+      {props.Loading == true ? (
+        <BouncingBallsLoading />
+      ) : (
+        // <CircularProgress size={24} style={{padding:0}} color="inherit" />
+        props.children
+      )}
     </Box>
   );
 }

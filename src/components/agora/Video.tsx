@@ -1,9 +1,9 @@
 import { AgoraVideoPlayer } from "agora-rtc-react";
 // import { Grid } from "@material-ui/core";
 import { useState, useEffect } from "react";
-import { useMicrophoneAndCameraTracks } from "./settings.js";
 
-export default function Video(props: any) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function Video(props:any) {
   // const [gridSpacing, setGridSpacing] = useState(12);
   const [HEIGHT, setHEIGHT] = useState(window.innerHeight);
   const [WIDTH, setWIDTH] = useState(window.innerWidth);
