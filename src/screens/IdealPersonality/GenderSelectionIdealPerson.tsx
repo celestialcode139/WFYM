@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Container, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
@@ -10,7 +9,6 @@ import femaleBlack from "../../assets/icons/femaleBlack.svg";
 import femaleWhite from "../../assets/icons/femaleWhite.svg";
 import HeaderApp from "../../components/header/AppHeader";
 import Button from "../../components/buttonSm";
-import AgeRace from "../../components/race";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
@@ -48,11 +46,9 @@ const useStyles = makeStyles(() => {
 function Race() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [Race, setRace] = useState<string>("");
   const [Token, setToken] = useState("");
   const [SelectedGender, setSelectedGender] = useState("male");
 
-  const [races, setraces] = useState([]);
 // Getting Profile
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");

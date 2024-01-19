@@ -1,21 +1,14 @@
-import { Box, Container, Grid, TextField } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
 import HeaderApp from "../../components/header/AppHeader";
-import Button from "../../components/buttonSm";
-import DatepickerSticky from "../../components/datepickerSticky";
-import Sidebar from "../../components/sidebar";
 import avatar from "../../assets/images/avatar.png";
-import camera from "../../assets/icons/camera.svg";
-import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -69,7 +62,6 @@ const useStyles = makeStyles(() => {
 });
 function Race() {
   const classes = useStyles();
-  const [activeBtn, setactiveBtn] = useState("settings");
 
   return (
     <Box className={`${classes.appheader}`}>

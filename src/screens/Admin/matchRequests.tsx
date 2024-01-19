@@ -1,18 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Switch,
-  Typography,
-} from "@mui/material";
+import { Box, Switch, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
 import BorderedBG from "../../assets/images/borderedBG.png";
 import MUIDataTable from "mui-datatables";
-import Avatar from "../../assets/icons/image1.png";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
@@ -30,10 +22,6 @@ const columns = [
   "Assign Match",
   "Mark As Completed",
 ];
-
-const options = {
-  filterType: "checkbox",
-};
 
 const useStyles = makeStyles(() => {
   return {
@@ -164,6 +152,34 @@ function MatchRequests() {
   const [matches, setmatches] = useState([]);
   const [AllAvailableMatches, setAllAvailableMatches] = useState([]);
 
+  interface MatchesRequests {
+    _id: string;
+    status: string;
+    user_id: UserId;
+  }
+  interface UserId {
+    _id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    gender: string;
+    profile_images: string;
+    user_subscriptions: User_Subscriptions;
+  }
+  interface User_Subscriptions {
+    subscription_id: SubscriptionId;
+    remaining_matches: string;
+    _id: string;
+  }
+  interface SubscriptionId {
+    title: string;
+  }
+  interface ResultInterface {
+    data: [];
+    status: string;
+    message: string;
+  }
+
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
@@ -171,15 +187,18 @@ function MatchRequests() {
     }
   };
   const GetAllMatches = () => {
+    console.log(Loading);
     setLoading(true);
     APIHelper.CallApi(
       config.Endpoints.Match.GetAllMatches,
       {},
       "&execpt=completed",
       Token
-    ).then((result: any) => {
+    ).then((result : ResultInterface) => {
       if (result.status == "success") {
-        setmatches(result.data);
+        if (result.data !== null && result.data !== undefined) {
+          setmatches(result.data);
+        }
 
         // setmatchStatus(result.data[0]?.status ?? "");
         setLoading(false);
@@ -190,31 +209,30 @@ function MatchRequests() {
       }
     });
   };
-  const handleViewProfile = (e: number) => {
-    navigate(`/dash/view-matchprofile/${e}`);
-  };
+  // const handleViewProfile = (e: number) => {
+  //   navigate(`/dash/view-matchprofile/${e}`);
+  // };
   const handleOpenDiloag = (
     RequesterMatchRequestId: string,
     RequesterSubscriptionId: string,
-    RequesterId:string
+    RequesterId: string
   ) => {
     setRequesterMatchRequestId(RequesterMatchRequestId);
     setRequesterSubscriptionId(RequesterSubscriptionId);
-    setRequesterId(RequesterId)
-    console.log("Setting RequesterId ",RequesterId);
-    
+    setRequesterId(RequesterId);
+    console.log("Setting RequesterId ", RequesterId);
+
     setDiloagOpen(true);
   };
   const handleCloseDiloag = () => {
     setDiloagOpen(false);
     setRequesterMatchRequestId("");
-    GetAllMatches()
-
+    GetAllMatches();
   };
   const handleMarkAsCompleted = debounce(
     (Completed: boolean, RequestId: string) => {
       if (Completed == true) {
-        MarkAsCompleted(RequestId)
+        MarkAsCompleted(RequestId);
       }
     },
     1500
@@ -223,13 +241,12 @@ function MatchRequests() {
   const MarkAsCompleted = (RequestId: string) => {
     APIHelper.CallApi(
       config.Endpoints.Match.MarkAsCompleted,
-      {RequestId:RequestId},
+      { RequestId: RequestId },
       null,
       Token
-    ).then((result: any) => {
+    ).then((result: Response) => {
       if (result.status == "success") {
-        GetAllMatches()
-
+        GetAllMatches();
       } else {
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
@@ -248,20 +265,21 @@ function MatchRequests() {
   useEffect(() => {
     if (matches.length != 0) {
       const pendingRecord = matches.filter(
-        (record) => record.status != "completed"
+        (record: MatchesRequests) => record.status != "completed"
       );
-      const UsersName = pendingRecord.map((item) => ({
+      const UsersName = pendingRecord.map((item: MatchesRequests) => ({
         first_name: item?.user_id?.first_name,
         _id: item?.user_id?._id,
         SubscriptionId: item?.user_id?.user_subscriptions,
       }));
-      setAllAvailableMatches(UsersName);
-
+      if (UsersName.length !== 0) {
+        setAllAvailableMatches(UsersName);
+      }
     }
   }, [matches]);
 
   const tableData = useMemo(() => {
-    return matches.map((val) => {
+    return matches.map((val: MatchesRequests) => {
       return [
         <Box className={`${classes.Parent}`}>
           {`${val?.user_id?.first_name} ${val?.user_id?.last_name}`}
@@ -303,7 +321,11 @@ function MatchRequests() {
           <Box
             className={`${classes.ViewIcon}`}
             onClick={() => {
-              handleOpenDiloag(val._id, val.user_id?.user_subscriptions?._id,val.user_id?._id);
+              handleOpenDiloag(
+                val._id,
+                val.user_id?.user_subscriptions?._id,
+                val.user_id?._id
+              );
             }}
           >
             <img
@@ -315,7 +337,7 @@ function MatchRequests() {
         <Box className={`${classes.Parent}`}>
           <Switch
             onChange={(e: any) => {
-              handleMarkAsCompleted(e.target.checked,val._id);
+              handleMarkAsCompleted(e.target.checked, val._id);
             }}
           />
         </Box>,

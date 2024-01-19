@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
@@ -15,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",

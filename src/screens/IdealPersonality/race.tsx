@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
 import HeaderApp from "../../components/header/AppHeader";
 import Button from "../../components/buttonSm";
-import RangeSlider from "../../components/RangeSlider";
 import AgeRace from "../../components/race";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
@@ -18,7 +16,6 @@ import { ToastContainer } from "react-toastify";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -88,7 +85,7 @@ function Race() {
       Token
     ).then((result) => {
       if (result.status == "success") {
-        Alert.notify("Questioner Updated Successfully!");
+        Alert.notify("Questioner Updated Successfully!",4000);
         setTimeout(() => {
           navigate("/dashboard");
         }, 6000);

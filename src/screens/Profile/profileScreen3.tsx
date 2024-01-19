@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
 import "../../App.css";
@@ -14,7 +13,6 @@ import config from "../../../config";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     imagePicker: {
       backgroundColor: "#075bce",
@@ -75,8 +73,11 @@ const useStyles = makeStyles(() => {
   };
 });
 function ProfileScreen3() {
-  const [races, setraces] = useState([]);
+  const [races, setraces] = useState<Array<object>>([]);
   const [SelectedRace, setSelectedRace] = useState("");
+  interface SortingObjectInterface {
+    value:number
+  }
 
   const [Token, setToken] = useState("");
 
@@ -143,8 +144,8 @@ function ProfileScreen3() {
     UpdateBio();
   };
   // Other functions
-  const handleSort = (ArrayToSort:any) => {
-    const sortedArray = [...ArrayToSort].sort((a, b) => a.value.localeCompare(b.value));
+  const handleSort = (ArrayToSort:Array<object>) => {
+    const sortedArray = [...ArrayToSort].sort((a:SortingObjectInterface, b:SortingObjectInterface) => a.value.localeCompare(b.value));
     console.log("sortedArray ",sortedArray);
     setraces(sortedArray);
 
@@ -172,7 +173,7 @@ function ProfileScreen3() {
             data={races}
             key={races}
             race={SelectedRace}
-            onChange={(data: any) => setSelectedRace(data)}
+            onChange={(data: string) => setSelectedRace(data)}
           />
         </Box>
       </Box>

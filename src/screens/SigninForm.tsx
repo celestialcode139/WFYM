@@ -1,13 +1,12 @@
 import React from "react";
 import { Box, Typography, Container, TextField, Grid, CircularProgress } from "@mui/material";
-import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import Button from "../components/button";
 import signinForm from "../assets/images/signupForm.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
@@ -92,7 +91,7 @@ function Signin() {
   }
   const SignIn = () => {
     setLoading(true)
-    APIHelper.CallApi(config.Endpoints.auth.SignIn, { email: Email, password: Password }).then((result: any) => {
+    APIHelper.CallApi(config.Endpoints.auth.SignIn, { email: Email, password: Password },null,'').then((result: any) => {
       if (result.status == "success") {
         console.log("Success", result.data.token);
         GeneralHelper.storeData("Token", result.data.token)

@@ -1,5 +1,4 @@
-import { Box, Typography, Container, Link, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Typography, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import dislike from "../assets/images/dislike.svg";
@@ -9,7 +8,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
 
   return {
     MatchContainer: {

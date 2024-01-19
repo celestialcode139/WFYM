@@ -3,7 +3,6 @@ import { Box, Container, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
-import HeaderApp from "../../components/header/AppHeader";
 import BorderedBG from "../../assets/images/borderedBG.png";
 import Sidebar from "./sidebar";
 import { Outlet } from "react-router-dom";
@@ -15,11 +14,6 @@ import TeamAppHeader from "../../components/header/TeamAppHeader";
 
 // import $ from "jquery";
 
-const columns = ["Name", "Image", "Email", "Gender", "Action"];
-
-const options = {
-  filterType: "checkbox",
-};
 
 const useStyles = makeStyles(() => {
   return {

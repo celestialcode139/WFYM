@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Container, TextField, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import backArrow from "../assets/icons/backArrow.svg";
@@ -12,12 +11,9 @@ import OnBoardingHeader from "../components/onBoardingHeader";
 import { Link, useNavigate } from "react-router-dom";
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
-import APIHelper from "../Helpers/APIHelper";
-import config from "../../config";
 import moment from "moment";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     SignupProfile: {
       backgroundColor: "#ffffff",
@@ -84,7 +80,6 @@ function SignupProfile() {
   const classes = useStyles();
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
-  const [ProfileImage, setProfileImage] = useState("");
   const [DOB, setDOB] = useState("");
 
   const Validation = () => {

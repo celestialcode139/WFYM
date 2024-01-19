@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
@@ -16,7 +15,6 @@ import Alert from "../../Helpers/Alert";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     imagePicker: {
       backgroundColor: "#075bce",
@@ -135,7 +133,7 @@ function ProfileScreen5() {
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
         if (result.status == "success") {
-          Alert.notify("Profile Updated Successfully");
+          Alert.notify("Profile Updated Successfully",4000);
           setTimeout(() => {
             navigate("/dashboard")
           }, 6000);

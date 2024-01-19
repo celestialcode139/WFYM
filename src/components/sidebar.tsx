@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import Button from "../components/buttonSm";
@@ -9,7 +8,6 @@ import { Link } from "react-router-dom";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     sidebar: {
       width: "260px",

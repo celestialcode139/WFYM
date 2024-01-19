@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { useNavigate } from "react-router-dom";
+
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
 import BorderedBG from "../../assets/images/borderedBG.png";
@@ -13,10 +15,6 @@ import ViewProfileIcon from "../../assets/icons/ViewIcon.png";
 
 
 const columns = ["Name", "Image", "Email", "Gender", "Role", "Action"];
-
-const options = {
-  filterType: "checkbox",
-};
 
 const useStyles = makeStyles(() => {
   return {
@@ -138,6 +136,7 @@ const useStyles = makeStyles(() => {
 });
 function TeamMembers() {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [Token, setToken] = useState("");
   const [Loading, setLoading] = useState(false);
   const [matches, setmatches] = useState([]);
@@ -149,6 +148,8 @@ function TeamMembers() {
     }
   };
   const GetAllMatches = () => {
+    console.log(Loading);
+    
     setLoading(true);
     APIHelper.CallApi(
       config.Endpoints.Match.GetMatches,

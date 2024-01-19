@@ -3,9 +3,6 @@ import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import AdminSignature from "../assets/images/adminSignature.svg";
-import GeneralHelper from "../Helpers/GeneralHelper";
-import APIHelper from "../Helpers/APIHelper";
-import config from "../../config";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {

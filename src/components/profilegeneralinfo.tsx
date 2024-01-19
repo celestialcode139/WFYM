@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Container, TextField, MenuItem, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, TextField, MenuItem, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import AdminSignature from "../assets/images/adminSignature.svg";
@@ -8,7 +7,6 @@ import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import RangeSlider from "./RangeSlider";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
@@ -18,7 +16,6 @@ import { debounce } from "lodash";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",

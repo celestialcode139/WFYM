@@ -1,5 +1,4 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import SendMessage from "../assets/icons/sendMessage.svg";
@@ -17,7 +16,6 @@ import VideoCallIcon from "../assets/icons/videoicon.png";
 import moment from "moment";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
 
   return {
     profileImage: {
@@ -58,10 +56,35 @@ function Media() {
   const params = useParams();
 
   const [isOpen, setisOpen] = useState(false);
-  const [User, setUser] = useState<any>({});
+  const [User, setUser] = useState<UserInterface>();
   const [Token, setToken] = useState("");
   const [userId, setuserId] = useState("");
   const [Age, setAge] = useState("");
+  interface UserInterface {
+    _id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    gender: string;
+    profile_images: string;
+    status: string
+    user_details: UserDetailsInterface
+  }
+  interface UserDetailsInterface {
+    profession: string;
+    description: string;
+    location: string;
+    hobbies: Array<string>;
+    religion: string;
+    personality: string;
+    images: Array<string>;
+    drink_habits: boolean;
+    smoking_habits: boolean;
+    political_party: string;
+    race: string;
+    children_before: string;
+    highest_degree: string;
+  }
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -79,7 +102,7 @@ function Media() {
     APIHelper.CallApi(
       config.Endpoints.user.GetMyProfile,
       {},
-      params.id,
+      String(params.id),
       Token
     ).then((result: any) => {
       if (result.status == "success") {
@@ -136,7 +159,7 @@ function Media() {
                     </Typography>
                   </Box>
                   <Box>
-                    <Link to={{ pathname: `/chat/${userId}/${User._id}` }}>
+                    <Link to={{ pathname: `/chat/${userId}/${User === undefined ? null:User._id}` }}>
                       <Box
                         component="img"
                         className="hover"
@@ -145,7 +168,7 @@ function Media() {
                       ></Box>
                     </Link>
                     <Link
-                      to={{ pathname: `/video-call/${userId}/${User._id}` }}
+                      to={{ pathname: `/video-call/${userId}/${User === undefined ? null:User._id}` }}
                     >
                       <Box
                         component="img"
@@ -318,7 +341,7 @@ function Media() {
             </Grid>
             <Lightbox
               isOpen={isOpen}
-              setisOpen={(e: any) => {
+              setisOpen={(e: boolean) => {
                 setisOpen(e);
               }}
             />

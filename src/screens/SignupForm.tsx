@@ -125,7 +125,7 @@ function Signup() {
 
   const CallApi = async () => {
     setLoading(true)
-    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email }).then((result: any) => {
+    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email },null,'').then((result: any) => {
       if (result.status == "success") {
         console.log("Response is ", result);
         setLoading(false)

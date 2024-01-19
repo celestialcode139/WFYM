@@ -1,24 +1,18 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import Button from "../components/buttonSm";
-import AgeRace from "../components/race";
 import avatar from "../assets/images/avatar.png";
 import ProfileImage1 from "../assets/images/profileimages/1.png";
 import ProfileImage2 from "../assets/images/profileimages/2.png";
 import ProfileImage3 from "../assets/images/profileimages/3.png";
-import Video1 from "../assets/images/profileimages/video1.png";
 import UploadImage from "../assets/images/uploadImage.png";
-import Uploadvideo from "../assets/images/uploadvideo.png";
 import uploadVideoWhite from "../assets/images/uploadVideoWhite.png";
 import Video from "../components/video";
-import { useState } from "react";
 
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     imagePicker: {
       backgroundColor: "#075bce",

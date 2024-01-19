@@ -15,10 +15,6 @@ import { useNavigate } from "react-router-dom";
 
 const columns = ["Name", "Image", "Email", "Gender", "Status", "Action"];
 
-const options = {
-  filterType: "checkbox",
-};
-
 const useStyles = makeStyles(() => {
   return {
     appheader: {
@@ -130,6 +126,16 @@ function AllUsers() {
   const [Loading, setLoading] = useState(false);
   const [matches, setmatches] = useState([]);
 
+  interface UserInterface {
+    _id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    gender: string;
+    profile_images: string;
+    status: string
+  }
+
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
@@ -137,6 +143,8 @@ function AllUsers() {
     }
   };
   const GetAllMatches = () => {
+    console.log(Loading);
+    
     setLoading(true);
     APIHelper.CallApi(
       config.Endpoints.user.GetAllUsers,
@@ -170,7 +178,7 @@ function AllUsers() {
   }, [Token]);
 
   const tableData = useMemo(() => {
-    return matches.map((val) => {
+    return matches.map((val:UserInterface) => {
       return [
         <Box className={`${classes.Parent}`}>
           {`${val?.first_name} ${val?.last_name}`}

@@ -11,7 +11,6 @@ import HeaderApp from "../components/header/AppHeader";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
-import { useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 // import $ from "jquery";
 
@@ -57,10 +56,9 @@ const useStyles = makeStyles(() => {
 });
 function Race() {
   const classes = useStyles();
-  const [subscriptions, setsubscriptions] = useState<any>([]);
+  const [subscriptions, setsubscriptions] = useState([]);
   const [Token, setToken] = useState("");
   const [paymentButton, setpaymentButton] = useState(false);
-  const [show, setShow] = useState(false);
   const [success, setSuccess] = useState(false);
   const [orderID, setOrderID] = useState(false);
   const [amount, setamount] = useState(0);
@@ -146,6 +144,8 @@ function Race() {
   const onApprove = (data: any, actions: any) => {
     return actions.order.capture().then(function (details: any) {
       const { payer } = details;
+      console.log(data,payer);
+      
       setSuccess(true);
     });
   };
@@ -157,7 +157,6 @@ function Race() {
   };
 
   //capture likely error
-  const onError = (data: any, actions: any) => {};
   useEffect(() => {
     if (success) {
       BuySubscription(userId, subscription_id);
@@ -167,7 +166,6 @@ function Race() {
         subscription_id,
       });
 
-      setShow(false);
     }
   }, [success]);
 

@@ -1,20 +1,14 @@
-import { useState, useEffect } from "react";
-import { Box, Typography, Container, TextField, Grid } from "@mui/material";
-import Logo from "../assets/logo/logo-w.svg";
-import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
+import { Box, Typography, Container, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import OtpInput from "react-otp-input";
 import backArrow from "../assets/icons/backArrow.svg";
-import avatar from "../assets/images/avatar.png";
 import camera from "../assets/icons/cam.svg";
 import Button from "../components/button";
-import DatepickerSticky from "../components/datepickerSticky";
 import OnBoardingHeader from "../components/onBoardingHeader";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     SignupProfile: {
       backgroundColor: "#ffffff",

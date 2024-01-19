@@ -10,8 +10,6 @@ import Divider from "@mui/material/Divider";
 import Dashboard from "../../assets/icons/dashboard.png";
 import Users from "../../assets/icons/users.png";
 import Match from "../../assets/icons/match.png";
-import Team from "../../assets/icons/team.png";
-import Role from "../../assets/icons/role.png";
 import Logout from "../../assets/icons/logout.png";
 import Subscription from "../../assets/icons/subscription.png";
 import { useNavigate, useLocation } from "react-router-dom";

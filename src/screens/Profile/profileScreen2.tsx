@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
@@ -14,7 +13,6 @@ import config from "../../../config";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     imagePicker: {
       backgroundColor: "#075bce",
@@ -79,7 +77,38 @@ function ProfileScreen2() {
   const [SelectedHobbies, setSelectedHobbies] = useState<string[]>([]);
   const [Gender, setGender] = useState("male");
   const [Token, setToken] = useState("");
-  const [AllHobbies, setAllHobbies] = useState([]);
+  const [AllHobbies, setAllHobbies] = useState<Array<object>>([]);
+
+  interface APIResponseInterface {
+    status:string,
+    data:DataInterface,
+    message?:string
+
+  }
+  interface DataInterface {
+    gender:string,
+    user_details:UserDetailsInterface
+  }
+  interface UserDetailsInterface {
+    profession: string;
+    description: string;
+    location: string;
+    hobbies: Array<string>;
+    religion: string;
+    personality: string;
+    images: Array<string>;
+    drink_habits: boolean;
+    smoking_habits: boolean;
+    political_party: string;
+    race: string;
+    children_before: string;
+    highest_degree: string;
+  }
+  interface HobbiesAPIResponseInterface {
+    status:string,
+    data:Array<object>,
+    message?:string
+  }
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -89,14 +118,14 @@ function ProfileScreen2() {
   };
   const GetProfile = (Token: string) => {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
-      (result: any) => {
+      (result:APIResponseInterface ) => {
         if (result.status == "success") {
           console.log(result.data);
           setGender(result?.data?.gender ? result.data.gender : "");
           setSelectedHobbies(
             result?.data?.user_details?.hobbies
               ? result.data.user_details.hobbies
-              : ""
+              : []
           );
           console.log("Selected Hobbies ", result?.data?.user_details?.hobbies);
         } else {
@@ -112,7 +141,7 @@ function ProfileScreen2() {
       {},
       "hobbies",
       Token
-    ).then((result: any) => {
+    ).then((result: HobbiesAPIResponseInterface) => {
       if (result.status == "success") {
         handleSort(result.data)
         console.log("Hobbies ", result.data);
@@ -164,8 +193,8 @@ function ProfileScreen2() {
     UpdateProfile();
   };
   // Other functions
-  const handleSort = (ArrayToSort: any) => {
-    const sortedArray = [...ArrayToSort].sort((a, b) =>
+  const handleSort = (ArrayToSort: Array<object>) => {
+    const sortedArray = [...ArrayToSort].sort((a:any, b:any) =>
       a.value.localeCompare(b.value)
     );
     console.log("sortedArray ", sortedArray);
@@ -206,14 +235,14 @@ function ProfileScreen2() {
           <Typography className={`${classes.h1}`} sx={{ color: "#000000" }}>
             I am
           </Typography>
-          <GenderComp gender={Gender} onChange={(e: any) => setGender(e)} />
+          <GenderComp gender={Gender} onChange={(e: string) => setGender(e)} />
         </Grid>
         <Grid item sm={6} xs={12}>
           <Typography className={`${classes.h1}`} sx={{ color: "#000000" }}>
             Your interests
           </Typography>
           <Grid container spacing={2}>
-            {AllHobbies.map((val, i) => (
+            {AllHobbies.map((val:any, i) => (
               <Grid item key={i}>
                 <Typography
                   onClick={() => {

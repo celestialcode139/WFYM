@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
@@ -13,7 +12,6 @@ import config from "../../../config";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     imagePicker: {
       backgroundColor: "#075bce",

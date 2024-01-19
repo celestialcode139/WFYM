@@ -1,8 +1,7 @@
 // App.js
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { firestore } from "../../firebaseConfig";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import { useParams } from "react-router-dom";
@@ -10,15 +9,10 @@ import AdminSignature from "../assets/images/adminSignature.svg";
 import SendMsg from "../assets/icons/sendMsg.png";
 import VideoIcon from "../assets/icons/video.svg";
 import HeaderApp from "../components/header/AppHeader";
-import GeneralHelper from "../Helpers/GeneralHelper";
-import Button from "../components/buttonSm";
-import AgeRace from "../components/race";
-import moment from "moment";
-import _ from "lodash";
+// import _ from "lodash";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -119,8 +113,6 @@ const useStyles = makeStyles(() => {
 const Chat = () => {
   const classes = useStyles();
   const { myId, matchId } = useParams();
-  const [user, setUser] = useState(null);
-  const [userId, setuserId] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<any>([]);
   let compositJoin = [myId, matchId].sort().join("");

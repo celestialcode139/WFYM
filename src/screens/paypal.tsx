@@ -1,18 +1,14 @@
 import { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import HeaderApp from "../components/header/AppHeader";
 import AdminSignature from "../assets/images/adminSignature.svg";
 import Logo from "../assets/logo/logo-w.svg";
 
-import { useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -25,9 +21,7 @@ const useStyles = makeStyles(() => {
 });
 function Paypal() {
   const classes = useStyles();
-  const navigate = useNavigate();
-  const [Token, setToken] = useState("");
-  const [totalAmount, settotalAmount] = useState<any>(0);
+  const [totalAmount, settotalAmount] = useState(0);
   const [success, setSuccess] = useState(false);
   const [orderID, setOrderID] = useState(false);
 
@@ -62,7 +56,7 @@ function Paypal() {
   };
 
   //capture likely error
-  const onError = (data: any, actions: any) => {};
+  // const onError = (data: any, actions: any) => {};
   useEffect(() => {
     if (success) {
       handleParamChange("status", "completed");
@@ -73,7 +67,7 @@ function Paypal() {
   useEffect(() => {
     const currentUrl = window.location.search;
     const params = new URLSearchParams(currentUrl);
-    let amount = params.get("amount");
+    const amount = params.get("amount");
     settotalAmount(amount);
     console.log("Amount:", amount);
     setTimeout(() => {

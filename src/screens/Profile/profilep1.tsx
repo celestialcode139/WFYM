@@ -1,10 +1,8 @@
-import { Box, Grid, TextField, colors } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Grid, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
 
 import "../../App.css";
-import AdminSignature from "../../assets/images/adminSignature.svg";
 import Button from "../../components/buttonSm";
 import DatepickerSticky from "../../components/datepickerSticky";
 import avatar from "../../assets/images/avatar.png";
@@ -18,7 +16,6 @@ import moment from "moment";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
 
   return {
     imagePicker: {
@@ -58,7 +55,6 @@ function ProfileP1() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [Token, setToken] = useState("");
-  const [ProfileImage, setProfileImage] = useState("");
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
   const [Email, setEmail] = useState("");

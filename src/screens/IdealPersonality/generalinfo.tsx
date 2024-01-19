@@ -1,20 +1,17 @@
 import { useState, useEffect } from "react";
-import { Box, Container, TextField, MenuItem } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
 import HeaderApp from "../../components/header/AppHeader";
 import Button from "../../components/buttonSm";
 import GeneralinfoComp from "../../components/generalinfo";
-import { useNavigate } from "react-router-dom";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -34,7 +31,6 @@ const useStyles = makeStyles(() => {
 });
 function Generalinfo() {
   const classes = useStyles();
-  const navigate = useNavigate();
   const [Token, setToken] = useState("");
   const [body, setbody] = useState({
     occupation: "",

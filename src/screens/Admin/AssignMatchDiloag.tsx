@@ -1,5 +1,4 @@
 import * as React from "react";
-import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -15,10 +14,24 @@ import GeneralHelper from "../../Helpers/GeneralHelper";
 import Alert from "../../Helpers/Alert";
 import { ToastContainer } from "react-toastify";
 
-export default function AssignMatchDiloag(props: any) {
+
+interface PropsInterface {
+  MatchRequestId?: string;
+  RequesterSubscriptionId?: string;
+  Matches: Array<object>;
+  RequesterId?: number;
+  handleClose?: string;
+  // _id: number;
+}
+export default function AssignMatchDiloag(props: PropsInterface) {
   const [SelectedMatch, setSelectedMatch] = React.useState("");
   const [Matches, setMatches] = React.useState([]);
   const [AssignMatchLoading, setAssignMatchLoading] = React.useState(false);
+
+  interface UserInterface {
+    _id: number;
+    first_name?: string;
+  }
 
   const handleChange = (event: any) => {
     console.log("Setting ", event.target.value);
@@ -71,10 +84,8 @@ export default function AssignMatchDiloag(props: any) {
   };
 
   useEffect(() => {
-    console.log("All Pending Records from Diloag ", props.Matches);
-    console.log("Requester Id from Diloag ", props.RequesterId);
     const FilterAvailableMatches = props.Matches.filter(
-      (item) => item?._id !== props.RequesterId
+      (item:UserInterface) => item?._id != props.RequesterId
     );
 
     setMatches(FilterAvailableMatches);
@@ -134,7 +145,7 @@ export default function AssignMatchDiloag(props: any) {
               onChange={handleChange}
               style={{border:"2px solid red"}}
             >
-              {Matches.map((item) => (
+              {Matches.map((item:UserInterface) => (
                 <MenuItem key={item.first_name} value={item._id}>
                   {item.first_name}
                 </MenuItem>

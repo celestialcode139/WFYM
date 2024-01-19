@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import ViewVideoDiloag from "./viewVideoDiloag";
 
 export default function MediaCover(props: any) {

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import FHourglass from "../assets/images/looks/female/hourglass.png";
@@ -41,7 +40,6 @@ const maleLooks = [
 ];
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     looks: {},
     active: {

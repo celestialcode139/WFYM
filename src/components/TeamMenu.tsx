@@ -5,11 +5,9 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import ListItemText from "@mui/material/ListItemText";
 import GeneralHelper from "../Helpers/GeneralHelper";
-import { useNavigate } from "react-router-dom";
 
 export default function TeamMenu(props: any) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);

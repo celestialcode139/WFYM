@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { Box, Grid, TextField, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
-import AdminSignature from "../../assets/images/adminSignature.svg";
 import matchicon1 from "../../assets/icons/matchicon1.svg";
 import matchicon2 from "../../assets/icons/matchicon2.png";
 import matchicon3 from "../../assets/icons/matchicon3.png";
@@ -85,7 +84,7 @@ const useStyles = makeStyles(() => {
 });
 function Matches() {
   const classes = useStyles();
-  const [subscriptions, setsubscriptions] = useState<any>([]);
+  const [subscriptions, setsubscriptions] = useState([]);
   const [Token, setToken] = useState("");
   const [ToUpdate, setToUpdate] = useState("");
   const [SubscriptionDetails, setSubscriptionDetails] = useState({
@@ -93,6 +92,17 @@ function Matches() {
     "amount": "",
     "matches_per_months": ""
   })
+
+  interface SubscriptionInterface {
+    _id: string
+    amount: string
+    matches_per_months: string
+  }
+  interface TokenResponseInterface {
+    status: number
+    data: string
+  }
+
   const UpdateSubscription = (body: object) => {
     APIHelper.CallApi(config.Endpoints.Subscription.Update, body, null, Token).then((result: any) => {
       if (result.status == "success") {
@@ -107,14 +117,14 @@ function Matches() {
 
 
       } else {
-        alert.error(String(result.message))
+        alert(String(result.message))
         console.log(result.message);
       }
 
     })
   }
 
-  const handleDoubleClick = (subscription: object, ToUpdate: string) => {
+  const handleDoubleClick = (subscription: SubscriptionInterface, ToUpdate: string) => {
     setToUpdate(ToUpdate)
     setSubscriptionDetails(prevDetails => ({
       ...prevDetails,
@@ -127,13 +137,8 @@ function Matches() {
     UpdateSubscription(SubscriptionDetails)
 
   };
-  const handleChange = (e) => {
-    setText(e.target.value);
-  };
-
-
   const featchToken = async () => {
-    const result: any = await GeneralHelper.retrieveData("Token");
+    const result: TokenResponseInterface = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
       setToken(String(result.data));
     }
@@ -162,21 +167,13 @@ function Matches() {
     } else {
       featchToken();
     }
-    fetchUserId();
   }, [Token]);
-
-  const fetchUserId = async () => {
-    const result: any = await GeneralHelper.retrieveData("UserId");
-    if (result.status == 1) {
-      // setuserId(String(result.data));
-    }
-  };
 
   return (
     <Box sx={{ padding: "100px" }}>
       <Grid container spacing={1}>
-        {subscriptions.map((subscription: any, i: number) => {
-          let matchicon = [matchicon1, matchicon2, matchicon3];
+        {subscriptions.map((subscription: SubscriptionInterface, i: number) => {
+          const matchicon = [matchicon1, matchicon2, matchicon3];
           return (
             <Grid item md={4} xs={12} key={i}>
               <Box

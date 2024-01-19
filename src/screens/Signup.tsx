@@ -1,5 +1,4 @@
 import { Box, Typography, Container } from "@mui/material";
-import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";

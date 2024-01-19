@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Container } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
@@ -15,7 +14,6 @@ import config from "../../../config";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -44,7 +42,17 @@ function Generalinfo() {
     religion: "",
     political_Party: "",
     beforeChildren: false,
+    location: "",
   });
+
+  interface UpdateBioDataInterface {
+      minAge: number;
+      maxAge: number;
+      description?: string;
+      religion?: string;
+      political_party?: string;
+      children_before?: boolean;
+  }
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -82,17 +90,10 @@ function Generalinfo() {
   // Updating Profile Details
 
   const UpdateBio = () => {
-    // const data = {
-    //   minAge: body.minAge,
-    //   maxAge: body.maxAge,
-    //   description: body.description,
-    //   religion: body.religion,
-    //   political_party: body.political_Party,
-    //   children_before: body.beforeChildren == true ? 1 : 0,
-    // };
-    const data = {
+    const data:UpdateBioDataInterface = {
       minAge: body.minAge,
       maxAge: body.maxAge,
+      children_before: body.beforeChildren
     };
     if (body.description !== "") {
       data.description = body.description;
@@ -102,9 +103,6 @@ function Generalinfo() {
     }
     if (body.political_Party !== "") {
       data.political_party = body.political_Party;
-    }
-    if (body.beforeChildren !== "") {
-      data.children_before = body.beforeChildren;
     }
     console.log("Sending ....", data);
 

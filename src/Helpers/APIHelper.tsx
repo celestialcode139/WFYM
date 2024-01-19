@@ -10,7 +10,8 @@ interface Response {
 }
 
 
-const CallApi = ({ url, method }:Options, body:{},Id:any,Tokken:any):Promise<Response> => {
+// eslint-disable-next-line react-refresh/only-export-components
+const CallApi = ({ url, method }:Options, body:object,Id:string | null,Tokken:string):Promise<Response> => {
     const headers :Record<string, string> = {
         "Content-Type": "application/json",
     }

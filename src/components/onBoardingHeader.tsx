@@ -1,9 +1,8 @@
-import { Box, Typography, Container, Link } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Logo from "../assets/logo/logo-w.svg";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import Button from "../components/button";
 import SignupBg from "../assets/images/signupBg.svg";
 
 const useStyles = makeStyles(() => {

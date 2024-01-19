@@ -19,7 +19,6 @@ import { useEffect } from "react";
 import Key from "./assets/gifs/key.gif";
 import LoveBirds from "./assets/gifs/love-birds.gif";
 import LoveYou from "./assets/gifs/i-love-you.gif";
-import LoveIdea from "./assets/gifs/love_idea.gif";
 import Mail from "./assets/gifs/mail.gif";
 import Marriage from "./assets/gifs/marriage.gif";
 import Sunglasses from "./assets/gifs/sunglasses.gif";

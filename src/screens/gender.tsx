@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Box, Typography, Container} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import backArrow from "../assets/icons/backArrow.svg";
@@ -21,7 +20,6 @@ import config from "../../config";
 
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     SignupProfile: {
       backgroundColor: "#ffffff",
@@ -107,10 +105,10 @@ function SignupProfile() {
     }
   }
   const SignUp = (data: object) => {
-    APIHelper.CallApi(config.Endpoints.auth.SignUp, data).then((result:any) => {
+    APIHelper.CallApi(config.Endpoints.auth.SignUp, data,null,'').then((result:any) => {
       if (result.status == "success") {
-        GeneralHelper.ClearData("Signup_Details").then((result:any)=>{
-          GeneralHelper.ClearData("UserDetails_Names").then((result:any)=>{
+        GeneralHelper.ClearData("Signup_Details").then(()=>{
+          GeneralHelper.ClearData("UserDetails_Names").then(()=>{
             navigate("/signin")
           })
         })
