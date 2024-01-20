@@ -93,7 +93,7 @@ function AppHeader(props: any) {
               <Menu>
                 <Box
                   component="img"
-                  src={UserDetails.profile_images && UserDetails.profile_images}
+                  src={UserDetails?.profile_images && UserDetails?.profile_images}
                   className={`${classes.profileImage}`}
                 ></Box>
                 <Box
@@ -104,11 +104,11 @@ function AppHeader(props: any) {
                   }}
                 >
                   <Typography className={`${classes.profileName}`}>
-                    {UserDetails.first_name && UserDetails.first_name}
+                    {UserDetails?.first_name && UserDetails?.first_name}
                   </Typography>
                   <Typography className={`${classes.profileLocation}`}>
-                    {UserDetails.user_details &&
-                      `${UserDetails.user_details.country} ${UserDetails.user_details.city} ${UserDetails.user_details.location}`}
+                    {UserDetails?.user_details &&
+                      `${UserDetails?.user_details?.country} ${UserDetails?.user_details?.city} ${UserDetails?.user_details?.location}`}
                   </Typography>
                 </Box>
                 <Box component="img" src={ProfileDropdown}></Box>
