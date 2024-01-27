@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { Box, Grid, Typography } from "@mui/material";
-import Logo from "../../assets/logo/logo-w.svg";
+import Logo from "../../assets/logo/logo-w.png";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import ProfileDropdown from "../../assets/images/ProfileDropdown.svg";

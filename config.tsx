@@ -124,6 +124,16 @@ const Endpoints = {
       url: `${Base_Url.url}team/get-profile/`,
       method: "GET",
     },
+  },
+  Media:{
+    PostSignedURL:{
+      url: `${Base_Url.url}media/getUploadUrl`,
+      method: "GET",
+    },
+    GetSignedURL:{
+      url: `${Base_Url.url}media/getSignedUrl`,
+      method: "GET",
+    },
   }
 };
 

@@ -52,6 +52,7 @@ function Generalinfo() {
       religion?: string;
       political_party?: string;
       children_before?: boolean;
+      location?: string;
   }
 
   const featchToken = async () => {
@@ -103,6 +104,9 @@ function Generalinfo() {
     }
     if (body.political_Party !== "") {
       data.political_party = body.political_Party;
+    }
+    if (body.location !== "") {
+      data.location = body.location;
     }
     console.log("Sending ....", data);
 

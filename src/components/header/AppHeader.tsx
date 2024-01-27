@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { Box, Grid, Typography } from "@mui/material";
-import Logo from "../../assets/logo/logo-w.svg";
+import Logo from "../../assets/logo/logo-w.png";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import ProfileDropdown from "../../assets/images/ProfileDropdown.svg";
@@ -40,6 +40,10 @@ const useStyles = makeStyles(() => {
       fontSize: "10px!important",
       lineHeight: "10px!important",
       color: "#000000",
+      overflow:"hidden",
+      textOverflow:"ellipsis",
+      width:'100px',
+      whiteSpace:"nowrap"
     },
     ProfileDropdown: {
       marginLeft: "5px",
@@ -57,7 +61,7 @@ function AppHeader(props: any) {
   const GetProfileDetails = async () => {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       (result: any) => {
-        console.log("Profile Details ", result.data);
+        console.log("Profile Details ", result);
         setUserDetails(result.data);
       }
     );

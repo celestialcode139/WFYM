@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import BouncingBallsLoading from "./BouncingBallsLoading";
+import Heartbeat from "../assets/gifs/heart-beat.gif";
 
 const useStyles = makeStyles(() => {
   return {

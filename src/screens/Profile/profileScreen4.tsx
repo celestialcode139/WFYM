@@ -77,6 +77,7 @@ function ProfileScreen4() {
   const [activeLook, setactiveLook] = useState("");
   const [Token, setToken] = useState("");
   const [Gender, setGender] = useState("male");
+  const [Loading, setLoading] = useState(false);
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -88,7 +89,7 @@ function ProfileScreen4() {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       (result: any) => {
         if (result.status == "success") {
-          console.log("Profile Details ",result.data);
+          console.log("Profile Details ", result.data);
           setGender(result.data.gender)
           setactiveLook(
             result?.data?.user_details?.personality
@@ -110,6 +111,7 @@ function ProfileScreen4() {
     };
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
+        setLoading(false);
         if (result.status == "success") {
           navigate("/profile/page-5");
         } else {
@@ -120,6 +122,7 @@ function ProfileScreen4() {
     );
   };
   const handleNext = () => {
+    setLoading(true);
     UpdateBio();
   };
   // Other functions
@@ -147,10 +150,12 @@ function ProfileScreen4() {
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button onClick={() => handleNext()}>Save Changes</Button>
+          <Button Loading={Loading} onClick={() => handleNext()}>Save Changes</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button className={`${classes.cancelBtn}`}>Cancel</Button>
+          <Button onClick={() => {
+            navigate(-1);
+          }} className={`${classes.cancelBtn}`}>Cancel</Button>
         </Grid>
       </Grid>
     </>

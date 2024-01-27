@@ -11,7 +11,9 @@ import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 import { useEffect, useState } from "react";
 import GeneralHelper from "../../Helpers/GeneralHelper";
+import MediaHelper from "../../Helpers/MediaHelper";
 import moment from "moment";
+import axios from "axios";
 
 // import $ from "jquery";
 
@@ -32,11 +34,12 @@ const useStyles = makeStyles(() => {
     profileImage: {
       height: "120px",
       width: "120px",
-      backgroundImage: `url(${avatar})`,
-      backgroundSize: "contain",
       marginTop: "8px",
       borderRadius: "15px",
       position: "relative",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+      backgroundPosition: "center"
     },
     cancelBtn: {
       backgroundColor: "#ffffff",
@@ -64,6 +67,8 @@ function ProfileP1() {
   const [City, setCity] = useState("");
   const [Address, setAddress] = useState("");
   const [Description, setDescription] = useState("");
+  const [Loading, setLoading] = useState(false);
+  const [profileImage, setProfileImage] = useState({ image_url: avatar, file_name: "" });
   // Getting Profile Details
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -110,21 +115,31 @@ function ProfileP1() {
       }
     );
   };
+  interface UpdateProfileInterface {
+    first_name: string;
+    last_name: string;
+    user_name?: string;
+    gender?: string;
+    dob?: string;
+  }
   // Updating Profile Details
   const UpdateProfile = () => {
-    const data = {
+    setLoading(true);
+    const data: UpdateProfileInterface = {
       first_name: FirstName,
       last_name: LastName,
       user_name: `${FirstName} ${LastName}`,
       gender: Gender,
       dob: DOB,
     };
+
     APIHelper.CallApi(
       config.Endpoints.user.UpdateUserProfile,
       data,
       null,
       Token
     ).then((result) => {
+      setLoading(false);
       if (result.status == "success") {
         UpdateBio();
       } else {
@@ -133,13 +148,23 @@ function ProfileP1() {
       }
     });
   };
+  interface UpdateBioDataInterface {
+    country: string;
+    location: string;
+    description?: string;
+    city?: string;
+  }
   const UpdateBio = () => {
-    const data = {
-      country: Country,
-      location: Address,
-      description: Description,
-      city: City,
-    };
+    const data: UpdateBioDataInterface = {};
+    if (Country) {
+      data.country = Country;
+    }
+    if (Address) {
+      data.location = Address;
+    }
+    if (Description) {
+      data.description = Description;
+    }
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
         if (result.status == "success") {
@@ -175,14 +200,17 @@ function ProfileP1() {
         className="h-center"
         sx={{ marginBottom: { md: "0px", xs: "10px" } }}
       >
-        <Box className={`${classes.profileImage}`}>
+        <Box className={`${classes.profileImage}`} style={{ backgroundImage: `url(${profileImage.image_url})`, }}>
           <input
-            accept="image/*"
+            // accept="image/*"
             style={{ display: "none" }}
             id="raised-button-file"
             type="file"
-            onChange={(e) => {
-              console.log("Image : ", e.target.value);
+            onChange={async (e: any) => {
+              MediaHelper.UploadImage(e.target.files).then((resp) => {
+                console.log("image upload resp:", resp);
+                setProfileImage({ ...profileImage, image_url: resp[0] })
+              })
             }}
           />
           <label htmlFor="raised-button-file">
@@ -244,7 +272,7 @@ function ProfileP1() {
           <Grid item md={6} xs={12} sx={{ p: 1 }}>
             <DatepickerSticky Default={DOB} onChange={handleDOBChange}>
               <Button
-                onClick={() => {}}
+                onClick={() => { }}
                 sx={{
                   backgroundColor: "#EFFBFC",
                   color: "#323232",
@@ -297,6 +325,7 @@ function ProfileP1() {
             sx={{ p: 1, display: { md: "block", xs: "none" } }}
           >
             <Button
+              Loading={Loading}
               onClick={() => handleNext()}
               className={`${classes.marginTop100}`}
             >
@@ -309,7 +338,9 @@ function ProfileP1() {
             xs={12}
             sx={{ p: 1, display: { md: "block", xs: "none" } }}
           >
-            <Button className={`${classes.cancelBtn} ${classes.marginTop100}`}>
+            <Button onClick={() => {
+              navigate(-1);
+            }} className={`${classes.cancelBtn} ${classes.marginTop100}`}>
               Cancel
             </Button>
           </Grid>
@@ -360,7 +391,7 @@ function ProfileP1() {
             xs={12}
             sx={{ p: 1, display: { md: "none", xs: "block" } }}
           >
-            <Button onClick={() => handleNext()}>Save Changes</Button>
+            <Button Loading={Loading} onClick={() => handleNext()}>Save Changes</Button>
           </Grid>
           <Grid
             item
@@ -368,10 +399,13 @@ function ProfileP1() {
             xs={12}
             sx={{ p: 1, display: { md: "none", xs: "block" } }}
           >
-            <Button className={`${classes.cancelBtn}`}>Cancel</Button>
+            <Button onClick={() => {
+              navigate(-1);
+            }} className={`${classes.cancelBtn}`}>Cancel</Button>
           </Grid>
           <Grid item md={8} xs={12} sx={{ p: 1 }}>
             <Button
+
               className={`${classes.delBtn}`}
               sx={{ marginTop: { md: "80px" } }}
             >

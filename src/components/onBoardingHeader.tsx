@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import Logo from "../assets/logo/logo-w.svg";
+import Logo from "../assets/logo/logo-w.png";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => {
       fontFamily: "Mori-bold!important",
       textAlign: "center",
       marginTop: "35px!important",
-      color:"#000000"
+      color: "#000000"
     },
     p1: {
       fontSize: "12px!important",
@@ -50,9 +50,9 @@ const useStyles = makeStyles(() => {
 function OnBoardingHeading(props: any) {
   const classes = useStyles();
   return (
-    <Box sx={{marginBottom:"40px"}}>
+    <Box sx={{ marginBottom: "40px" }}>
       <Box className={`${classes.logo}`}>
-        <Box component="img" src={Logo}></Box>
+        <Box component="img" sx={{ width: { xs: "100px", sm: "200px" } }} src={Logo}></Box>
       </Box>
       <Typography className={`${classes.h1}`}>{props.heading}</Typography>
       <Typography className={`${classes.p1}`}>{props.subheading}</Typography>

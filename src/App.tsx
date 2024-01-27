@@ -116,8 +116,6 @@ void main() {
 
     gltfloader.load("src/threejs/GLTF/heart/scene.gltf", (gltf: any) => {
       // Access the loaded model
-      console.log(gltf);
-
       const model = gltf.scene;
       heartGlobal = model;
       model.name = "heart";
@@ -416,7 +414,7 @@ void main() {
         duration: 0.5,
         ease: "power1.inOut",
       });
-    }, 500);
+    }, 5000);
 
     //===================================================== Animate
 
@@ -425,7 +423,7 @@ void main() {
     function Animation() {
       const elapsedTime = clock.getElapsedTime();
       setTimeout(() => {
-        heartGlobal.rotation.y = elapsedTime;
+        // heartGlobal.rotation.y = elapsedTime;
       }, 500);
 
       renderer.render(scene, camera);
@@ -483,7 +481,6 @@ void main() {
       const windowHeight = window.innerHeight;
       const progress =
         (window.pageYOffset - track?.offsetTop) / (trackHeight - windowHeight);
-      console.log("progress:", progress);
       tl.progress(progress);
     });
   };

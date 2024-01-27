@@ -78,16 +78,17 @@ function ProfileScreen2() {
   const [Gender, setGender] = useState("male");
   const [Token, setToken] = useState("");
   const [AllHobbies, setAllHobbies] = useState<Array<object>>([]);
+  const [Loading, setLoading] = useState(false);
 
   interface APIResponseInterface {
-    status:string,
-    data:DataInterface,
-    message?:string
+    status: string,
+    data: DataInterface,
+    message?: string
 
   }
   interface DataInterface {
-    gender:string,
-    user_details:UserDetailsInterface
+    gender: string,
+    user_details: UserDetailsInterface
   }
   interface UserDetailsInterface {
     profession: string;
@@ -105,9 +106,9 @@ function ProfileScreen2() {
     highest_degree: string;
   }
   interface HobbiesAPIResponseInterface {
-    status:string,
-    data:Array<object>,
-    message?:string
+    status: string,
+    data: Array<object>,
+    message?: string
   }
 
   const featchToken = async () => {
@@ -118,7 +119,7 @@ function ProfileScreen2() {
   };
   const GetProfile = (Token: string) => {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
-      (result:APIResponseInterface ) => {
+      (result: APIResponseInterface) => {
         if (result.status == "success") {
           console.log(result.data);
           setGender(result?.data?.gender ? result.data.gender : "");
@@ -163,6 +164,7 @@ function ProfileScreen2() {
       Token
     )
       .then((result) => {
+        setLoading(false)
         if (result.status == "success") {
           UpdateBio();
         } else {
@@ -190,11 +192,12 @@ function ProfileScreen2() {
     );
   };
   const handleNext = () => {
+    setLoading(true)
     UpdateProfile();
   };
   // Other functions
   const handleSort = (ArrayToSort: Array<object>) => {
-    const sortedArray = [...ArrayToSort].sort((a:any, b:any) =>
+    const sortedArray = [...ArrayToSort].sort((a: any, b: any) =>
       a.value.localeCompare(b.value)
     );
     console.log("sortedArray ", sortedArray);
@@ -242,17 +245,16 @@ function ProfileScreen2() {
             Your interests
           </Typography>
           <Grid container spacing={2}>
-            {AllHobbies.map((val:any, i) => (
+            {AllHobbies.map((val: any, i) => (
               <Grid item key={i}>
                 <Typography
                   onClick={() => {
                     HandleSelectHobbie(val.value);
                   }}
-                  className={`${classes.badge} ${
-                    CheckIfSelected(val.value) == true
-                      ? classes.activeBadge
-                      : null
-                  }`}
+                  className={`${classes.badge} ${CheckIfSelected(val.value) == true
+                    ? classes.activeBadge
+                    : null
+                    }`}
                 >
                   {/* <Box
                     component="img"
@@ -268,10 +270,12 @@ function ProfileScreen2() {
       </Grid>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button onClick={() => handleNext()}>Save Changes</Button>
+          <Button Loading={Loading} onClick={() => handleNext()}>Save Changes</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button className={`${classes.cancelBtn}`}>Cancel</Button>
+          <Button onClick={() => {
+            navigate(-1);
+          }} className={`${classes.cancelBtn}`}>Cancel</Button>
         </Grid>
       </Grid>
     </>
