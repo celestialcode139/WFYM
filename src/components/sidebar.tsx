@@ -51,7 +51,7 @@ function Sidebar() {
           Profile
         </Button>
       </Link>
-      <Link to={{ pathname: "/ideal-personality/race" }}>
+      <Link to={{ pathname: "/ideal-personality/general-info" }}>
         <Button
           onClick={() => setactiveBtn("bio")}
           className={`${

@@ -240,9 +240,10 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 }
 .video220 {
   width: 100%;
-  /* object-fit: none; */
+  object-fit: cover;
   height: 220px;
   border-radius: 7px;
+  background-color: #00000024;
 }
 .prelative {
   position: relative;

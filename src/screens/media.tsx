@@ -1,14 +1,14 @@
+import { useState, useRef } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import Button from "../components/buttonSm";
 import avatar from "../assets/images/avatar.png";
-import ProfileImage1 from "../assets/images/profileimages/1.png";
-import ProfileImage2 from "../assets/images/profileimages/2.png";
-import ProfileImage3 from "../assets/images/profileimages/3.png";
-import UploadImage from "../assets/images/uploadImage.png";
-import uploadVideoWhite from "../assets/images/uploadVideoWhite.png";
+import uploadVideoWhite from "../assets/images/uploadVideo_new.png";
 import Video from "../components/video";
+import MediaGallery from "../components/MediaGallery";
+import MediaHelper from "../Helpers/MediaHelper";
+
 
 // import $ from "jquery";
 
@@ -72,10 +72,12 @@ const useStyles = makeStyles(() => {
       margin: "0 auto",
     },
     galleryImage: {
-      width: "100%",
+      width: "100px",
       borderRadius: "7px",
-      height: "100%",
       objectFit: "cover",
+      top: "36%",
+      cursor: "pointer",
+      zIndex: "999999"
     },
     galleryImageUpload: {
       //   backgroundImage: `url('${UploadImage}')`,
@@ -84,10 +86,42 @@ const useStyles = makeStyles(() => {
       borderRadius: "7px",
       backgroundSize: "100% 100%",
     },
+    imageCircularProgress: {
+      background: "#055cce00",
+      height: "100%",
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      top: "0px"
+    },
+    label: {
+      height: "100%",
+      display: "block",
+      zIndex: "999999",
+      position: "relative",
+      cursor: "pointer"
+    }
   };
 });
 function Media() {
   const classes = useStyles();
+  const [gallery, setgallery] = useState<String[]>(['']);
+  const [introVideo, setintroVideo] = useState<String[]>(['']);
+  const [bodyShort, setbodyShort] = useState<String[]>(['']);
+  const introVideoRef = useRef<HTMLInputElement>(null);
+  const bodyShortRef = useRef<HTMLInputElement>(null);
+  const [progress, setprogress] = useState(0);
+
+
+  const handleMedia = (name: string) => {
+    setgallery([...gallery, name])
+  }
+  const onprogress = (progressEvent: any) => {
+    const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+    setprogress(progress)
+  };
 
   return (
     <>
@@ -97,50 +131,18 @@ function Media() {
             <Grid item md={4} xs={12}>
               <Typography className={`${classes.h1}`}>Gallery</Typography>
               <Grid container spacing={1}>
-                <Grid item xs={4}>
-                  <Box
-                    className={`${classes.galleryImage}`}
-                    component="img"
-                    src={ProfileImage1}
-                  ></Box>
-                </Grid>
-                <Grid item xs={4}>
-                  <Box
-                    className={`${classes.galleryImage}`}
-                    component="img"
-                    src={ProfileImage2}
-                  ></Box>
-                </Grid>
-                <Grid item xs={4}>
-                  <Box
-                    className={`${classes.galleryImage}`}
-                    component="img"
-                    src={ProfileImage3}
-                  ></Box>
-                </Grid>
-                <Grid item xs={4}>
-                  <Box
-                    className={`${classes.galleryImage}`}
-                    component="img"
-                    src={ProfileImage1}
-                  ></Box>
-                </Grid>
-                <Grid item xs={4}>
-                  <Box
-                    className={`${classes.galleryImage}`}
-                    component="img"
-                    src={ProfileImage2}
-                  ></Box>
-                </Grid>
-                <Grid item xs={4}>
-                  <Box
-                    onClick={() => alert("Clicked")}
-                    sx={{ objectFit: "fill" }}
-                    className={`${classes.galleryImage}`}
-                    component="img"
-                    src={UploadImage}
-                  ></Box>
-                </Grid>
+
+                {
+                  gallery.map((val, i) => (
+                    <Grid item xs={4} key={i}>
+                      <Box sx={{ position: "relative", display: "flex", justifyContent: "center" }}>
+                        <MediaGallery handleMedia={handleMedia} />
+                      </Box>
+                    </Grid>
+                  ))
+                }
+
+
               </Grid>
             </Grid>
             <Grid
@@ -158,22 +160,41 @@ function Media() {
                     className={`${classes.galleryImage} pabsolute`}
                     component="img"
                     src={uploadVideoWhite}
+                    onClick={() => {
+                      if (introVideoRef.current) {
+                        introVideoRef.current.click();
+                      }
+                    }}
                   ></Box>
+                  <input
+                    // accept="image/*"
+                    style={{ display: "none" }}
+                    id="raised-button-file"
+                    type="file"
+                    ref={introVideoRef}
+                    onChange={async (e: any) => {
+                      setprogress(1);
+                      MediaHelper.UploadImage(e.target.files, onprogress).then(async (resp) => {
+                        console.log("image upload resp:", resp[0].url);
+
+                      })
+                    }}
+                  />
                   <Video
-                    onClick={() => alert("Clicked")}
-                    src="https://assets.codepen.io/6093409/river.mp4"
+                    src={introVideo}
                   />
                 </Grid>
 
-                <Grid item xs={4} className="prelative">
+                <Grid item xs={4} className="prelative" sx={{ display: "flex", justifyContent: 'center' }}>
                   <Box
                     className={`${classes.galleryImage} pabsolute`}
                     component="img"
                     src={uploadVideoWhite}
+                    onClick={() => alert("Clicked")}
                   ></Box>
                   <Video
-                    onClick={() => alert("Clicked")}
-                    src="https://assets.codepen.io/6093409/river.mp4"
+
+                    src={bodyShort}
                   />
                 </Grid>
               </Grid>
@@ -194,3 +215,5 @@ function Media() {
 }
 
 export default Media;
+
+

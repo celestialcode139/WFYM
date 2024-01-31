@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import MediaHelper from "../../Helpers/MediaHelper";
 import moment from "moment";
-import axios from "axios";
+import CircularProgress from "../../components/CircularProgress";
 
 // import $ from "jquery";
 
@@ -52,6 +52,14 @@ const useStyles = makeStyles(() => {
     marginTop100: {
       marginTop: "80px",
     },
+    imageCircularProgress: {
+      background: "#055cce00",
+      height: "100%",
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }
   };
 });
 function ProfileP1() {
@@ -69,6 +77,8 @@ function ProfileP1() {
   const [Description, setDescription] = useState("");
   const [Loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState({ image_url: avatar, file_name: "" });
+  const [progress, setprogress] = useState(0);
+
   // Getting Profile Details
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -76,9 +86,9 @@ function ProfileP1() {
       setToken(String(result.data));
     }
   };
-  const GetProfile = (Token: string) => {
+  const GetProfile = async (Token: string) => {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
-      (result: any) => {
+      async (result: any) => {
         if (result.status == "success") {
           setFirstName(result?.data?.first_name ? result.data.first_name : "");
           setLastName(result?.data?.last_name ? result.data.last_name : "");
@@ -104,6 +114,11 @@ function ProfileP1() {
               ? result.data.user_details.city
               : ""
           );
+          const fileURL = await MediaHelper.GetImage(result?.data?.user_details?.images);
+          console.log("fileURL", fileURL);
+
+          setProfileImage({ ...profileImage, image_url: fileURL, file_name: result?.data?.user_details?.images });
+
           if (result.data.dob) {
             const DateOfBirth = moment.utc(result?.data?.dob);
             setDOB(DateOfBirth.format("DD MMMM YYYY"));
@@ -149,6 +164,7 @@ function ProfileP1() {
     });
   };
   interface UpdateBioDataInterface {
+    images: string;
     country: string;
     location: string;
     description?: string;
@@ -165,6 +181,13 @@ function ProfileP1() {
     if (Description) {
       data.description = Description;
     }
+    if (City) {
+      data.city = City;
+    }
+    if (profileImage.file_name) {
+      data.images = profileImage.file_name;
+    }
+
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
         if (result.status == "success") {
@@ -181,6 +204,10 @@ function ProfileP1() {
   };
   const handleDOBChange = (e: string) => {
     setDOB(String(e));
+  };
+  const onprogress = (progressEvent: any) => {
+    const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+    setprogress(progress)
   };
   // Other functions
   useEffect(() => {
@@ -201,15 +228,18 @@ function ProfileP1() {
         sx={{ marginBottom: { md: "0px", xs: "10px" } }}
       >
         <Box className={`${classes.profileImage}`} style={{ backgroundImage: `url(${profileImage.image_url})`, }}>
+          <Box className={`${classes.imageCircularProgress}`}>
+            <CircularProgress progress={progress} />
+          </Box>
           <input
             // accept="image/*"
             style={{ display: "none" }}
             id="raised-button-file"
             type="file"
             onChange={async (e: any) => {
-              MediaHelper.UploadImage(e.target.files).then((resp) => {
+              MediaHelper.UploadImage(e.target.files, onprogress).then((resp) => {
                 console.log("image upload resp:", resp);
-                setProfileImage({ ...profileImage, image_url: resp[0] })
+                setProfileImage({ ...profileImage, image_url: resp[0].url, file_name: resp[0].file_name })
               })
             }}
           />
@@ -419,3 +449,5 @@ function ProfileP1() {
 }
 
 export default ProfileP1;
+
+

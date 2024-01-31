@@ -9,6 +9,10 @@ interface Response {
     data?: {}
     message: string
 }
+interface signedUrlInterface {
+    url: string;
+    file_name: string
+}
 
 
 const GetSignedURL = async (fileName: string): Promise<string> => {
@@ -27,22 +31,22 @@ const GetSignedURL = async (fileName: string): Promise<string> => {
 
     return ''
 }
-const UploadImage = async (files: File[]) => {
-    let signedUrl: string[] = []
+const UploadImage = async (files: File[], onprogress: any) => {
+    let signedUrl: signedUrlInterface[] = []
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const resp = await axios.put(`${await GetSignedURL(file.name)}`, file, {
             onUploadProgress: (progressEvent) => {
-                const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-                console.log(`Upload Progress: ${progress}%`);
-                // You can use 'progress' variable to update your UI or do other things based on the progress
+                onprogress(progressEvent)
             },
         });
         if (resp.status == 200) {
-            signedUrl.push(await GetImage(file.name))
+            let url = await GetImage(file.name);
+            let object = { url, file_name: file.name }
+            signedUrl.push(object)
         }
     }
-    console.log();
+    console.log("signedUrl:", signedUrl);
 
     return signedUrl
 }
