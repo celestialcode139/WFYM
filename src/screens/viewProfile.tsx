@@ -6,7 +6,7 @@ import Video from "../components/video";
 import IntroVideo from "../assets/videos/intro.mp4";
 import BodyShort from "../assets/videos/bodyshort.mp4";
 import Lightbox from "../components/lightbox";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
@@ -14,12 +14,14 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import VideoCallIcon from "../assets/icons/videoicon.png";
 import moment from "moment";
+import MediaHelper from "../Helpers/MediaHelper";
 
 const useStyles = makeStyles(() => {
 
   return {
     profileImage: {
       width: "100%",
+      borderRadius: "10px"
     },
     quickProfileContainer: {
       padding: "15px",
@@ -60,6 +62,12 @@ function Media() {
   const [Token, setToken] = useState("");
   const [userId, setuserId] = useState("");
   const [Age, setAge] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [Loading, setLoading] = useState(false);
+  const [gallery, setgallery] = useState<string[]>([""]);
+  const [introVideo, setintroVideo] = useState<string>("");
+  const [bodyShort, setbodyShort] = useState<string>("");
+
   interface UserInterface {
     _id: number;
     first_name: string;
@@ -104,11 +112,19 @@ function Media() {
       {},
       String(params.id),
       Token
-    ).then((result: any) => {
+    ).then(async (result: any) => {
       if (result.status == "success") {
-        console.log("Matches:", result.data);
+        // console.log("Matches:", result.data.media_id);
+        setgallery(result?.data?.media_id?.gallery ?? []);
+        setbodyShort(result?.data?.media_id?.bodyShort ?? []);
+        setintroVideo(result?.data?.media_id?.introVideo ?? []);
         setUser(result.data);
         calculateAge(result.data.dob);
+        getImageURL(result.data?.user_details?.images)
+        const galleryUrlsArray = await Promise.all(
+          (result.data.media_id.gallery as string[]).map((element) => MediaHelper.GetImage(element))
+        );
+        setgallery(galleryUrlsArray);
       } else {
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
@@ -127,6 +143,11 @@ function Media() {
     setAge(String(years));
   };
 
+  const getImageURL = async (img: string) => {
+    let imgurl = await MediaHelper.GetImage(img);
+    setProfileImage(imgurl);
+  }
+
   useEffect(() => {
     if (Token != "") {
       init();
@@ -135,6 +156,9 @@ function Media() {
     }
   }, [Token]);
 
+
+
+
   return (
     <>
       <Grid container spacing={5}>
@@ -142,7 +166,7 @@ function Media() {
           <Box
             component="img"
             className={`${classes.profileImage}`}
-            src={User?.profile_images}
+            src={profileImage}
           ></Box>
         </Grid>
         <Grid item md={7} xs={12}>
@@ -159,7 +183,7 @@ function Media() {
                     </Typography>
                   </Box>
                   <Box>
-                    <Link to={{ pathname: `/chat/${userId}/${User === undefined ? null:User._id}` }}>
+                    <Link to={{ pathname: `/chat/${userId}/${User === undefined ? null : User._id}` }}>
                       <Box
                         component="img"
                         className="hover"
@@ -168,7 +192,7 @@ function Media() {
                       ></Box>
                     </Link>
                     <Link
-                      to={{ pathname: `/video-call/${userId}/${User === undefined ? null:User._id}` }}
+                      to={{ pathname: `/video-call/${userId}/${User === undefined ? null : User._id}` }}
                     >
                       <Box
                         component="img"
@@ -179,6 +203,7 @@ function Media() {
                     </Link>
                   </Box>
                 </Box>
+            
 
                 <Box className={`${classes.pt20}`}>
                   <Typography
@@ -316,10 +341,10 @@ function Media() {
             </Typography>
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <Video  src={IntroVideo} />
+                <Video src={introVideo} key={introVideo} />
               </Grid>
               <Grid item xs={6}>
-                <Video  src={BodyShort} />
+                <Video src={bodyShort} />
               </Grid>
             </Grid>
           </Box>
@@ -328,8 +353,9 @@ function Media() {
               Gallery
             </Typography>
             <Grid container spacing={1}>
-              {User?.user_details?.images.map((img: string, i: number) => (
-                <Grid item xs={4} key={i}>
+              {gallery.map((img: string, i: number) => {
+
+                return <Grid item xs={4} key={i}>
                   <Box
                     onClick={() => setisOpen(true)}
                     component="img"
@@ -337,9 +363,10 @@ function Media() {
                     src={img}
                   ></Box>
                 </Grid>
-              ))}
+              })}
             </Grid>
             <Lightbox
+              gallery={gallery}
               isOpen={isOpen}
               setisOpen={(e: boolean) => {
                 setisOpen(e);

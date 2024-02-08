@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 import GeneralHelper from "../../Helpers/GeneralHelper";
+import MediaHelper from "../../Helpers/MediaHelper";
 
 const useStyles = makeStyles(() => {
   return {
@@ -30,6 +31,7 @@ const useStyles = makeStyles(() => {
       width: "50px",
       borderRadius: "50%",
       border: "2px solid #01A0E6",
+      objectFit: "cover"
     },
     profileName: {
       fontSize: "16px!important",
@@ -40,10 +42,10 @@ const useStyles = makeStyles(() => {
       fontSize: "10px!important",
       lineHeight: "10px!important",
       color: "#000000",
-      overflow:"hidden",
-      textOverflow:"ellipsis",
-      width:'100px',
-      whiteSpace:"nowrap"
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      width: '100px',
+      whiteSpace: "nowrap"
     },
     ProfileDropdown: {
       marginLeft: "5px",
@@ -57,12 +59,14 @@ function AppHeader(props: any) {
   const classes = useStyles();
   const [Token, setToken] = useState("");
   const [UserDetails, setUserDetails] = useState<any>({});
+  const [profileImage, setProfileImage] = useState("");
 
   const GetProfileDetails = async () => {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       (result: any) => {
         console.log("Profile Details ", result);
         setUserDetails(result.data);
+        getImageURL(result.data.user_details.images);
       }
     );
   };
@@ -74,9 +78,15 @@ function AppHeader(props: any) {
     }
   };
 
+  const getImageURL = async (img: string) => {
+    let imgurl = await MediaHelper.GetImage(img);
+    setProfileImage(imgurl);
+  }
+
   useEffect(() => {
     if (Token != "") {
       GetProfileDetails();
+
     } else {
       featchToken();
     }
@@ -97,7 +107,8 @@ function AppHeader(props: any) {
               <Menu>
                 <Box
                   component="img"
-                  src={UserDetails?.profile_images && UserDetails?.profile_images}
+                  loading="lazy"
+                  src={profileImage}
                   className={`${classes.profileImage}`}
                 ></Box>
                 <Box

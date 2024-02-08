@@ -9,7 +9,8 @@ import avatar from "../../assets/images/avatar.png";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -69,6 +70,7 @@ const useStyles = makeStyles(() => {
     },
     pageContainer: {
       maxWidth: "500px",
+      width: "100%"
     },
   };
 });
@@ -116,6 +118,7 @@ function ProfileScreen3() {
       "race",
       Token
     ).then((result: any) => {
+      setLoading(false);
       if (result.status == "success") {
         // console.log(result.data);
         handleSort(result.data)
@@ -156,6 +159,7 @@ function ProfileScreen3() {
   };
 
   useEffect(() => {
+    setLoading(true);
     if (Token != "") {
       GetProfile(Token);
       GetRace();
@@ -173,12 +177,26 @@ function ProfileScreen3() {
     <>
       <Box className={`h-center`}>
         <Box className={`${classes.pageContainer}`}>
-          <AgeRace
-            data={races}
-            key={races}
-            race={SelectedRace}
-            onChange={(data: string) => setSelectedRace(data)}
-          />
+          {
+            !Loading ?
+              <AgeRace
+                data={races}
+                key={races}
+                race={SelectedRace}
+                onChange={(data: string) => setSelectedRace(data)}
+              /> :
+              <Grid container spacing={2}>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+              </Grid>
+          }
+
         </Box>
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>

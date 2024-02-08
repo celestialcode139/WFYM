@@ -31,6 +31,7 @@ export default function AssignMatchDiloag(props: PropsInterface) {
   interface UserInterface {
     _id: number;
     first_name?: string;
+    last_name?: string;
   }
 
   const handleChange = (event: any) => {
@@ -84,6 +85,7 @@ export default function AssignMatchDiloag(props: PropsInterface) {
   };
 
   useEffect(() => {
+    
     const FilterAvailableMatches = props.Matches.filter(
       (item:UserInterface) => item?._id != props.RequesterId
     );
@@ -147,7 +149,7 @@ export default function AssignMatchDiloag(props: PropsInterface) {
             >
               {Matches.map((item:UserInterface) => (
                 <MenuItem key={item.first_name} value={item._id}>
-                  {item.first_name}
+                  {item.first_name}{item.last_name}
                 </MenuItem>
               ))}
               {/* <MenuItem value={10}>Ten</MenuItem>

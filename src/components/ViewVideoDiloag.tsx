@@ -36,6 +36,7 @@ export default function ViewVideoDiloag(props: any) {
           className="video220"
           autoPlay
           loop
+          controls={true}
           style={{ height: window.innerHeight * 0.7 }}
         >
           <source src={props.src} type="video/mp4" />

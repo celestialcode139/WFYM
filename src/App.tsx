@@ -423,7 +423,7 @@ void main() {
     function Animation() {
       const elapsedTime = clock.getElapsedTime();
       setTimeout(() => {
-        // heartGlobal.rotation.y = elapsedTime;
+         heartGlobal.rotation.y = elapsedTime;
       }, 500);
 
       renderer.render(scene, camera);

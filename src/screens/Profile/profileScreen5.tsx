@@ -11,8 +11,8 @@ import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 import { ToastContainer } from "react-toastify";
 import Alert from "../../Helpers/Alert";
+import Skeleton from '@mui/material/Skeleton';
 
-// import $ from "jquery";
 
 const useStyles = makeStyles(() => {
   return {
@@ -80,6 +80,7 @@ function ProfileScreen5() {
   const navigate = useNavigate();
   const [Token, setToken] = useState("");
   const [body, setbody] = useState<any>({});
+  const [Loading, setLoading] = useState(false);
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -90,6 +91,7 @@ function ProfileScreen5() {
   const GetProfile = (Token: string) => {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       (result: any) => {
+        setLoading(false)
         if (result.status == "success") {
           // console.log("Response:", result?.data?.user_details?.religion);
 
@@ -112,7 +114,7 @@ function ProfileScreen5() {
       }
     );
   };
-  
+
   // Updating Profile Details
 
   const UpdateBio = () => {
@@ -120,9 +122,9 @@ function ProfileScreen5() {
       profession: body.occupation,
       religion: body.religion,
       political_party: body.political_Party,
-      children_before: body.childrens == "" || body.childrens == undefined? 0 : body.childrens,
-      smoking_habits: body.smookingHabit != true?false:true,
-      drink_habits: body.drinkingHabit != true?false:true,
+      children_before: body.childrens == "" || body.childrens == undefined ? 0 : body.childrens,
+      smoking_habits: body.smookingHabit != true ? false : true,
+      drink_habits: body.drinkingHabit != true ? false : true,
       deal_breaker: body.dealBracker,
       height: body.height,
       weight: body.weight,
@@ -132,8 +134,9 @@ function ProfileScreen5() {
 
     APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
       (result) => {
+        setLoading(false)
         if (result.status == "success") {
-          Alert.notify("Profile Updated Successfully",4000);
+          Alert.notify("Profile Updated Successfully", 4000);
           setTimeout(() => {
             navigate("/dashboard")
           }, 6000);
@@ -145,12 +148,14 @@ function ProfileScreen5() {
     );
   };
   const handleNext = () => {
+    setLoading(true)
     UpdateBio();
   };
   // Other functions
 
-  
+
   useEffect(() => {
+    setLoading(true)
     if (Token != "") {
       GetProfile(Token);
     } else {
@@ -166,7 +171,7 @@ function ProfileScreen5() {
     <>
       <Box>
         <Box className={`${classes.pageContainer}`}>
-          {Object.keys(body).length > 0 ? (
+          {!Loading ? Object.keys(body).length > 0 ? (
             <Generalinfo
               body={body}
               key={body}
@@ -176,7 +181,20 @@ function ProfileScreen5() {
                 setbody(e);
               }}
             />
-          ) : null}
+          ) : null :
+            <Grid container spacing={2}>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+            </Grid>
+          }
         </Box>
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
@@ -184,10 +202,12 @@ function ProfileScreen5() {
           <Button onClick={() => handleNext()}>Save Changes</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button className={`${classes.cancelBtn}`}>Cancel</Button>
+          <Button onClick={() => {
+            navigate(-1);
+          }} className={`${classes.cancelBtn}`}>Cancel</Button>
         </Grid>
       </Grid>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }

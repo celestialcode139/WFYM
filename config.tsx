@@ -36,7 +36,7 @@ const Endpoints = {
       url: `${Base_Url.url}user/get-my-profile/`,
       method: "GET",
     },
-    GetAllUsers:{
+    GetAllUsers: {
       url: `${Base_Url.url}user/get-all-users`,
       method: "GET",
     },
@@ -115,25 +115,33 @@ const Endpoints = {
       method: "POST",
     },
   },
-  Team:{
-    Login:{
+  Team: {
+    Login: {
       url: `${Base_Url.url}team/login`,
       method: "POST",
     },
-    GetById:{
+    GetById: {
       url: `${Base_Url.url}team/get-profile/`,
       method: "GET",
     },
   },
-  Media:{
-    PostSignedURL:{
+  Media: {
+    PostSignedURL: {
       url: `${Base_Url.url}media/getUploadUrl`,
       method: "GET",
     },
-    GetSignedURL:{
+    GetSignedURL: {
       url: `${Base_Url.url}media/getSignedUrl`,
       method: "GET",
     },
+    UploadMedia: {
+      url: `${Base_Url.url}media/media/upload`,
+      method: "POST",
+    },
+    GetMedia: {
+      url: `${Base_Url.url}media/media/getmedia`,
+      method: "GET",
+    }
   }
 };
 

@@ -9,7 +9,8 @@ import Looks from "../../components/looks";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-// import $ from "jquery";
+import Skeleton from '@mui/material/Skeleton';
+
 
 const useStyles = makeStyles(() => {
   return {
@@ -68,6 +69,7 @@ const useStyles = makeStyles(() => {
     },
     pageContainer: {
       maxWidth: "80%",
+      width: "100%"
     },
   };
 });
@@ -88,6 +90,7 @@ function ProfileScreen4() {
   const GetProfile = (Token: string) => {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       (result: any) => {
+        setLoading(false)
         if (result.status == "success") {
           console.log("Profile Details ", result.data);
           setGender(result.data.gender)
@@ -127,6 +130,7 @@ function ProfileScreen4() {
   };
   // Other functions
   useEffect(() => {
+    setLoading(true)
     if (Token != "") {
       GetProfile(Token);
     } else {
@@ -138,7 +142,7 @@ function ProfileScreen4() {
     <>
       <Box className={`h-center`}>
         <Box className={`${classes.pageContainer}`}>
-          <Looks
+          {!Loading ? <Looks
             key={activeLook}
             gender={Gender}
             look={activeLook}
@@ -146,6 +150,15 @@ function ProfileScreen4() {
               setactiveLook(look);
             }}
           />
+            :
+            <Grid container spacing={2}>
+              <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={250} /></Grid>
+              <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={250} /></Grid>
+              <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={250} /></Grid>
+              <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={250} /></Grid>
+            </Grid>
+          }
+
         </Box>
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>

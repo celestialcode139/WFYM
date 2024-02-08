@@ -56,7 +56,7 @@ const options = {
 };
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AlertProvider template={AlertTemplate} {...options}>
       <BrowserRouter>
         <Routes>
@@ -78,21 +78,18 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="chat/:myId/:matchId" Component={Chat} />
             <Route path="video-call/:myId/:matchId" Component={VideoCall} />
           </Route>
-        </Routes>
-        <Routes>
+  
           <Route path="/ideal-personality">
             <Route path="general-info" Component={ProfileGeneralinfo} />
             <Route path="looking-for" Component={GenderSelectionIdealPerson} />
             <Route path="looks" Component={MaleLooks} />
             <Route path="race" Component={Race} />
           </Route>
-        </Routes>
-        <Routes>
+      
           <Route path="/dash" Component={DashLayout}>
             <Route path="view-matchprofile/:id" Component={ViewProfile} />
           </Route>
-        </Routes>
-        <Routes>
+       
           <Route path="/profile" Component={PLayout}>
             <Route path="page-1" Component={profileScreen1} />
             <Route path="page-2" Component={profileScreen2} />
@@ -102,8 +99,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="change-password" Component={ChangePassword} />
             <Route path="media" Component={Media} />
           </Route>
-        </Routes>
-        <Routes>
+       
           <Route path="/admin" Component={AdminLayout}>
             <Route path="dashboard" Component={Admin_Dashboard} />
             <Route path="all-users" Component={AllUsers} />
@@ -114,5 +110,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Routes>
       </BrowserRouter>
     </AlertProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

@@ -6,6 +6,7 @@ import like from "../assets/images/like.svg";
 import Fav from "../assets/icons/fav.svg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import MediaHelper from "../Helpers/MediaHelper";
 
 const useStyles = makeStyles(() => {
 
@@ -40,6 +41,7 @@ const useStyles = makeStyles(() => {
       left: "10px",
       fontFamily: "Mori-bold!important",
       fontSize: "16px",
+      mixBlendMode: "difference"
     },
   };
 });
@@ -48,15 +50,23 @@ function MatchCards(props: any) {
   const navigate = useNavigate();
   const [Favourite, setFavourite] = useState(props.is_fav);
   const [Discard, setDiscard] = useState(props.is_discard);
+  const [profileImage, setProfileImage] = useState("");
+
+  const getImageURL = async (img: string) => {
+    let imgurl = await MediaHelper.GetImage(img);
+    setProfileImage(imgurl);
+  }
+
   useEffect(() => {
     setFavourite(props.is_fav);
+    getImageURL(props.img)
   }, [props.is_fav]);
 
   return (
     <Box
       onClick={() => navigate(`/dash/view-matchprofile/${props._id}`)}
       className={`${classes.MatchContainer}`}
-      sx={{ backgroundImage: `url(${props.img})` }}
+      sx={{ backgroundImage: `url(${profileImage})`, backgroundSize: "cover", backgroundPosition: "center" }}
     >
       <Typography className={`${classes.name}`}>
         {props.name}, {props.age}
@@ -70,9 +80,9 @@ function MatchCards(props: any) {
           onClick={() => {
             setDiscard(!Discard);
             props.FavDecline({
-              _id:props.request_id,
-              is_fav:Favourite,
-              is_discard:!Discard,
+              _id: props.request_id,
+              is_fav: Favourite,
+              is_discard: !Discard,
             })
           }}
         >
@@ -90,9 +100,9 @@ function MatchCards(props: any) {
           onClick={() => {
             setFavourite(!Favourite);
             props.FavDecline({
-              _id:props.request_id,
-              is_fav:!Favourite,
-              is_discard:Discard,
+              _id: props.request_id,
+              is_fav: !Favourite,
+              is_discard: Discard,
             })
           }}
         >

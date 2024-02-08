@@ -63,6 +63,7 @@ const useStyles = makeStyles(() => {
 });
 function Race() {
   const classes = useStyles();
+console.log("qwerqwerqwrqwrqwrqwrq");
 
   return (
     <Box className={`${classes.appheader}`}>

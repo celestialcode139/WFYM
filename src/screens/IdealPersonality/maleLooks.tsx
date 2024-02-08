@@ -32,6 +32,7 @@ function MaleLooks() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [Token, setToken] = useState("");
+  const [lookingFor, setlookingFor] = useState("Female");
   const [ActiveLook, setActiveLook] = useState("");
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -43,7 +44,8 @@ function MaleLooks() {
     APIHelper.CallApi(config.Endpoints.user.GetIdealPersonality, {}, null, Token).then(
       (result: any) => {
         if (result.status == "success") {
-          console.log(result.data);
+          console.log(result.data.looking_for);
+          setlookingFor(result.data.looking_for)
           setActiveLook(result?.data?.personality);
         } else {
           console.log(result.message);
@@ -94,7 +96,7 @@ function MaleLooks() {
             sx={{ marginTop: { md: "100px", sm: "60px", xs: "30px" } }}
           >
             <Looks
-              gender="female"
+              gender={lookingFor}
               key={ActiveLook}
               look={ActiveLook}
               onChange={(e: any) => {

@@ -163,12 +163,12 @@ function Dashboard() {
     ).then((result: any) => {
       if (result.status == "success") {
         console.log("result ", result.data);
-        if (result.data.isProfileVerified == false) {
-          Alert.notify("Compleate Your Profile First.", 3000);
+        if (result.data.isProfileVerified.status == false) {
+          Alert.notify(`Compleate Your Profile First. ${result.data.isProfileVerified.msg}`, 3000);
           setRequestMatchLoading(false);
           NavigateTo("/profile/page-1");
-        } else if (result.data.isIdealPersonVerified == false) {
-          Alert.notify("Compleate Your Ideal Personality Profile.", 3000);
+        } else if (result.data.isIdealPersonVerified.status == false) {
+          Alert.notify(`Compleate Your Ideal Personality Profile. ${result.data.isIdealPersonVerified.msg}`, 3000);
           setRequestMatchLoading(false);
           NavigateTo("/ideal-personality/general-info");
         } else if (result.data.isSubscriptionActive == false) {
@@ -224,7 +224,7 @@ function Dashboard() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        console.log(result?.data[0]?.match_result);
+        console.log(result);
         setmatchHistory(result?.data[0]?.match_result ?? []);
         setLoading(false);
         // setGender(result?.data?.gender ? result.data.gender : "");
@@ -298,6 +298,12 @@ function Dashboard() {
 
     return age;
   };
+
+  useEffect(() => {
+    console.log("matchHistory:",matchHistory);
+    
+  }, [matchHistory])
+  
 
   return (
     <Box className={`${classes.appheader}`}>
@@ -398,7 +404,7 @@ function Dashboard() {
                           FavDecline={(e: any) => FavDecline(e)}
                           name={`${history.result_user_id.first_name} ${history.result_user_id.last_name}`}
                           age={calculateAge(history.result_user_id.dob)}
-                          img={history.result_user_id?.profile_images}
+                          img={history.result_user_id?.user_details?.images}
                           _id={history.result_user_id._id}
                           request_id={history._id}
                           is_fav={history?.is_fav}

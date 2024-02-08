@@ -3,6 +3,7 @@ import { makeStyles } from "@mui/styles";
 import "../App.css";
 import DoubleTic from "../assets/icons/doubleTic.svg";
 import { useEffect } from "react";
+import Image from "../components/Image";
 
 const useStyles = makeStyles(() => {
 
@@ -36,8 +37,8 @@ function ProfileSummery(props: any) {
   const classes = useStyles();
 
   useEffect(() => {
-    console.log(props.data);
-  }, []);
+    console.log(props?.data?.result_user_id?.media_id?.gallery);
+  }, [props.data]);
 
   const calculateAge = (birthDate: any) => {
     const birthDateObject: any = new Date(birthDate);
@@ -49,9 +50,9 @@ function ProfileSummery(props: any) {
   };
 
   useEffect(() => {
-    console.log("SUMMERY : ",props.data);
-    
-  }, []);
+    console.log("SUMMERY : ", props.data);
+
+  }, [props.data]);
 
   return (
     <Box className={`${classes.quickProfileContainer}`}>
@@ -65,19 +66,19 @@ function ProfileSummery(props: any) {
         </Typography>
       </Box>
       <Box className={`${classes.pt20}`}>
-        <Typography className={`f-15-bold mb-10`} sx={{color:"#000000"}}>Location</Typography>
+        <Typography className={`f-15-bold mb-10`} sx={{ color: "#000000" }}>Location</Typography>
         <Typography className={`p-12`}>
           {`${props.data?.result_user_id?.user_details?.location} ${props.data?.result_user_id?.user_details?.city}  ${props.data?.result_user_id?.user_details?.country}`}
         </Typography>
       </Box>
       <Box className={`${classes.pt20}`}>
-        <Typography className={`f-15-bold mb-10`} sx={{color:"#000000"}}>About</Typography>
+        <Typography className={`f-15-bold mb-10`} sx={{ color: "#000000" }}>About</Typography>
         <Typography className={`p-12`}>
           {props.data?.result_user_id?.user_details?.description}
         </Typography>
       </Box>
       <Box className={`${classes.pt20}`}>
-        <Typography className={`f-15-bold mb-10`} sx={{ marginBottom: "10px", color:"#000000" }}>
+        <Typography className={`f-15-bold mb-10`} sx={{ marginBottom: "10px", color: "#000000" }}>
           Interests
         </Typography>
         <Box>
@@ -93,16 +94,15 @@ function ProfileSummery(props: any) {
         </Box>
       </Box>
       <Box className={`${classes.pt20}`}>
-        <Typography className={`f-15-bold mb-10`} sx={{color:"#000000"}}>Gallery</Typography>
+        <Typography className={`f-15-bold mb-10`} sx={{ color: "#000000" }}>Gallery</Typography>
         <Grid container spacing={1}>
-          {props.data?.result_user_id?.user_details?.images?.map(
+          {props?.data?.result_user_id?.media_id?.gallery?.map(
             (image: any, i: number) => (
               <Grid item xs={6} key={i}>
-                <Box
-                  component="img"
+                <Image
                   className={`${classes.galleryImage}`}
                   src={image}
-                ></Box>
+                ></Image>
               </Grid>
             )
           )}

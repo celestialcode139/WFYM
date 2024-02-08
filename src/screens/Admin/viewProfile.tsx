@@ -9,13 +9,14 @@ import { useEffect, useState } from "react";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
+import MediaHelper from "../../Helpers/MediaHelper";
 
 const useStyles = makeStyles(() => {
 
   return {
     profileImage: {
       width: "100%",
-      borderRadius:"20px"
+      borderRadius: "20px"
     },
     quickProfileContainer: {
       padding: "15px",
@@ -45,15 +46,15 @@ const useStyles = makeStyles(() => {
       color: "#065BCE!important",
       fontFamily: "Mori-bold!important",
     },
-    AssignMatchButton:{
-      backgroundColor:"#065BCE",
-      alignItems:"center",
-      justifyContent:"center",
-      display:"flex",
-      borderRadius:"30px",
-      height:"50px",
-      marginTop:"50px",
-      cursor:"pointer"
+    AssignMatchButton: {
+      backgroundColor: "#065BCE",
+      alignItems: "center",
+      justifyContent: "center",
+      display: "flex",
+      borderRadius: "30px",
+      height: "50px",
+      marginTop: "50px",
+      cursor: "pointer"
     }
   };
 });
@@ -70,7 +71,12 @@ function ViewProfile(props: any) {
       setToken(String(result.data));
     }
   };
-  
+  useEffect(() => {
+    console.log("User:", User);
+
+  }, [User])
+
+
   const GetLatestMatch = () => {
     console.log("Getting Latest Match With Token ", Token);
 
@@ -89,11 +95,20 @@ function ViewProfile(props: any) {
       }
     });
   };
+
+  const getImageURL = (img: string) => {
+    console.log("asdfasdfasdfasdfaEasdfasdfasdfasdfaE");
+    
+    MediaHelper.GetImage(img).then((e: string) => {
+      console.log("asdfasdfasdfasdfaE:", e);
+    })
+  }
   const init = () => {
     GetLatestMatch();
+    getImageURL("xyz.png");
   };
 
-  
+
 
   useEffect(() => {
     if (Token != "") {
@@ -103,7 +118,7 @@ function ViewProfile(props: any) {
     }
   }, [Token, props]);
 
-  
+
 
   return (
     <>
@@ -282,7 +297,15 @@ function ViewProfile(props: any) {
           <Box className={`${classes.pt20}`}>
             <Typography className={`f-15-bold mb-10`}>Gallery</Typography>
             <Grid container spacing={1}>
-              {User?.user_details?.images.map((img: string, i: number) => (
+              <Grid item xs={4}>
+                <Box
+                  onClick={() => setisOpen(true)}
+                  component="img"
+                  className={`${classes.galleryImage}`}
+                  src={User?.user_details?.images}
+                ></Box>
+              </Grid>
+              {/* {User?.user_details?.images.map((img: string, i: number) => (
                 <Grid item xs={4} key={i}>
                   <Box
                     onClick={() => setisOpen(true)}
@@ -291,7 +314,7 @@ function ViewProfile(props: any) {
                     src={img}
                   ></Box>
                 </Grid>
-              ))}
+              ))} */}
             </Grid>
             <Lightbox
               isOpen={isOpen}

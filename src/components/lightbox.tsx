@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileImage1 from "../assets/images/profileimages/1.png";
+import ProfileImage2 from "../assets/images/profileimages/2.png";
 import Lightbox from "lightbox-react";
 import "lightbox-react/style.css";
 
 export default function MediaCover(props: any) {
-  const images = [ProfileImage1, ProfileImage1, ProfileImage1];
   const [photoIndex, setphotoIndex] = useState(0);
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    setImages(props.gallery)
+  }, [props.gallery])
 
   return (
     <div>

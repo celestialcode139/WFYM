@@ -194,7 +194,7 @@ function MatchRequests() {
       {},
       "&execpt=completed",
       Token
-    ).then((result : ResultInterface) => {
+    ).then((result: any) => {
       if (result.status == "success") {
         if (result.data !== null && result.data !== undefined) {
           setmatches(result.data);
@@ -244,7 +244,7 @@ function MatchRequests() {
       { RequestId: RequestId },
       null,
       Token
-    ).then((result: Response) => {
+    ).then((result: any) => {
       if (result.status == "success") {
         GetAllMatches();
       } else {
@@ -269,10 +269,11 @@ function MatchRequests() {
       );
       const UsersName = pendingRecord.map((item: MatchesRequests) => ({
         first_name: item?.user_id?.first_name,
+        last_name: item?.user_id?.last_name,
         _id: item?.user_id?._id,
         SubscriptionId: item?.user_id?.user_subscriptions,
       }));
-      if (UsersName.length !== 0) {
+      if (UsersName.length > 0) {
         setAllAvailableMatches(UsersName);
       }
     }
@@ -293,29 +294,26 @@ function MatchRequests() {
         </Box>,
         <Box className={`${classes.Parent}`}>{`${val?.user_id?.email}`}</Box>,
         <Box className={`${classes.Parent}`}>
-          {`${
-            val?.user_id?.gender.charAt(0).toUpperCase() +
+          {`${val?.user_id?.gender.charAt(0).toUpperCase() +
             val?.user_id?.gender.slice(1)
-          }`}
+            }`}
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box className={`${classes.SubscriptionBadge}`}>
             <Typography className={`${classes.SubscriptionText}`}>
-              {`${
-                val?.user_id?.user_subscriptions?.subscription_id?.title ==
+              {`${val?.user_id?.user_subscriptions?.subscription_id?.title ==
                 undefined
-                  ? "Don't have"
-                  : val?.user_id?.user_subscriptions?.subscription_id?.title
-              }`}
+                ? "Don't have"
+                : val?.user_id?.user_subscriptions?.subscription_id?.title
+                }`}
             </Typography>
           </Box>
         </Box>,
         <Box className={`${classes.Parent}`}>
-          {`${
-            val?.user_id?.user_subscriptions?.remaining_matches == undefined
-              ? 0
-              : val?.user_id?.user_subscriptions?.remaining_matches
-          }`}
+          {`${val?.user_id?.user_subscriptions?.remaining_matches == undefined
+            ? 0
+            : val?.user_id?.user_subscriptions?.remaining_matches
+            }`}
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box

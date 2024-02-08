@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
@@ -8,6 +8,11 @@ import uploadVideoWhite from "../assets/images/uploadVideo_new.png";
 import Video from "../components/video";
 import MediaGallery from "../components/MediaGallery";
 import MediaHelper from "../Helpers/MediaHelper";
+import APIHelper from "../Helpers/APIHelper";
+import config from "../../config";
+import GeneralHelper from "../Helpers/GeneralHelper";
+import CircularProgress from "../components/CircularProgress";
+
 
 
 // import $ from "jquery";
@@ -75,7 +80,7 @@ const useStyles = makeStyles(() => {
       width: "100px",
       borderRadius: "7px",
       objectFit: "cover",
-      top: "36%",
+      top: "calc(50% - 20px)",
       cursor: "pointer",
       zIndex: "999999"
     },
@@ -107,21 +112,116 @@ const useStyles = makeStyles(() => {
 });
 function Media() {
   const classes = useStyles();
-  const [gallery, setgallery] = useState<String[]>(['']);
-  const [introVideo, setintroVideo] = useState<String[]>(['']);
-  const [bodyShort, setbodyShort] = useState<String[]>(['']);
+  const [gallery, setgallery] = useState<string[]>([""]);
+  const [introVideo, setintroVideo] = useState<string>("");
+  const [bodyShort, setbodyShort] = useState<string>("");
   const introVideoRef = useRef<HTMLInputElement>(null);
   const bodyShortRef = useRef<HTMLInputElement>(null);
   const [progress, setprogress] = useState(0);
+  const [progress1, setprogress1] = useState(0);
+  const [Loading, setLoading] = useState(false);
+  const [Token, setToken] = useState("");
 
 
-  const handleMedia = (name: string) => {
-    setgallery([...gallery, name])
+  interface IUpdateMedia {
+    gallery: string[];
+    introVideo: string;
+    bodyShort?: string;
+  }
+
+  const handleMedia = (name: string, type: string, indx: number) => {
+    if (type == "new") {
+      setgallery([...(gallery.filter((x) => x)), name, ""])
+    } else {
+      let updatedGallery = [...gallery];
+      updatedGallery[indx]=name;
+      setgallery(updatedGallery);
+      // debugger
+    }
   }
   const onprogress = (progressEvent: any) => {
     const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+    console.log("progress:", progress);
+
     setprogress(progress)
   };
+  const onprogress1 = (progressEvent: any) => {
+    const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+    console.log("progress:", progress);
+
+    setprogress1(progress)
+  };
+
+  const UpdateMediaHandler = () => {
+    setLoading(true);
+    const data: IUpdateMedia = {
+      gallery,
+      introVideo,
+      bodyShort
+
+    };
+
+    APIHelper.CallApi(
+      config.Endpoints.Media.UploadMedia,
+      data,
+      null,
+      Token
+    ).then((result: any) => {
+      setLoading(false);
+      if (result.status == "success") {
+        console.log("Response:", result);
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+
+  const GetMediaHandler = (tkn: string) => {
+    setLoading(true);
+    APIHelper.CallApi(
+      config.Endpoints.Media.GetMedia,
+      {},
+      null,
+      tkn
+    ).then((result: any) => {
+      setLoading(false);
+      if (result.status == "success") {
+        console.log("GetMediaHandler:", result.data);
+        if (result.data) {
+          setbodyShort(result.data.bodyShort)
+          setintroVideo(result.data.introVideo)
+          setgallery(result?.data?.gallery);
+        }
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+      GetMediaHandler(result.data);
+
+    }
+  };
+
+  useEffect(() => {
+    console.log("gallery:", gallery);
+  }, [gallery])
+
+
+
+
+
+  useEffect(() => {
+    featchToken();
+  }, [])
+
+
 
   return (
     <>
@@ -133,15 +233,14 @@ function Media() {
               <Grid container spacing={1}>
 
                 {
-                  gallery.map((val, i) => (
-                    <Grid item xs={4} key={i}>
+                  gallery.map((val, i) => {
+                    return <Grid item xs={4} key={i}>
                       <Box sx={{ position: "relative", display: "flex", justifyContent: "center" }}>
-                        <MediaGallery handleMedia={handleMedia} />
+                        <MediaGallery indx={i} img={val} handleMedia={handleMedia} />
                       </Box>
                     </Grid>
-                  ))
+                  })
                 }
-
 
               </Grid>
             </Grid>
@@ -156,16 +255,26 @@ function Media() {
               </Typography>
               <Grid container spacing={1}>
                 <Grid item xs={8} className="h-center v-center prelative">
-                  <Box
-                    className={`${classes.galleryImage} pabsolute`}
-                    component="img"
-                    src={uploadVideoWhite}
-                    onClick={() => {
-                      if (introVideoRef.current) {
-                        introVideoRef.current.click();
-                      }
-                    }}
-                  ></Box>
+                  {
+                    progress < 100 && progress > 0 ?
+                      <Box
+                        className={`${classes.galleryImage} pabsolute`} sx={{ width: 23 }}>
+                        <CircularProgress progress={progress} />
+                      </Box>
+                      :
+                      <Box
+                        className={`${classes.galleryImage} pabsolute`}
+                        component="img"
+                        src={uploadVideoWhite}
+                        onClick={() => {
+                          if (introVideoRef.current) {
+                            introVideoRef.current.click();
+                          }
+                        }}
+                      ></Box>
+                  }
+
+
                   <input
                     // accept="image/*"
                     style={{ display: "none" }}
@@ -175,25 +284,53 @@ function Media() {
                     onChange={async (e: any) => {
                       setprogress(1);
                       MediaHelper.UploadImage(e.target.files, onprogress).then(async (resp) => {
-                        console.log("image upload resp:", resp[0].url);
-
+                        console.log("image upload resp:", resp[0]?.file_name);
+                        setintroVideo(resp[0]?.file_name)
                       })
                     }}
                   />
                   <Video
+                    key={introVideo}
                     src={introVideo}
                   />
                 </Grid>
 
                 <Grid item xs={4} className="prelative" sx={{ display: "flex", justifyContent: 'center' }}>
-                  <Box
-                    className={`${classes.galleryImage} pabsolute`}
-                    component="img"
-                    src={uploadVideoWhite}
-                    onClick={() => alert("Clicked")}
-                  ></Box>
-                  <Video
+                  {
+                    progress1 < 100 && progress1 > 0 ?
+                      <Box
+                        className={`${classes.galleryImage} pabsolute`} sx={{ width: 23 }}>
+                        <CircularProgress progress={progress1} />
+                      </Box>
+                      :
+                      <Box
+                        className={`${classes.galleryImage} pabsolute`}
+                        component="img"
+                        src={uploadVideoWhite}
+                        onClick={() => {
+                          if (bodyShortRef.current) {
+                            bodyShortRef.current.click();
+                          }
+                        }}
+                      ></Box>
+                  }
 
+                  <input
+                    // accept="image/*"
+                    style={{ display: "none" }}
+                    id="raised-button-file"
+                    type="file"
+                    ref={bodyShortRef}
+                    onChange={async (e: any) => {
+                      setprogress(1);
+                      MediaHelper.UploadImage(e.target.files, onprogress1).then(async (resp) => {
+                        console.log("image upload resp:", resp[0].file_name);
+                        setbodyShort(resp[0].file_name)
+                      })
+                    }}
+                  />
+                  <Video
+                    key={bodyShort}
                     src={bodyShort}
                   />
                 </Grid>
@@ -204,7 +341,9 @@ function Media() {
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button>Save Changes</Button>
+          <Button onClick={() => {
+            UpdateMediaHandler()
+          }}>Save Changes</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
           <Button className={`${classes.cancelBtn}`}>Cancel</Button>

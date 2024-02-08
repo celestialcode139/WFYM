@@ -1,7 +1,8 @@
 import { Box, Grid, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
-
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 import "../../App.css";
 import Button from "../../components/buttonSm";
 import DatepickerSticky from "../../components/datepickerSticky";
@@ -87,8 +88,10 @@ function ProfileP1() {
     }
   };
   const GetProfile = async (Token: string) => {
+
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       async (result: any) => {
+        setLoading(false)
         if (result.status == "success") {
           setFirstName(result?.data?.first_name ? result.data.first_name : "");
           setLastName(result?.data?.last_name ? result.data.last_name : "");
@@ -124,6 +127,7 @@ function ProfileP1() {
             setDOB(DateOfBirth.format("DD MMMM YYYY"));
           }
         } else {
+          setLoading(false)
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));
         }
@@ -211,6 +215,7 @@ function ProfileP1() {
   };
   // Other functions
   useEffect(() => {
+    setLoading(true);
     if (Token != "") {
       GetProfile(Token);
     } else {
@@ -227,223 +232,250 @@ function ProfileP1() {
         className="h-center"
         sx={{ marginBottom: { md: "0px", xs: "10px" } }}
       >
-        <Box className={`${classes.profileImage}`} style={{ backgroundImage: `url(${profileImage.image_url})`, }}>
-          <Box className={`${classes.imageCircularProgress}`}>
-            <CircularProgress progress={progress} />
-          </Box>
-          <input
-            // accept="image/*"
-            style={{ display: "none" }}
-            id="raised-button-file"
-            type="file"
-            onChange={async (e: any) => {
-              MediaHelper.UploadImage(e.target.files, onprogress).then((resp) => {
-                console.log("image upload resp:", resp);
-                setProfileImage({ ...profileImage, image_url: resp[0].url, file_name: resp[0].file_name })
-              })
-            }}
-          />
-          <label htmlFor="raised-button-file">
-            <Box
-              className={`${classes.imagePicker}`}
-              component="img"
-              src={camera}
-            ></Box>
-          </label>
-        </Box>
-      </Grid>
-      <Grid item md={5} xs={12}>
-        <Grid container>
-          <Grid item md={6} xs={12} sx={{ p: 1 }}>
-            <TextField
-              sx={{
-                width: "100%",
-                "& div": {
-                  borderRadius: "12px!important",
-                  width: "100%",
-                },
-              }}
-              type="text"
-              label="First Name"
-              value={FirstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </Grid>
-          <Grid item md={6} xs={12} sx={{ p: 1 }}>
-            <TextField
-              sx={{
-                width: "100%",
-                "& div": {
-                  borderRadius: "12px!important",
-                  width: "100%",
-                },
-              }}
-              type="text"
-              label="Last Name"
-              value={LastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </Grid>
-          <Grid item md={6} xs={12} sx={{ p: 1 }}>
-            <TextField
-              sx={{
-                width: "100%",
-                "& div": {
-                  borderRadius: "12px!important",
-                  width: "100%",
-                },
-              }}
-              type="text"
-              label="Email"
-              value={Email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Grid>
-          <Grid item md={6} xs={12} sx={{ p: 1 }}>
-            <DatepickerSticky Default={DOB} onChange={handleDOBChange}>
-              <Button
-                onClick={() => { }}
-                sx={{
-                  backgroundColor: "#EFFBFC",
-                  color: "#323232",
+        {
+          !Loading ?
+            <Box className={`${classes.profileImage}`} style={{ backgroundImage: `url(${profileImage.image_url})`, }}>
+              <Box className={`${classes.imageCircularProgress}`}>
+                <CircularProgress progress={progress} />
+              </Box>
+              <input
+                // accept="image/*"
+                style={{ display: "none" }}
+                id="raised-button-file"
+                type="file"
+                onChange={async (e: any) => {
+                  MediaHelper.UploadImage(e.target.files, onprogress).then((resp) => {
+                    console.log("image upload resp:", resp);
+                    setProfileImage({ ...profileImage, image_url: resp[0].url, file_name: resp[0].file_name })
+                  })
                 }}
-              >
-                {/* Choose birthday date */}
-                {
-                  DOB == ""
-                    ? "Choose birthday date"
-                    : moment(DOB).format("D MMM YYYY")
-                  // DOB
-                }
-              </Button>
-            </DatepickerSticky>
-          </Grid>
-          <Grid item md={6} xs={12} sx={{ p: 1 }}>
-            <TextField
-              sx={{
-                width: "100%",
-                "& div": {
-                  borderRadius: "12px!important",
-                  width: "100%",
-                },
-              }}
-              type="text"
-              label="Country"
-              value={Country}
-              onChange={(e: any) => setCountry(e.target.value)}
-            />
-          </Grid>
-          <Grid item md={6} xs={12} sx={{ p: 1 }}>
-            <TextField
-              sx={{
-                width: "100%",
-                "& div": {
-                  borderRadius: "12px!important",
-                  width: "100%",
-                },
-              }}
-              type="text"
-              label="City"
-              value={City}
-              onChange={(e: any) => setCity(e.target.value)}
-            />
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-            sx={{ p: 1, display: { md: "block", xs: "none" } }}
-          >
-            <Button
-              Loading={Loading}
-              onClick={() => handleNext()}
-              className={`${classes.marginTop100}`}
-            >
-              Save Changes
-            </Button>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-            sx={{ p: 1, display: { md: "block", xs: "none" } }}
-          >
-            <Button onClick={() => {
-              navigate(-1);
-            }} className={`${classes.cancelBtn} ${classes.marginTop100}`}>
-              Cancel
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item md={3} xs={12}>
-        <Grid container>
-          <Grid item xs={12} sx={{ p: 1 }}>
-            <TextField
-              sx={{
-                width: "100%",
-                "& div": {
-                  borderRadius: "12px!important",
-                  width: "100%",
-                },
-              }}
-              type="text"
-              label="Description"
-              multiline
-              rows={4}
-              value={Description}
-              onChange={(e: any) => setDescription(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12} sx={{ p: 1 }}>
-            <TextField
-              sx={{
-                width: "100%",
-                "& div": {
-                  borderRadius: "12px!important",
-                  width: "100%",
-                },
-              }}
-              type="text"
-              label="Address"
-              value={Address}
-              onChange={(e: any) => setAddress(e.target.value)}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={4}
-            sx={{ p: 1, display: { md: "block", xs: "none" } }}
-          ></Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-            sx={{ p: 1, display: { md: "none", xs: "block" } }}
-          >
-            <Button Loading={Loading} onClick={() => handleNext()}>Save Changes</Button>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-            sx={{ p: 1, display: { md: "none", xs: "block" } }}
-          >
-            <Button onClick={() => {
-              navigate(-1);
-            }} className={`${classes.cancelBtn}`}>Cancel</Button>
-          </Grid>
-          <Grid item md={8} xs={12} sx={{ p: 1 }}>
-            <Button
+              />
+              <label htmlFor="raised-button-file">
+                <Box
+                  className={`${classes.imagePicker}`}
+                  component="img"
+                  src={camera}
+                ></Box>
+              </label>
 
-              className={`${classes.delBtn}`}
-              sx={{ marginTop: { md: "80px" } }}
-            >
-              Delete Account
-            </Button>
-          </Grid>
-        </Grid>
+            </Box>
+            : <Skeleton animation="wave" variant="rounded" width={"90%"} height={120} />
+        }
+
+
       </Grid>
+      {
+        !Loading ?
+          <>
+            <Grid item md={5} xs={12}>
+              <Grid container>
+                <Grid item md={6} xs={12} sx={{ p: 1 }}>
+                  <TextField
+                    sx={{
+                      width: "100%",
+                      "& div": {
+                        borderRadius: "12px!important",
+                        width: "100%",
+                      },
+                    }}
+                    type="text"
+                    label="First Name"
+                    value={FirstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item md={6} xs={12} sx={{ p: 1 }}>
+                  <TextField
+                    sx={{
+                      width: "100%",
+                      "& div": {
+                        borderRadius: "12px!important",
+                        width: "100%",
+                      },
+                    }}
+                    type="text"
+                    label="Last Name"
+                    value={LastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item md={6} xs={12} sx={{ p: 1 }}>
+                  <TextField
+                    sx={{
+                      width: "100%",
+                      "& div": {
+                        borderRadius: "12px!important",
+                        width: "100%",
+                      },
+                    }}
+                    type="text"
+                    label="Email"
+                    value={Email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Grid>
+                <Grid item md={6} xs={12} sx={{ p: 1 }}>
+                  <DatepickerSticky Default={DOB} onChange={handleDOBChange}>
+                    <Button
+                      onClick={() => { }}
+                      sx={{
+                        backgroundColor: "#EFFBFC",
+                        color: "#323232",
+                      }}
+                    >
+                      {/* Choose birthday date */}
+                      {
+                        DOB == ""
+                          ? "Choose birthday date"
+                          : moment(DOB).format("D MMM YYYY")
+                        // DOB
+                      }
+                    </Button>
+                  </DatepickerSticky>
+                </Grid>
+                <Grid item md={6} xs={12} sx={{ p: 1 }}>
+                  <TextField
+                    sx={{
+                      width: "100%",
+                      "& div": {
+                        borderRadius: "12px!important",
+                        width: "100%",
+                      },
+                    }}
+                    type="text"
+                    label="Country"
+                    value={Country}
+                    onChange={(e: any) => setCountry(e.target.value)}
+                  />
+                </Grid>
+                <Grid item md={6} xs={12} sx={{ p: 1 }}>
+                  <TextField
+                    sx={{
+                      width: "100%",
+                      "& div": {
+                        borderRadius: "12px!important",
+                        width: "100%",
+                      },
+                    }}
+                    type="text"
+                    label="City"
+                    value={City}
+                    onChange={(e: any) => setCity(e.target.value)}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  md={6}
+                  xs={12}
+                  sx={{ p: 1, display: { md: "block", xs: "none" } }}
+                >
+                  <Button
+                    Loading={Loading}
+                    onClick={() => handleNext()}
+                    className={`${classes.marginTop100}`}
+                  >
+                    Save Changes
+                  </Button>
+                </Grid>
+                <Grid
+                  item
+                  md={6}
+                  xs={12}
+                  sx={{ p: 1, display: { md: "block", xs: "none" } }}
+                >
+                  <Button onClick={() => {
+                    navigate(-1);
+                  }} className={`${classes.cancelBtn} ${classes.marginTop100}`}>
+                    Cancel
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item md={3} xs={12}>
+              <Grid container>
+                <Grid item xs={12} sx={{ p: 1 }}>
+                  <TextField
+                    sx={{
+                      width: "100%",
+                      "& div": {
+                        borderRadius: "12px!important",
+                        width: "100%",
+                      },
+                    }}
+                    type="text"
+                    label="Description"
+                    multiline
+                    rows={4}
+                    value={Description}
+                    onChange={(e: any) => setDescription(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sx={{ p: 1 }}>
+                  <TextField
+                    sx={{
+                      width: "100%",
+                      "& div": {
+                        borderRadius: "12px!important",
+                        width: "100%",
+                      },
+                    }}
+                    type="text"
+                    label="Address"
+                    value={Address}
+                    onChange={(e: any) => setAddress(e.target.value)}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  sx={{ p: 1, display: { md: "block", xs: "none" } }}
+                ></Grid>
+                <Grid
+                  item
+                  md={6}
+                  xs={12}
+                  sx={{ p: 1, display: { md: "none", xs: "block" } }}
+                >
+                  <Button Loading={Loading} onClick={() => handleNext()}>Save Changes</Button>
+                </Grid>
+                <Grid
+                  item
+                  md={6}
+                  xs={12}
+                  sx={{ p: 1, display: { md: "none", xs: "block" } }}
+                >
+                  <Button onClick={() => {
+                    navigate(-1);
+                  }} className={`${classes.cancelBtn}`}>Cancel</Button>
+                </Grid>
+                <Grid item md={8} xs={12} sx={{ p: 1 }}>
+                  <Button
+
+                    className={`${classes.delBtn}`}
+                    sx={{ marginTop: { md: "80px" } }}
+                  >
+                    Delete Account
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid></>
+          :
+          <>
+            <Grid item md={10}>
+              <Grid container spacing={1}>
+                <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+                <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+                <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+                <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+                <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+                <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+                <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+                <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+                <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              </Grid>
+            </Grid>
+          </>
+      }
     </Grid>
   );
 }

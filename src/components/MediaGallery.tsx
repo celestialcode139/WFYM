@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
@@ -105,11 +105,13 @@ const useStyles = makeStyles(() => {
     };
 });
 export interface IMediaGallery {
-    handleMedia: (name: string) => void,
+    handleMedia: (name: string, type: string, indx: number) => void,
+    img: string,
+    indx: number,
 }
-function Media({ handleMedia }: IMediaGallery) {
+function Media({ handleMedia, img, indx }: IMediaGallery) {
     const classes = useStyles();
-    const [profileImage, setProfileImage] = useState({ image_url: UploadImage, file_name: "" });
+    const [profileImage, setProfileImage] = useState({ image_url: UploadImage, type: "new" });
     const [progress, setprogress] = useState(0);
     const fileUploader = useRef<HTMLInputElement>(null);
 
@@ -118,6 +120,26 @@ function Media({ handleMedia }: IMediaGallery) {
         const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
         setprogress(progress)
     };
+
+    useEffect(() => {
+        init();
+    }, [img])
+
+    const init = () => {
+
+        if (img != "") {
+            MediaHelper.GetImage(img).then((e) => {
+                console.log("E:", e);
+                setProfileImage({ ...profileImage, image_url: e, type: "update" })
+            })
+        } else {
+            setProfileImage({ ...profileImage, image_url: UploadImage, type: "new", indx })
+        }
+    }
+
+
+
+
     return (
         <>
             <Box className={`${classes.imageCircularProgress}`} onClick={() => {
@@ -138,18 +160,16 @@ function Media({ handleMedia }: IMediaGallery) {
                     setprogress(1);
                     MediaHelper.UploadImage(e.target.files, onprogress).then(async (resp) => {
                         console.log("image upload resp:", resp);
-                        setProfileImage({ ...profileImage, image_url: resp[0].url, file_name: resp[0].file_name })
-                        handleMedia(resp[0].file_name)
+                        handleMedia(resp[0].file_name, profileImage.type, indx)
                     })
                 }}
             />
-
             <Box
-
+                key={profileImage.image_url}
                 sx={{ objectFit: `contain` }}
                 className={`${classes.galleryImage}`}
                 component="img"
-                src={profileImage.image_url}
+                src={profileImage.image_url != "" ? profileImage.image_url : UploadImage}
             ></Box>
         </>
     );

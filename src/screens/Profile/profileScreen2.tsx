@@ -9,8 +9,8 @@ import avatar from "../../assets/images/avatar.png";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-
-// import $ from "jquery";
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 
 const useStyles = makeStyles(() => {
   return {
@@ -78,7 +78,7 @@ function ProfileScreen2() {
   const [Gender, setGender] = useState("male");
   const [Token, setToken] = useState("");
   const [AllHobbies, setAllHobbies] = useState<Array<object>>([]);
-  const [Loading, setLoading] = useState(false);
+  const [Loading, setLoading] = useState(true);
 
   interface APIResponseInterface {
     status: string,
@@ -128,8 +128,10 @@ function ProfileScreen2() {
               ? result.data.user_details.hobbies
               : []
           );
+          setLoading(false)
           console.log("Selected Hobbies ", result?.data?.user_details?.hobbies);
         } else {
+          setLoading(false)
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));
         }
@@ -221,6 +223,7 @@ function ProfileScreen2() {
     }
   };
   useEffect(() => {
+    setLoading(true);
     if (Token != "") {
       GetHobbies(Token);
       GetProfile(Token);
@@ -238,14 +241,26 @@ function ProfileScreen2() {
           <Typography className={`${classes.h1}`} sx={{ color: "#000000" }}>
             I am
           </Typography>
-          <GenderComp gender={Gender} onChange={(e: string) => setGender(e)} />
+          {
+            !Loading ?
+              <GenderComp gender={Gender} onChange={(e: string) => setGender(e)} />
+              :
+              <>
+                <Stack spacing={2}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={30} />
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={30} />
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={30} />
+                </Stack>
+              </>
+          }
+
         </Grid>
         <Grid item sm={6} xs={12}>
           <Typography className={`${classes.h1}`} sx={{ color: "#000000" }}>
             Your interests
           </Typography>
           <Grid container spacing={2}>
-            {AllHobbies.map((val: any, i) => (
+            {!Loading ? AllHobbies.map((val: any, i) => (
               <Grid item key={i}>
                 <Typography
                   onClick={() => {
@@ -264,7 +279,38 @@ function ProfileScreen2() {
                   {val.value}
                 </Typography>
               </Grid>
-            ))}
+            )) :
+              <>
+                <Grid item xs={4}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={50} />
+                </Grid>
+                <Grid item xs={4}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={50} />
+                </Grid>
+                <Grid item xs={4}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={50} />
+                </Grid>
+                <Grid item xs={4}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={50} />
+                </Grid>
+                <Grid item xs={4}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={50} />
+                </Grid>
+                <Grid item xs={4}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={50} />
+                </Grid>
+                <Grid item xs={4}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={50} />
+                </Grid>
+                <Grid item xs={4}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={50} />
+                </Grid>
+                <Grid item xs={4}>
+                  <Skeleton animation="wave" variant="rounded" width={"100%"} height={50} />
+                </Grid>
+              </>
+            }
+
           </Grid>
         </Grid>
       </Grid>
