@@ -20,10 +20,11 @@ interface PropsInterface {
   RequesterSubscriptionId?: string;
   Matches: Array<object>;
   RequesterId?: number;
-  handleClose?: string;
+  open?: boolean;
+  handleClose?: () => void;
   // _id: number;
 }
-export default function AssignMatchDiloag(props: PropsInterface) {
+export default function AssignMatchDiloag(props: any) {
   const [SelectedMatch, setSelectedMatch] = React.useState("");
   const [Matches, setMatches] = React.useState([]);
   const [AssignMatchLoading, setAssignMatchLoading] = React.useState(false);
@@ -47,8 +48,8 @@ export default function AssignMatchDiloag(props: PropsInterface) {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
       if (SelectedMatch == undefined || SelectedMatch == "") {
-        console.log("Selected Match ",SelectedMatch);
-        
+        console.log("Selected Match ", SelectedMatch);
+
         Alert.notify("No Matches Available!", 3000);
       } else {
         console.log(String(SelectedMatch));
@@ -85,9 +86,9 @@ export default function AssignMatchDiloag(props: PropsInterface) {
   };
 
   useEffect(() => {
-    
-    const FilterAvailableMatches = props.Matches.filter(
-      (item:UserInterface) => item?._id != props.RequesterId
+
+    const FilterAvailableMatches: any = props.Matches.filter(
+      (item: UserInterface) => item?._id != props.RequesterId
     );
 
     setMatches(FilterAvailableMatches);
@@ -145,9 +146,9 @@ export default function AssignMatchDiloag(props: PropsInterface) {
               value={SelectedMatch}
               label="Matches"
               onChange={handleChange}
-              style={{border:"2px solid red"}}
+              style={{ border: "2px solid red" }}
             >
-              {Matches.map((item:UserInterface) => (
+              {Matches.map((item: UserInterface) => (
                 <MenuItem key={item.first_name} value={item._id}>
                   {item.first_name}{item.last_name}
                 </MenuItem>

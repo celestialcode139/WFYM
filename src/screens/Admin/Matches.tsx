@@ -138,7 +138,7 @@ function Matches() {
 
   };
   const featchToken = async () => {
-    const result: TokenResponseInterface = await GeneralHelper.retrieveData("Token");
+    const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
       setToken(String(result.data));
     }

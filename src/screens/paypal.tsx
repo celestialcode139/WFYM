@@ -67,7 +67,7 @@ function Paypal() {
   useEffect(() => {
     const currentUrl = window.location.search;
     const params = new URLSearchParams(currentUrl);
-    const amount = params.get("amount");
+    const amount: any = params.get("amount");
     settotalAmount(amount);
     console.log("Amount:", amount);
     setTimeout(() => {
@@ -86,7 +86,7 @@ function Paypal() {
 
   return (
     <PayPalScriptProvider
-      options={{ "client-id": CLIENT_ID, enableFunding: "venmo" }}
+      options={{ clientId: CLIENT_ID, enableFunding: "venmo" }}
     >
       <Box className={`${classes.appheader}`}>
         <Container maxWidth="xl">
@@ -94,14 +94,17 @@ function Paypal() {
             sx={{ margin: "0 auto", padding: "10px", height: "100vh" }}
             className={`blurBg`}
           >
-            <Box className={`h-center`} sx={{marginTop:"50px",marginBottom:"30px"}}>
+            <Box className={`h-center`} sx={{ marginTop: "50px", marginBottom: "30px" }}>
               <Box component="img" src={Logo}></Box>
             </Box>
-            <PayPalButtons
-              style={{ layout: "vertical", width: "100%" }}
-              createOrder={createOrder}
-              onApprove={onApprove}
-            />
+            <Box style={{ width: "100%" }} >
+
+              <PayPalButtons
+                style={{ layout: "vertical" }}
+                createOrder={createOrder}
+                onApprove={onApprove}
+              />
+            </Box>
           </Box>
         </Container>
       </Box>

@@ -171,7 +171,7 @@ function Race() {
 
   return (
     <PayPalScriptProvider
-      options={{ "client-id": CLIENT_ID, enableFunding: "venmo" }}
+      options={{ clientId: CLIENT_ID, enableFunding: "venmo" }}
     >
       <Box className={`${classes.appheader}`}>
         <Container maxWidth="xl">

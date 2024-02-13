@@ -133,7 +133,7 @@ function Media({ handleMedia, img, indx }: IMediaGallery) {
                 setProfileImage({ ...profileImage, image_url: e, type: "update" })
             })
         } else {
-            setProfileImage({ ...profileImage, image_url: UploadImage, type: "new", indx })
+            setProfileImage({ ...profileImage, image_url: UploadImage, type: "new" })
         }
     }
 

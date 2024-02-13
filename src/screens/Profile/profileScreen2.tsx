@@ -119,7 +119,7 @@ function ProfileScreen2() {
   };
   const GetProfile = (Token: string) => {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
-      (result: APIResponseInterface) => {
+      (result: any) => {
         if (result.status == "success") {
           console.log(result.data);
           setGender(result?.data?.gender ? result.data.gender : "");
@@ -144,7 +144,7 @@ function ProfileScreen2() {
       {},
       "hobbies",
       Token
-    ).then((result: HobbiesAPIResponseInterface) => {
+    ).then((result: any) => {
       if (result.status == "success") {
         handleSort(result.data)
         console.log("Hobbies ", result.data);

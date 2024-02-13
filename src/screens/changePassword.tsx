@@ -124,7 +124,7 @@ function ChangePassword() {
     });
   };
 
-  const GetDataFromChild = debounce((Data: object) => {
+  const GetDataFromChild = debounce((Data: any) => {
     console.log("Setting Main Body ", Data);
 
     setBody({

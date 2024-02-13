@@ -82,14 +82,14 @@ function SetNewPass() {
     }
   }
   const retrieveData = async () => {
-    const Email:AsyncResponseInterface = await GeneralHelper.retrieveData("Email")
-    const OTP_ID:AsyncResponseInterface = await GeneralHelper.retrieveData("OTP_ID")
+    const Email: any = await GeneralHelper.retrieveData("Email")
+    const OTP_ID: any = await GeneralHelper.retrieveData("OTP_ID")
     if (Email.status == 1 && OTP_ID.status == 1) {
       handleUpdatePass(Email.data, OTP_ID.data, Password)
     }
   }
   const handleUpdatePass = (Email: string, OTP_Id: string, Password: string) => {
-    APIHelper.CallApi(config.Endpoints.auth.setPass, { email: Email, otp_id: OTP_Id, password: Password },null,'').then((result) => {
+    APIHelper.CallApi(config.Endpoints.auth.setPass, { email: Email, otp_id: OTP_Id, password: Password }, null, '').then((result) => {
       if (result?.status == "success") {
         GeneralHelper.ClearData("Email").then(() => {
           GeneralHelper.ClearData("OTP_ID").then(() => {

@@ -168,9 +168,9 @@ function ProfileP1() {
     });
   };
   interface UpdateBioDataInterface {
-    images: string;
-    country: string;
-    location: string;
+    images?: string;
+    country?: string;
+    location?: string;
     description?: string;
     city?: string;
   }
