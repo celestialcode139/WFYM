@@ -151,8 +151,8 @@ function ProfileScreen3() {
     UpdateBio();
   };
   // Other functions
-  const handleSort = (ArrayToSort: Array<object>) => {
-    const sortedArray = [...ArrayToSort].sort((a: SortingObjectInterface, b: SortingObjectInterface) => a.value.localeCompare(b.value));
+  const handleSort = (ArrayToSort: Array<{value:string}>) => {
+    const sortedArray = [...ArrayToSort].sort((a,b) => a.value.localeCompare(b.value));
     console.log("sortedArray ", sortedArray);
     setraces(sortedArray);
 

@@ -4,12 +4,13 @@
 import { Box } from "@mui/material";
 import Header from "./components/header/header";
 import Footer from "./components/header/footer";
-import HeroSection from "./components/heroSection";
+import HeroSection
+  from "./components/heroSection";
 import "./App.css";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { TransformControls } from "three/examples/jsm/controls/TransformControls";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { TransformControls } from "three/examples/jsm/controls/TransformControls.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
@@ -80,7 +81,7 @@ void main() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     //===================================================== Create an empty scene
     const scene = new THREE.Scene();
-    scene.add(mainGroup,textGroup);
+    scene.add(mainGroup, textGroup);
     // scene.background=new THREE.TextureLoader().load("/city_bg.jpg");
     rgbeLoader.load(
       "src/threejs/hdr/rural_asphalt_road_4k.hdr",
@@ -220,8 +221,8 @@ void main() {
       vertexShader,
       fragmentShader,
       transparent: true,
-    alphaTest: 0,
-    // blending: new THREE.NormalBlending,
+      alphaTest: 0,
+      // blending: new THREE.NormalBlending,
       uniforms: {
         maxDistance: { value: 3 }, // Adjust the maximum distance
         imageTexture: {
@@ -260,7 +261,7 @@ void main() {
       textMesh.position.sub(center);
     });
 
-    
+
     Font_Loader.load("src/assets/font/roboto.json", function (font: any) {
       const textGeometry1 = new TextGeometry("matches real connections", {
         font: font,
@@ -276,7 +277,7 @@ void main() {
       const center = new THREE.Vector3();
       boundingBox.getCenter(center);
       textMesh1.position.sub(center);
-      textMesh1.position.y=-0.038
+      textMesh1.position.y = -0.038
 
     });
     //===================================================== Create a point light in our scene
@@ -423,7 +424,7 @@ void main() {
     function Animation() {
       const elapsedTime = clock.getElapsedTime();
       setTimeout(() => {
-         heartGlobal.rotation.y = elapsedTime;
+        heartGlobal.rotation.y = elapsedTime;
       }, 500);
 
       renderer.render(scene, camera);
@@ -436,7 +437,8 @@ void main() {
     function TControl(name: any, type = "P", group = true) {
       const tControl = new TransformControls(camera, renderer.domElement);
       tControl.addEventListener("dragging-changed", (event: any) => {
-        OrbitControls.enabled = !event.value;
+        const orbitControls = new OrbitControls(camera, canvas);
+        orbitControls.enabled = !event.value;
       });
       tControl.attach(name);
       scene.add(tControl);
@@ -448,24 +450,24 @@ void main() {
         const newScale = name.scale;
         type == "R"
           ? (console.log("New Rotation:", {
-              x: parseFloat(newRotate.x.toFixed(5)),
-              y: parseFloat(newRotate.y.toFixed(5)),
-              z: parseFloat(newRotate.z.toFixed(5)),
-            }),
+            x: parseFloat(newRotate.x.toFixed(5)),
+            y: parseFloat(newRotate.y.toFixed(5)),
+            z: parseFloat(newRotate.z.toFixed(5)),
+          }),
             tControl.setMode("rotate"))
           : type == "S"
-          ? (console.log("New Scale:", {
+            ? (console.log("New Scale:", {
               x: parseFloat(newScale.x.toFixed(5)),
               y: parseFloat(newScale.y.toFixed(5)),
               z: parseFloat(newScale.z.toFixed(5)),
             }),
-            tControl.setMode("scale"))
-          : (console.log("New Position:", {
+              tControl.setMode("scale"))
+            : (console.log("New Position:", {
               x: parseFloat(newPosition.x.toFixed(5)),
               y: parseFloat(newPosition.y.toFixed(5)),
               z: parseFloat(newPosition.z.toFixed(5)),
             }),
-            tControl.setMode("translate"));
+              tControl.setMode("translate"));
       });
     }
     //===================================================== Debugger
@@ -477,10 +479,10 @@ void main() {
 
     const track = document.querySelector(".animationHeight");
     window.addEventListener("scroll", function (event) {
-      const trackHeight = track?.offsetHeight;
+      const trackHeight = (track as HTMLElement)?.offsetHeight;
       const windowHeight = window.innerHeight;
       const progress =
-        (window.pageYOffset - track?.offsetTop) / (trackHeight - windowHeight);
+        (window.pageYOffset - (track as HTMLElement)?.offsetTop) / (trackHeight - windowHeight);
       tl.progress(progress);
     });
   };
