@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Typography, Container, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import OtpInput from "react-otp-input";
@@ -14,7 +13,6 @@ import config from "../../config";
 
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     OTP: {
       backgroundColor: "#ffffff",
@@ -92,7 +90,7 @@ function OTPResetPass() {
   }
   const CallApi = async (Email: string, OTP: string) => {
     if (Resend == false) {
-      APIHelper.CallApi(config.Endpoints.auth.OTP.VarifyOtp, { email: Email, otp: OTP }).then((result: any) => {
+      APIHelper.CallApi(config.Endpoints.auth.OTP.VarifyOtp, { email: Email, otp: OTP },null,'').then((result: any) => {
         console.log(result);
         if (result?.data?.varify_otp != null) {
           StoreData(String(result.data?.varify_otp?._id))
@@ -108,7 +106,7 @@ function OTPResetPass() {
 
 
   const ResenOTP = async (Email: string) => {
-    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email }).then((result) => {
+    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email },null,'').then((result) => {
       if (result?.status == "success") {
         handleResend()
       } else {

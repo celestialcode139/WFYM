@@ -1,84 +1,113 @@
-import { Box, Typography, Container, Link, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Typography, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import dislike from "../assets/images/dislike.svg";
-import like from "../assets/images/like.svg";
 import DoubleTic from "../assets/icons/doubleTic.svg";
-import image from "../assets/icons/image.png";
+import { useEffect } from "react";
+import Image from "../components/Image";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
 
   return {
-    quickProfileContainer:{
-        padding:"15px"
+    quickProfileContainer: {
+      padding: "15px",
     },
-    name:{
-        color: "black",
+    name: {
+      color: "black",
     },
-    pt20:{
-        marginTop:"20px"
+    pt20: {
+      marginTop: "20px",
     },
-    badge:{
-        padding: "3px 6px",
-        display: "inline-flex",
-        border: "1px solid #075bce",
-        borderRadius: "6px",
-        fontSize: "12px",
-        color: "#075bce",
-        marginRight:"6px",
-        marginBottom:"6px"
+    badge: {
+      padding: "3px 6px",
+      display: "inline-flex",
+      border: "1px solid #075bce",
+      borderRadius: "6px",
+      fontSize: "12px",
+      color: "#075bce",
+      marginRight: "6px",
+      marginBottom: "6px",
     },
-    galleryImage:{
-        width:"100%",
-        borderRadius:"10px"
-    }
+    galleryImage: {
+      width: "100%",
+      borderRadius: "10px",
+    },
   };
 });
-function ProfileSummery(props:any) {
+function ProfileSummery(props: any) {
   const classes = useStyles();
+
+  useEffect(() => {
+    console.log(props?.data?.result_user_id?.media_id?.gallery);
+  }, [props.data]);
+
+  const calculateAge = (birthDate: any) => {
+    const birthDateObject: any = new Date(birthDate);
+    const currentDate: any = new Date();
+    const timeDifference = currentDate - birthDateObject;
+    const age = Math.floor(timeDifference / (365.25 * 24 * 60 * 60 * 1000));
+
+    return age;
+  };
+
+  useEffect(() => {
+    console.log("SUMMERY : ", props.data);
+
+  }, [props.data]);
+
   return (
     <Box className={`${classes.quickProfileContainer}`}>
+      <Box>
+        <Typography className={`f-22-bold mb-10 ${classes.name}`}>
+          {`${props.data?.result_user_id?.first_name} ${props.data?.result_user_id?.last_name}`}
+          , {calculateAge(props.data?.result_user_id?.dob)}
+        </Typography>
+        <Typography className={`p-12`}>
+          {props.data?.result_user_id?.user_details?.profession}
+        </Typography>
+      </Box>
+      <Box className={`${classes.pt20}`}>
+        <Typography className={`f-15-bold mb-10`} sx={{ color: "#000000" }}>Location</Typography>
+        <Typography className={`p-12`}>
+          {`${props.data?.result_user_id?.user_details?.location} ${props.data?.result_user_id?.user_details?.city}  ${props.data?.result_user_id?.user_details?.country}`}
+        </Typography>
+      </Box>
+      <Box className={`${classes.pt20}`}>
+        <Typography className={`f-15-bold mb-10`} sx={{ color: "#000000" }}>About</Typography>
+        <Typography className={`p-12`}>
+          {props.data?.result_user_id?.user_details?.description}
+        </Typography>
+      </Box>
+      <Box className={`${classes.pt20}`}>
+        <Typography className={`f-15-bold mb-10`} sx={{ marginBottom: "10px", color: "#000000" }}>
+          Interests
+        </Typography>
         <Box>
-            <Typography className={`f-22-bold mb-10 ${classes.name}`}>Jessica Parker, 23</Typography>
-            <Typography className={`p-12`}>Proffesional model</Typography>
+          {props.data?.result_user_id?.user_details?.hobbies?.map(
+            (hoby: any, i: number) => {
+              return hoby ? (
+                <Box className={`${classes.badge} v-center`} key={i}>
+                  <Box component="img" src={DoubleTic}></Box> {hoby}
+                </Box>
+              ) : null;
+            }
+          )}
         </Box>
-        <Box className={`${classes.pt20}`}>
-            <Typography className={`f-15-bold mb-10`}>Location</Typography>
-            <Typography className={`p-12`}>Chicago, IL United States</Typography>
-        </Box>
-        <Box className={`${classes.pt20}`}>
-            <Typography className={`f-15-bold mb-10`}>About</Typography>
-            <Typography className={`p-12`}>My name is Jessica Parker and I enjoy meeting new people and finding ways to help them have an uplifting experience. I enjoy reading..</Typography>
-        </Box>
-        <Box className={`${classes.pt20}`}>
-            <Typography className={`f-15-bold mb-10`} sx={{marginBottom:"10px"}}>Interests</Typography>
-            <Box>
-                <Box className={`${classes.badge} v-center`}><Box component="img" src={DoubleTic}></Box> Travelling</Box>
-                <Box className={`${classes.badge} v-center`}><Box component="img" src={DoubleTic}></Box> Books</Box>
-                <Box className={`${classes.badge} v-center`}><Box component="img" src={DoubleTic}></Box> Music</Box>
-                <Box className={`${classes.badge} v-center`}><Box component="img" src={DoubleTic}></Box> Dancing</Box>
-                <Box className={`${classes.badge} v-center`}><Box component="img" src={DoubleTic}></Box> Modeling</Box>
-            </Box>
-        </Box>
-        <Box className={`${classes.pt20}`}>
-            <Typography className={`f-15-bold mb-10`}>Gallery</Typography>
-            <Grid container spacing={1}>
-                <Grid item xs={6}>
-                    <Box component="img" className={`${classes.galleryImage}`} src={image}></Box>
-                </Grid>
-                <Grid item xs={6}>
-                    <Box component="img" className={`${classes.galleryImage}`} src={image}></Box>
-                </Grid>
-                <Grid item xs={6}>
-                    <Box component="img" className={`${classes.galleryImage}`} src={image}></Box>
-                </Grid>
-                <Grid item xs={6}>
-                    <Box component="img" className={`${classes.galleryImage}`} src={image}></Box>
-                </Grid>
-            </Grid>
-        </Box>
+      </Box>
+      <Box className={`${classes.pt20}`}>
+        <Typography className={`f-15-bold mb-10`} sx={{ color: "#000000" }}>Gallery</Typography>
+        <Grid container spacing={1}>
+          {props?.data?.result_user_id?.media_id?.gallery?.map(
+            (image: any, i: number) => (
+              <Grid item xs={6} key={i}>
+                <Image
+                  className={`${classes.galleryImage}`}
+                  src={image}
+                ></Image>
+              </Grid>
+            )
+          )}
+        </Grid>
+      </Box>
     </Box>
   );
 }

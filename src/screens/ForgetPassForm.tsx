@@ -1,13 +1,12 @@
 import React from "react";
-import { Box, Typography, Container, TextField, Grid } from "@mui/material";
-import Logo from "../assets/logo/logo-w.svg";
+import { Box, Container, TextField, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import Button from "../components/button";
 import signinForm from "../assets/images/signupForm.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
@@ -73,7 +72,7 @@ function ForgetPassForm() {
     }
   }
   const CallApi = async () => {
-    APIHelper.CallApi(config.Endpoints.auth.forgetPass, { email: Email }).then((result:any) => {
+    APIHelper.CallApi(config.Endpoints.auth.forgetPass, { email: Email },null,'').then((result:any) => {
       if (result?.status == "success") {
         StoreData()
       } else {

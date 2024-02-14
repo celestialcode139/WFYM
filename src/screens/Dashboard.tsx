@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import Logo from "../../assets/logo/logo-w.svg";
-import Avatar from "../../assets/images/avatar.png";
-import { useTheme } from "@mui/material/styles";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import AdminSignature from "../assets/images/adminSignature.svg";
-import ProfileDropdown from "../../assets/images/ProfileDropdown.svg";
 import HeaderApp from "../components/header/AppHeader";
 import BorderedBG from "../assets/images/borderedBG.png";
 import matchBlue from "../assets/icons/matchBlue.svg";
@@ -14,18 +16,20 @@ import matchWhite from "../assets/icons/matchWhite.svg";
 import msgBlue from "../assets/icons/msgBlue.svg";
 import msgWhite from "../assets/icons/msgWhite.svg";
 import MatchCards from "../components/matchCards";
-import MatchImg from "../assets/images/matchImg.png";
 import ProfileSummery from "../components/ProfileSummery";
+import { useNavigate } from "react-router-dom";
+import Alert from "../Helpers/Alert";
 import Carousel from "../components/Carousel";
-import Button from "../components/button";
 import ButtonSm from "../components/buttonSm";
-import image from "../assets/icons/image.png";
-import image1 from "../assets/icons/image1.png";
-import image2 from "../assets/icons/image2.png";
+import GeneralHelper from "../Helpers/GeneralHelper";
+import APIHelper from "../Helpers/APIHelper";
+import config from "../../config";
+import NoMatches from "../assets/images/no_matches.svg";
+import { ToastContainer } from "react-toastify";
+
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -33,6 +37,7 @@ const useStyles = makeStyles(() => {
       backgroundImage: `url(${AdminSignature})`,
       backgroundSize: "100%",
       backgroundRepeat: "no-repeat",
+      overflow:"hidden"
     },
     logo: {
       width: "130px",
@@ -99,7 +104,7 @@ const useStyles = makeStyles(() => {
       zIndex: "999999",
       background: "#f9f9f9",
       borderRadius: "10px",
-      boxShadow: "6px 7px 17px #00000017",
+      // boxShadow: "6px 7px 17px #00000017",
       padding: "10px",
     },
     prt200: {
@@ -110,8 +115,195 @@ const useStyles = makeStyles(() => {
 });
 function Dashboard() {
   const classes = useStyles();
+  const navigate = useNavigate();
+  const [Loading, setLoading] = useState(false);
+  const [RequestMatchLoading, setRequestMatchLoading] = useState(false);
   const [matchMessage, setmatchMessage] = useState("match");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [matchHistory, setmatchHistory] = useState([]);
+  const [matchFavourite, setmatchFavourite] = useState([]);
   const [matches, setmatches] = useState<any[]>([]);
+  const [matchStatus, setmatchStatus] = useState<String>("");
+  const [Token, setToken] = useState("");
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+    }
+  };
+  const GetLatestMatch = () => {
+    setLoading(true);
+    APIHelper.CallApi(
+      config.Endpoints.Match.GetLatestMatch,
+      {},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log("Setting Matches:", result.data);
+        setmatches(result.data[0]?.match_result ?? []);
+        setmatchStatus(result.data[0]?.status ?? "");
+        setLoading(false);
+      } else {
+        setLoading(false);
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+
+  const VerifyAccountCompletion = () => {
+    setRequestMatchLoading(true);
+    APIHelper.CallApi(
+      config.Endpoints.user.GetProfileVerification,
+      {},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log("result ", result.data);
+        if (result.data.isProfileVerified.status == false) {
+          Alert.notify(`Compleate Your Profile First. ${result.data.isProfileVerified.msg}`, 3000);
+          setRequestMatchLoading(false);
+          NavigateTo("/profile/page-1");
+        } else if (result.data.isIdealPersonVerified.status == false) {
+          Alert.notify(`Compleate Your Ideal Personality Profile. ${result.data.isIdealPersonVerified.msg}`, 3000);
+          setRequestMatchLoading(false);
+          NavigateTo("/ideal-personality/general-info");
+        } else if (result.data.isSubscriptionActive == false) {
+          Alert.notify("Please Buy A Subscription First.", 3000);
+          setRequestMatchLoading(false);
+          NavigateTo("/buy-matches");
+        } else {
+          RequestMatch();
+        }
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const NavigateTo = (Route: string) => {
+    setTimeout(() => {
+      navigate(Route);
+    }, 4000);
+  };
+  const RequestMatch = () => {
+    console.log("Click On Request Match");
+    
+    setLoading(true);
+    APIHelper.CallApi(
+      config.Endpoints.Match.RequestMatch,
+      {},
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        Alert.notify("Match Requested", 3000);
+        console.log("Request Matches:", result.data);
+        // setmatches(result.data[0]?.match_result ?? []);
+        setLoading(false);
+        setRequestMatchLoading(false);
+        GetLatestMatch();
+      } else {
+        setLoading(false);
+        setRequestMatchLoading(false);
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const GetMatchHistory = () => {
+    setLoading(true);
+
+    APIHelper.CallApi(
+      config.Endpoints.Match.GetMatches,
+      {},
+      "?use_auth_user_id=true&is_discard=false",
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log(result);
+        setmatchHistory(result?.data[0]?.match_result ?? []);
+        setLoading(false);
+        // setGender(result?.data?.gender ? result.data.gender : "");
+      } else {
+        setLoading(false);
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const GetFavourites = () => {
+    setLoading(true);
+    APIHelper.CallApi(
+      config.Endpoints.Match.GetMatches,
+      {},
+      "?use_auth_user_id=true&is_fav=true",
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log(result.data);
+        setmatchFavourite(result?.data[0]?.match_result ?? []);
+        setLoading(false);
+        // setmatchHistory(result.data[0].match_result);
+        // setGender(result?.data?.gender ? result.data.gender : "");
+      } else {
+        setLoading(false);
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  const FavDecline = (body: any) => {
+    let data = { ...body };
+    APIHelper.CallApi(
+      config.Endpoints.Match.FavDecline,
+      data,
+      null,
+      Token
+    ).then((result: any) => {
+      if (result.status == "success") {
+        console.log(result.data);
+        init();
+        // setmatchHistory(result.data[0].match_result);
+        // setGender(result?.data?.gender ? result.data.gender : "");
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+
+  const init = () => {
+    GetMatchHistory();
+    GetFavourites();
+    GetLatestMatch();
+  };
+
+  useEffect(() => {
+    if (Token != "") {
+      init();
+    } else {
+      featchToken();
+    }
+  }, [Token]);
+
+  const calculateAge = (birthDate: any) => {
+    var birthDateObject: any = new Date(birthDate);
+    var currentDate: any = new Date();
+    var timeDifference = currentDate - birthDateObject;
+    var age = Math.floor(timeDifference / (365.25 * 24 * 60 * 60 * 1000));
+
+    return age;
+  };
+
+  useEffect(() => {
+    console.log("matchHistory:",matchHistory);
+    
+  }, [matchHistory])
+  
 
   return (
     <Box className={`${classes.appheader}`}>
@@ -154,7 +346,7 @@ function Dashboard() {
                         }}
                         className={`${classes.circleBadge}`}
                       >
-                        30
+                        {matchHistory?.length}
                       </Box>
                     </Box>
                   </Grid>
@@ -187,113 +379,160 @@ function Dashboard() {
                         }}
                         className={`${classes.circleBadge}`}
                       >
-                        10
+                        {matchFavourite?.length}
                       </Box>
                     </Box>
                   </Grid>
                 </Grid>
-                <Typography sx={{ marginTop: "20px" }} className={`f-26-bold`}>
-                  Matches History
-                </Typography>
-                <Typography className="p-12">
-                  This is a list of people who have liked you and your matches.
-                </Typography>
-                <Typography className={`p12BA`} sx={{ marginTop: "15px" }}>
-                  Today
-                </Typography>
               </Box>
-              <Grid container spacing={1} sx={{ marginTop: "1px" }}>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
+              {matchHistory?.length <= 0 ? (
+                <Box className="h-center">
+                  <Box
+                    sx={{ width: "80%" }}
+                    component="img"
+                    src={NoMatches}
+                  ></Box>
+                </Box>
+              ) : (
+                <Grid container spacing={1} sx={{ marginTop: "1px" }}>
+                  {Loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : matchMessage == "match" ? (
+                    matchHistory?.map((history: any, i: number) => (
+                      <Grid item xs={6} key={i}>
+                        <MatchCards
+                          FavDecline={(e: any) => FavDecline(e)}
+                          name={`${history.result_user_id.first_name} ${history.result_user_id.last_name}`}
+                          age={calculateAge(history.result_user_id.dob)}
+                          img={history.result_user_id?.user_details?.images}
+                          _id={history.result_user_id._id}
+                          request_id={history._id}
+                          is_fav={history?.is_fav}
+                          is_discard={history?.is_discard}
+                        />
+                      </Grid>
+                    ))
+                  ) : (
+                    matchFavourite.map((favourite: any, i: number) => (
+                      <Grid item xs={6} key={i}>
+                        <MatchCards
+                          FavDecline={(e: any) => FavDecline(e)}
+                          name={`${favourite.result_user_id.first_name} ${favourite.result_user_id.last_name}`}
+                          age={calculateAge(favourite.result_user_id.dob)}
+                          img={
+                            favourite.result_user_id?.profile_images
+                              ? favourite.result_user_id.profile_images
+                              : "https://i.pravatar.cc/150"
+                          }
+                          _id={favourite.result_user_id._id}
+                          request_id={favourite._id}
+                          is_fav={favourite?.is_fav}
+                          is_discard={favourite?.is_discard}
+                        />
+                      </Grid>
+                    ))
+                  )}
                 </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-                <Grid item xs={6}>
-                  <MatchCards name="Leilani" age={19} img={MatchImg} />
-                </Grid>
-              </Grid>
+              )}
             </Box>
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={matchHistory?.length > 0 ? 5 : 8.5}>
             <Box
               className={`blurBg h100  ${classes.BorderedBG} `}
               sx={{ minHeight: "400px", padding: "15px" }}
             >
-              <Box className="sticky" sx={{ display: matches.length > 0 ? "block" : "none" }}>
-                <Box>
-                  <Typography className={`f-22-bold mb-10`} sx={{marginTop:"10px"}}>
-                    Discover
-                  </Typography>
-                  <Typography className={`p-12`}>
-                    {matches.length} matches found
-                  </Typography>
-                </Box>
-                <Carousel data={matches} />
-              </Box>
               <Box
-                className={`${classes.prt200}`}
-                sx={{ display: matches.length > 0 ? "none" : "block" }}
+                className="sticky"
+                sx={{ display: matchHistory?.length > 0 ? "block" : "none" }}
               >
-                <Box>
-                  <Typography className={`f-35-bold mb-10 pText text-center`}>
-                    Start matching
-                  </Typography>
-                  <Typography className={`p-12 text-center`}>
-                    Start a conversation now with each other
-                  </Typography>
-                  <Box sx={{ marginTop: "35px" }}>
-                    <ButtonSm
-                      onClick={() => {
-                        setmatches([
-                          {
-                            image: image,
-                            name: "Jessica Parker",
-                            age: 23,
-                            desg: "Proffesional model",
-                          },
-                          {
-                            image: image1,
-                            name: "Jacqueline",
-                            age: 26,
-                            desg: "Artist",
-                          },
-                          {
-                            image: image2,
-                            name: "Sophia",
-                            age: 31,
-                            desg: "CEO",
-                          },
-                        ]);
-                      }}
-                      sx={{ maxWidth: "150px", margin: "0 auto!important" }}
+                <Box className="space-between v-center">
+                  <Box>
+                    <Typography
+                      className={`f-22-bold mb-10`}
+                      sx={{ marginTop: "10px", color: "#000000" }}
                     >
-                      Request Matches
-                    </ButtonSm>
+                      Discover
+                    </Typography>
+                    <Typography className={`p-12`}>
+                      {matchHistory?.length} matches found 
+                    </Typography>
+                  </Box>
+                  <Box>
+                    {/* {matchStatus == "completed" || matchStatus == "" ? ( */}
+                      <ButtonSm
+                        onClick={() => (matchStatus == "completed" || matchStatus == "") ? RequestMatch():null}
+                        sx={{ maxWidth: "150px", margin: "0 auto!important" }}
+                      >
+                        {
+                          matchStatus == "completed" || matchStatus == "" ?
+                          // "Request Matches"
+                          `Request Matches`
+
+                          :
+                          `Request Is ${String(matchStatus)}`
+                        }
+                      </ButtonSm>
+                    {/* ) : null} */}
                   </Box>
                 </Box>
+
+                <Carousel
+                  data={matchHistory}
+                  currentIndex={(e: any) => setCurrentIndex(e)}
+                />
               </Box>
+              {matchHistory.length == 0 && (
+                <Box
+                  className={`${classes.prt200}`}
+                  sx={{ display: matches?.length > 0 ? "none" : "block" }}
+                >
+                  <Box>
+                    <Typography className={`f-35-bold mb-10 pText text-center`}>
+                      {matchStatus == ""
+                        ? "Start matching"
+                        : matchStatus == "pending"
+                        ? "Waiting for admin response!"
+                        : ""}
+                    </Typography>
+
+                    <Typography className={`p-12 text-center`}>
+                      Start a conversation now with each other
+                    </Typography>
+                    <Box sx={{ marginTop: "35px" }}>
+                      {matchStatus == "" ? (
+                        <ButtonSm
+                          onClick={() => VerifyAccountCompletion()}
+                          Loading={RequestMatchLoading}
+                          sx={{ maxWidth: "150px", margin: "0 auto!important" }}
+                        >
+                          Request Matches
+                        </ButtonSm>
+                      ) : null}
+                    </Box>
+                  </Box>
+                </Box>
+              )}
             </Box>
           </Grid>
-          <Grid item xs={12} md={3.5}>
+          <Grid
+            item
+            xs={12}
+            md={3.5}
+            sx={{ display: matchHistory?.length <= 0 ? "none" : null }}
+          >
             <Box
               className={`blurBg h100 ${classes.BorderedBG}`}
               sx={{ minHeight: "400px" }}
             >
-              <ProfileSummery />
+              <ProfileSummery
+                data={matchHistory[currentIndex]}
+                key={currentIndex}
+              />
             </Box>
           </Grid>
         </Grid>
       </Container>
+      <ToastContainer />
     </Box>
   );
 }

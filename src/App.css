@@ -14,6 +14,21 @@
   font-family: "Mori-light"; /* Replace with your preferred font name */
   src: url("./assets/font/moriGothic/MoriGothic-Light.woff2") format("woff2");
 }
+body{
+  overflow-x: hidden;
+}
+.canvas {
+  position: sticky;
+  top: 0px;
+  z-index: 999;
+}
+.p-relative {
+  position: relative;
+}
+.animationHeight {
+  height: 300vh;
+  margin-top: -35% !important;
+}
 div,
 span,
 p,
@@ -22,7 +37,8 @@ a {
   letter-spacing: 0px !important;
 }
 .landingPage {
-  background-color: #f0f1fa !important;
+  position: relative;
+  background-color: #ffffff !important;
   min-height: 100vh;
 }
 .h-center {
@@ -87,7 +103,7 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
   border-image-slice: 1;
   border-radius: 10px;
 }
-.brgradient{
+.brgradient {
   border-image: linear-gradient(to bottom, #ffffff, #0000004f, #ffffff);
   border-image-slice: 1;
   border-right: 1px solid;
@@ -152,7 +168,7 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 }
 .min100vh_h100vh {
   min-height: calc(100vh - 185px);
-  height: calc(100vh - 185px);
+  /* height: calc(100vh - 185px); */
 }
 .owl-dots {
   display: none;
@@ -221,4 +237,74 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 }
 .f-14 {
   font-size: 14px !important;
+}
+.video220 {
+  width: 100%;
+  object-fit: cover;
+  height: 220px;
+  border-radius: 7px;
+  background-color: #00000024;
+}
+.prelative {
+  position: relative;
+}
+.pabsolute {
+  position: absolute;
+  top: 0px;
+}
+.space-between {
+  justify-content: space-between;
+  display: flex;
+}
+.circle {
+  display: inline-block;
+  background-color: #ffffff;
+  height: 10px;
+  width: 10px;
+  border-radius: 25px;
+}
+
+#container {
+  /* height: 200px; */
+  /* margin-top: 50px; */
+}
+
+#ball-1{
+  -webkit-animation-name: bounce;
+  -webkit-animation-delay: 0s;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+}
+#ball-2{
+  -webkit-animation-name: bounce;
+  -webkit-animation-delay: 0.1s;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  margin-right: 5px;
+  margin-left: 5px;
+  
+}
+#ball-3{
+  -webkit-animation-name: bounce;
+  -webkit-animation-delay: 0.2s;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+}
+.mgif{
+  width:50px
+}
+
+@-webkit-keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(10px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+  80%{
+    transform: translateY(10);
+  }
 }

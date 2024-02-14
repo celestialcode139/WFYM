@@ -9,24 +9,29 @@ interface Response {
     message:string
 }
 
-const CallApi = ({ url, method }:Options, body:{}):Promise<Response> => {
-    const headers = {
+
+// eslint-disable-next-line react-refresh/only-export-components
+const CallApi = ({ url, method }:Options, body:object,Id:string | null,Tokken:string):Promise<Response> => {
+    const headers :Record<string, string> = {
         "Content-Type": "application/json",
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         try {
-            console.log("API url :", url,
+            if (Tokken) {
+                headers.Authorization=Tokken;
+            }
+            console.log("API url :", Id?url+Id:url,
                 "\n Method :", method,
                 "\n Headers :", headers,
                 "\n Body :", body
             )
-            fetch(url, {
+            fetch(Id?url+Id:url, {
                 method: method,
                 headers: headers,
                 body: method != "GET" ? JSON.stringify(body) : null
             })
                 .then((res) => res.json())
-                .then((resjson:any) => {
+                .then((resjson) => {
                     resolve(resjson)
                 })
                 .catch((err) => {

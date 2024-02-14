@@ -1,17 +1,20 @@
-import { Box, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { useState, useEffect } from "react";
+import { Box, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
-import AgeRace from "../../components/race";
 import avatar from "../../assets/images/avatar.png";
 import Generalinfo from "../../components/generalinfo";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import GeneralHelper from "../../Helpers/GeneralHelper";
+import APIHelper from "../../Helpers/APIHelper";
+import config from "../../../config";
+import { ToastContainer } from "react-toastify";
+import Alert from "../../Helpers/Alert";
+import Skeleton from '@mui/material/Skeleton';
 
-// import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     imagePicker: {
       backgroundColor: "#075bce",
@@ -67,32 +70,146 @@ const useStyles = makeStyles(() => {
       marginTop: "80px",
     },
     pageContainer: {
-      maxWidth: "500px",
+      maxWidth: "900px",
       margin: "0 auto",
     },
   };
 });
-function profileScreen5() {
-  const [activeInterest, setActiveInterest] = useState([0, 5, 7]);
+function ProfileScreen5() {
   const classes = useStyles();
+  const navigate = useNavigate();
+  const [Token, setToken] = useState("");
+  const [body, setbody] = useState<any>({});
+  const [Loading, setLoading] = useState(false);
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+    }
+  };
+  const GetProfile = (Token: string) => {
+    APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
+      (result: any) => {
+        setLoading(false)
+        if (result.status == "success") {
+          // console.log("Response:", result?.data?.user_details?.religion);
+
+          setbody({
+            occupation: result?.data?.user_details?.profession,
+            religion: result?.data?.user_details?.religion,
+            political_Party: result?.data?.user_details?.political_party,
+            childrens: result?.data?.user_details?.children_before,
+            smookingHabit: result?.data?.user_details?.smoking_habits,
+            drinkingHabit: result?.data?.user_details?.drink_habits,
+            dealBracker: result?.data?.user_details?.deal_breaker,
+            height: result?.data?.user_details?.height,
+            weight: result?.data?.user_details?.weight,
+            highestDegree: result?.data?.user_details?.highest_degree,
+          });
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+
+  // Updating Profile Details
+
+  const UpdateBio = () => {
+    const data = {
+      profession: body.occupation,
+      religion: body.religion,
+      political_party: body.political_Party,
+      children_before: body.childrens == "" || body.childrens == undefined ? 0 : body.childrens,
+      smoking_habits: body.smookingHabit != true ? false : true,
+      drink_habits: body.drinkingHabit != true ? false : true,
+      deal_breaker: body.dealBracker,
+      height: body.height,
+      weight: body.weight,
+      highest_degree: body.highestDegree,
+    };
+    console.log("data", data);
+
+    APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
+      (result) => {
+        setLoading(false)
+        if (result.status == "success") {
+          Alert.notify("Profile Updated Successfully", 4000);
+          setTimeout(() => {
+            navigate("/dashboard")
+          }, 6000);
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  const handleNext = () => {
+    setLoading(true)
+    UpdateBio();
+  };
+  // Other functions
+
+
+  useEffect(() => {
+    setLoading(true)
+    if (Token != "") {
+      GetProfile(Token);
+    } else {
+      featchToken();
+    }
+  }, [Token]);
+
+  useEffect(() => {
+    console.log("Body:", Object.keys(body).length);
+  }, [body]);
 
   return (
     <>
       <Box>
         <Box className={`${classes.pageContainer}`}>
-          <Generalinfo />
+          {!Loading ? Object.keys(body).length > 0 ? (
+            <Generalinfo
+              body={body}
+              key={body}
+              Token={Token}
+              onChange={(e: any) => {
+                console.log("qwerqwer", e);
+                setbody(e);
+              }}
+            />
+          ) : null :
+            <Grid container spacing={2}>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+              <Grid item md={4}><Skeleton animation="wave" variant="rounded" width={"100%"} height={50} /></Grid>
+            </Grid>
+          }
         </Box>
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button>Save Changes</Button>
+          <Button onClick={() => handleNext()}>Save Changes</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button className={`${classes.cancelBtn}`}>Cancel</Button>
+          <Button onClick={() => {
+            navigate(-1);
+          }} className={`${classes.cancelBtn}`}>Cancel</Button>
         </Grid>
       </Grid>
+      <ToastContainer />
     </>
   );
 }
 
-export default profileScreen5;
+export default ProfileScreen5;

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, Container, TextField, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import backArrow from "../assets/icons/backArrow.svg";
@@ -9,15 +8,12 @@ import avatar from "../assets/images/avatar.png";
 import Button from "../components/button";
 import DatepickerSticky from "../components/datepickerSticky";
 import OnBoardingHeader from "../components/onBoardingHeader";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
-import APIHelper from "../Helpers/APIHelper";
-import config from "../../config";
-
+import moment from "moment";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     SignupProfile: {
       backgroundColor: "#ffffff",
@@ -75,7 +71,7 @@ const useStyles = makeStyles(() => {
       bottom: "-11px",
       right: "-11px",
       width: "20px",
-      cursor: "pointer"
+      cursor: "pointer",
     },
   };
 });
@@ -84,47 +80,43 @@ function SignupProfile() {
   const classes = useStyles();
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
-  const [ProfileImage, setProfileImage] = useState("");
-  const [DOB, setDOB] = useState("10-11-2003");
+  const [DOB, setDOB] = useState("");
 
   const Validation = () => {
     if (FirstName != "" && LastName != "") {
-      handleNext()
+      handleNext();
+    } else {
+      GeneralHelper.ShowToast("Please fill out all fields.");
     }
-    else {
-      GeneralHelper.ShowToast("Please fill out all fields.")
-    }
-  }
-
+  };
+  const handleDOBChange = (e: string) => {
+    setDOB(String(e));
+  };
   const handleNext = () => {
     const data = JSON.stringify({
       FirstName: FirstName,
       LastName: LastName,
       DOB: DOB,
-    })
-    GeneralHelper.storeData("UserDetails_Names", data)
-    navigate("/gender")
-
+    });
+    GeneralHelper.storeData("UserDetails_Names", data);
+    navigate("/gender");
   };
   const featchData = async () => {
-    const result:any = await GeneralHelper.retrieveData("UserDetails_Names")
+    const result: any = await GeneralHelper.retrieveData("UserDetails_Names");
     if (result.status == 1) {
-      const data = JSON.parse(result.data as string)
-      setFirstName(data.FirstName)
-      setLastName(data.LastName)
+      const data = JSON.parse(result.data as string);
+      setFirstName(data.FirstName);
+      setLastName(data.LastName);
     }
-  }
+  };
   useEffect(() => {
-    featchData()
-}, [])
+    featchData();
+  }, []);
 
   return (
     <Box className={`${classes.SignupProfile}`}>
       <Container maxWidth="lg">
-        <OnBoardingHeader
-          heading="Profile details"
-
-        />
+        <OnBoardingHeader heading="Profile details" />
 
         <Grid container>
           <Grid
@@ -154,7 +146,7 @@ function SignupProfile() {
                 <Box className={`${classes.profileImage}`}>
                   <input
                     accept="image/*"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                     id="raised-button-file"
                     type="file"
                     onChange={(e) => {
@@ -177,15 +169,17 @@ function SignupProfile() {
                       sx={{
                         width: "100%",
                         "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root":
-                        {
-                          borderRadius: "15px!important",
-                          width: "100%",
-                        },
+                          {
+                            borderRadius: "15px!important",
+                            width: "100%",
+                          },
                       }}
                       type="text"
                       label="First Name"
                       value={FirstName}
-                      onChange={(e) => { setFirstName(e.target.value) }}
+                      onChange={(e) => {
+                        setFirstName(e.target.value);
+                      }}
                     />
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
@@ -193,29 +187,44 @@ function SignupProfile() {
                       sx={{
                         width: "100%",
                         "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root":
-                        {
-                          borderRadius: "15px!important",
-                          width: "100%",
-                        },
+                          {
+                            borderRadius: "15px!important",
+                            width: "100%",
+                          },
                       }}
                       type="text"
                       label="Last Name"
                       value={LastName}
-                      onChange={(e) => { setLastName(e.target.value) }}
+                      onChange={(e) => {
+                        setLastName(e.target.value);
+                      }}
                     />
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
-                    <DatepickerSticky>
+                    <DatepickerSticky Default={DOB} onChange={handleDOBChange}>
                       <Button
                         sx={{ backgroundColor: "#EFFBFC", color: "#323232" }}
                       >
-                        Choose birthday date
+                        {
+                          DOB == ""?
+                            "Choose birthday date"
+                            :
+                            moment(DOB).format("D MMM YYYY")
+                            // DOB
+
+                        }
                       </Button>
                     </DatepickerSticky>
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
                     {/* <Link to={{ pathname: "/gender" }}> */}
-                      <Button onClick={()=>{Validation()}}>Confirm</Button>
+                    <Button
+                      onClick={() => {
+                        Validation();
+                      }}
+                    >
+                      Confirm
+                    </Button>
                     {/* </Link> */}
                   </Grid>
                 </Grid>

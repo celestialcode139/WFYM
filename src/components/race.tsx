@@ -1,16 +1,11 @@
 import { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import AdminSignature from "../assets/images/adminSignature.svg";
-import RangeSlider from "./RangeSlider";
-import WizerdPagination from "./wizerdPagination";
-
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -27,6 +22,7 @@ const useStyles = makeStyles(() => {
       padding: "10px 16px",
       fontSize: "12px!important",
       cursor: "pointer",
+      color:"#000000"
     },
     activeBadge: {
       backgroundColor: "black",
@@ -38,74 +34,43 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-function Race() {
+function Race(props: any) {
   const classes = useStyles();
-  const [matchMessage, setmatchMessage] = useState("match");
-  const [matches, setmatches] = useState<any[]>([]);
-  const [activeInterest, setActiveInterest] = useState<any[]>([]);
-  const interest = [
-    {
-      text: "South Asian",
-    },
-    {
-      text: "Black African",
-    },
-    {
-      text: "White/Caucasian",
-    },
-    {
-      text: "East Asian",
-    },
-    {
-      text: "Black American",
-    },
-    {
-      text: "Middle Eastern",
-    },
-    {
-      text: "Hispanic/Latino",
-    },
-    {
-      text: "Other",
-    },
-  ];
+  const [activeInterest, setActiveInterest] = useState("");
 
-  const GetInterest = (id: any): any => {
-    return activeInterest.filter((val) => {
-      return val == id;
-    });
-  };
-  const toggleFun = (i: any) => {
-    const data = activeInterest.filter((val) => val == i);
-    if (data.length <= 0) {
-      setActiveInterest([...activeInterest, i]);
-    } else {
-      const updateData = activeInterest.filter((val) => val !== i);
-      setActiveInterest(updateData);
-    }
-  };
+  useEffect(() => {
+    setActiveInterest(props.race);
+  }, [props.race]);
+
+  useEffect(() => {
+    console.log(props.data);
+  }, [props.data]);
+  useEffect(() => {
+    console.log("activeInterest ",activeInterest);
+  }, [activeInterest]);
 
   return (
     <Box>
-      <Box sx={{ marginBottom: "30px" }}>
+      {/* <Box sx={{ marginBottom: "30px" }}>
         <RangeSlider title="Age" handleChange={(e: []) => console.log(e)} />
-      </Box>
+      </Box> */}
       <Box>
-        <Typography className={`f-bold v-center`} sx={{ marginBottom: "30px" }}>
+        <Typography className={`f-bold v-center`} sx={{ marginBottom: "30px",color:"#000000" }}>
           Race
         </Typography>
         <Grid container spacing={2}>
-          {interest.map((val, i) => (
-            <Grid item>
+          {props.data?.map((val: any, i: number) => (
+            <Grid item key={i}>
               <Typography
                 onClick={() => {
-                  toggleFun(i);
+                  setActiveInterest(val.value);
+                  props.onChange(val.value);
                 }}
                 className={`${classes.badge} ${
-                  GetInterest(i)[0] == i ? classes.activeBadge : null
+                  activeInterest == val.value ? classes.activeBadge : null
                 }`}
               >
-                {val.text}
+                {val.value}
               </Typography>
             </Grid>
           ))}

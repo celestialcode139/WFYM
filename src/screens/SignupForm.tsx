@@ -1,5 +1,6 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 
 // MUI
 import {
@@ -21,6 +22,8 @@ import signupForm from "../assets/images/signupForm.svg";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
+import { useAlert } from 'react-alert'
+
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -70,6 +73,8 @@ const useStyles = makeStyles(() => {
 function Signup() {
   const classes = useStyles();
   const navigate = useNavigate();
+  const alert = useAlert();
+  const [Loading, setLoading] = React.useState(false);
   const [Email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
   const [CPassword, setCPassword] = React.useState("");
@@ -119,13 +124,20 @@ function Signup() {
   }
 
   const CallApi = async () => {
-    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email }).then((result:any) => {
+    setLoading(true)
+    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email },null,'').then((result: any) => {
       if (result.status == "success") {
-        console.log("Response is ",result);
+        console.log("Response is ", result);
+        setLoading(false)
+        if (result.data.msg == "user exist") {
+          alert.error(`User already exist.`)
+          // GeneralHelper.ShowToast(`User already exist. Try to loginin with ${Email}`,"success")
+        } else {
           navigate("/otp")
+        }
       } else {
-        console.log(result.message);
-        GeneralHelper.ShowToast(String(result.message))
+        setLoading(false)
+        alert.error(String(result.message))
       }
 
     })
@@ -194,7 +206,11 @@ function Signup() {
         <Box sx={{ marginTop: "20px" }}>
           {/* <Link to={{ pathname: "/otp" }}> */}
           <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }} >
-            Continue
+            {Loading ?
+              <CircularProgress color="inherit" size={20} />
+              :
+              "Continue"
+            }
           </Button>
           {/* </Link> */}
         </Box>

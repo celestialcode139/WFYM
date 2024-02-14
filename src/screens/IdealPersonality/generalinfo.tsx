@@ -1,21 +1,17 @@
 import { useState, useEffect } from "react";
-import { Box, Container, TextField, MenuItem } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Container } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import AdminSignature from "../../assets/images/adminSignature.svg";
 import HeaderApp from "../../components/header/AppHeader";
 import Button from "../../components/buttonSm";
-import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import GeneralinfoComp from "../../components/generalinfo";
+import GeneralHelper from "../../Helpers/GeneralHelper";
+import APIHelper from "../../Helpers/APIHelper";
+import config from "../../../config";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     appheader: {
       backgroundColor: "#ffffff",
@@ -26,7 +22,7 @@ const useStyles = makeStyles(() => {
     },
     pageContainer: {
       width: "100%",
-      maxWidth: "500px",
+      maxWidth: "800px",
     },
     TextFieldParent: {
       marginBottom: "20px",
@@ -35,23 +31,95 @@ const useStyles = makeStyles(() => {
 });
 function Generalinfo() {
   const classes = useStyles();
+  const [Token, setToken] = useState("");
   const [body, setbody] = useState({
-    desc: "",
-    personality: [],
     occupation: "",
-    religion: "",
+    religion: "principled",
     political_Party: "",
     childrens: "",
+    planForChildren: false,
+    smookingHabit: false,
+    drinkingHabit: false,
+    dealBracker: "",
+    height: "",
+    weight: "",
+    highestDegree: "",
   });
 
-  const personalityHandler = (e: any) => {
-    console.log(e.target.value);
-    setbody({ ...body, personality: e.target.value });
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
+    }
   };
-  const religionHandler = (e: any) => {
-    console.log(e.target.value);
-    setbody({ ...body, religion: e.target.value });
+  const GetProfile = (Token: string) => {
+    APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
+      (result: any) => {
+        if (result.status == "success") {
+          console.log(result.data);
+          setbody(
+            result?.data?.user_details?.personality
+              ? result.data.user_details.personality
+              : ""
+          );
+          setbody({
+            ...body,
+            occupation: result?.data?.user_details?.profession,
+            religion: result?.data?.user_details?.religion,
+            political_Party: result?.data?.user_details?.political_party,
+            childrens: result?.data?.user_details?.children_before,
+            smookingHabit: result?.data?.user_details?.smoking_habits,
+            drinkingHabit: result?.data?.user_details?.drink_habits,
+            dealBracker: result?.data?.user_details?.deal_breaker,
+            height: result?.data?.user_details?.height,
+            weight: result?.data?.user_details?.weight,
+            highestDegree: result?.data?.user_details?.highest_degree,
+          });
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
   };
+  // Updating Profile Details
+
+  const UpdateBio = () => {
+    const data = {
+      profession: body.occupation,
+      religion: body.religion,
+      political_party: body.political_Party,
+      children_before: body.childrens,
+      smoking_habits: body.smookingHabit,
+      drink_habits: body.drinkingHabit,
+      deal_breaker: body.dealBracker,
+      height: body.height,
+      weight: body.weight,
+      highest_degree: body.highestDegree,
+    };
+    APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
+      (result) => {
+        if (result.status == "success") {
+          GeneralHelper.ShowToast(String("Profile Updated"));
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  const handleNext = () => {
+    UpdateBio();
+  };
+  // Other functions
+  useEffect(() => {
+    if (Token != "") {
+      GetProfile(Token);
+    } else {
+      featchToken();
+    }
+  }, [Token]);
+
   return (
     <Box className={`${classes.appheader}`}>
       <Container maxWidth="xl">
@@ -64,8 +132,15 @@ function Generalinfo() {
             className={`${classes.pageContainer}`}
             sx={{ marginTop: { md: "100px", sm: "60px", xs: "30px" } }}
           >
-            <GeneralinfoComp />
+            <GeneralinfoComp
+              key={body}
+              body={body}
+              onChange={(e: any) => {
+                setbody(e);
+              }}
+            />
             <Button
+              onClick={() => handleNext()}
               sx={{
                 maxWidth: "200px",
                 margin: "0 auto",

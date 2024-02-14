@@ -1,17 +1,19 @@
-import { Box, Grid, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { useState, useEffect } from "react";
+import { Box, Grid } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { useNavigate } from "react-router-dom";
 import "../../App.css";
 import Button from "../../components/buttonSm";
 import AgeRace from "../../components/race";
 import avatar from "../../assets/images/avatar.png";
-import camera from "../../assets/icons/camera.svg";
-import { useState } from "react";
-
+import GeneralHelper from "../../Helpers/GeneralHelper";
+import APIHelper from "../../Helpers/APIHelper";
+import config from "../../../config";
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
-  const theme = useTheme();
   return {
     imagePicker: {
       backgroundColor: "#075bce",
@@ -68,101 +70,147 @@ const useStyles = makeStyles(() => {
     },
     pageContainer: {
       maxWidth: "500px",
+      width: "100%"
     },
   };
 });
-function profileScreen2() {
-  const [activeInterest, setActiveInterest] = useState([0, 5, 7]);
+function ProfileScreen3() {
   const classes = useStyles();
-  const interest = [
-    {
-      text: "Photography",
-      img: camera,
-    },
-    {
-      text: "Shopping",
-      img: camera,
-    },
-    {
-      text: "Karaoke",
-      img: camera,
-    },
-    {
-      text: "Yoga",
-      img: camera,
-    },
-    {
-      text: "Cooking",
-      img: camera,
-    },
-    {
-      text: "Tennis",
-      img: camera,
-    },
-    {
-      text: "Run",
-      img: camera,
-    },
-    {
-      text: "Swimming",
-      img: camera,
-    },
-    {
-      text: "Art",
-      img: camera,
-    },
-    {
-      text: "Traveling",
-      img: camera,
-    },
-    {
-      text: "Extreme",
-      img: camera,
-    },
-    {
-      text: "Drink",
-      img: camera,
-    },
-    {
-      text: "Music",
-      img: camera,
-    },
-    {
-      text: "Video games",
-      img: camera,
-    },
-  ];
-  const GetInterest = (id: any): number[] => {
-    return activeInterest.filter((val) => {
-      return val == id;
-    });
-  };
-  const toggleFun = (i: number) => {
-    const data = activeInterest.filter((val) => val == i);
-    if (data.length <= 0) {
-      setActiveInterest([...activeInterest, i]);
-    } else {
-      const updateData = activeInterest.filter((val) => val !== i);
-      setActiveInterest(updateData);
+  const navigate = useNavigate();
+  const [races, setraces] = useState<Array<object>>([]);
+  const [SelectedRace, setSelectedRace] = useState("");
+  const [Token, setToken] = useState("");
+  const [Loading, setLoading] = useState(false);
+  interface SortingObjectInterface {
+    value: number
+  }
+
+
+
+
+  const featchToken = async () => {
+    const result: any = await GeneralHelper.retrieveData("Token");
+    if (result.status == 1) {
+      setToken(String(result.data));
     }
   };
+  const GetProfile = (Token: string) => {
+    APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
+      (result: any) => {
+        if (result.status == "success") {
+          // console.log(result.data);
+          setSelectedRace(
+            result?.data?.user_details?.race
+              ? result.data.user_details.race
+              : ""
+          );
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  const GetRace = () => {
+    APIHelper.CallApi(
+      config.Endpoints.Init.GetMetaData,
+      {},
+      "race",
+      Token
+    ).then((result: any) => {
+      setLoading(false);
+      if (result.status == "success") {
+        // console.log(result.data);
+        handleSort(result.data)
+
+      } else {
+        console.log(result.message);
+        GeneralHelper.ShowToast(String(result.message));
+      }
+    });
+  };
+  // Updating Profile Details
+  const UpdateBio = () => {
+    const data = {
+      race: SelectedRace,
+    };
+    APIHelper.CallApi(config.Endpoints.user.UpdateBio, data, null, Token).then(
+      (result) => {
+        setLoading(false);
+        if (result.status == "success") {
+          navigate("/profile/page-4");
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      }
+    );
+  };
+  const handleNext = () => {
+    setLoading(true);
+    UpdateBio();
+  };
+  // Other functions
+  const handleSort = (ArrayToSort: Array<{value:string}>) => {
+    const sortedArray = [...ArrayToSort].sort((a,b) => a.value.localeCompare(b.value));
+    console.log("sortedArray ", sortedArray);
+    setraces(sortedArray);
+
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    if (Token != "") {
+      GetProfile(Token);
+      GetRace();
+    } else {
+      featchToken();
+    }
+  }, [Token]);
+  useEffect(() => {
+    console.log("Selected Race ", SelectedRace);
+  }, [SelectedRace]);
+
+
+
   return (
     <>
-    <Box className={`h-center`}>
-      <Box className={`${classes.pageContainer}`}>
-        <AgeRace />
+      <Box className={`h-center`}>
+        <Box className={`${classes.pageContainer}`}>
+          {
+            !Loading ?
+              <AgeRace
+                data={races}
+                key={races}
+                race={SelectedRace}
+                onChange={(data: string) => setSelectedRace(data)}
+              /> :
+              <Grid container spacing={2}>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+                <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={30} /></Grid>
+              </Grid>
+          }
+
+        </Box>
       </Box>
-    </Box>
-    <Grid container className="h-center" sx={{ marginTop: "40px" }}>
+      <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button>Save Changes</Button>
+          <Button Loading={Loading} onClick={() => handleNext()}>Save Changes</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button className={`${classes.cancelBtn}`}>Cancel</Button>
+          <Button onClick={() => {
+            navigate(-1);
+          }} className={`${classes.cancelBtn}`}>Cancel</Button>
         </Grid>
       </Grid>
-      </>
+    </>
   );
 }
 
-export default profileScreen2;
+export default ProfileScreen3;

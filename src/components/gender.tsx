@@ -1,46 +1,29 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Container } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
+import { Box, Typography } from "@mui/material";
 import "../App.css";
-import backArrow from "../assets/icons/backArrow.svg";
-import avatar from "../assets/images/avatar.png";
 import Button from "../components/buttonSm";
 import maleBlack from "../assets/icons/maleBlack.svg";
 import maleWhite from "../assets/icons/maleWhite.svg";
 import femaleBlack from "../assets/icons/femaleBlack.svg";
 import femaleWhite from "../assets/icons/femaleWhite.svg";
 
-const useStyles = makeStyles(() => {
-  const theme = useTheme();
-  return {
-    SignupProfile: {
-      backgroundColor: "#ffffff",
-      minHeight: "100vh",
-    },
-    h1: {
-      fontSize: "27px!important",
-      fontFamily: "Mori-bold!important",
-      textAlign: "center",
-      marginTop: "35px!important",
-      lineHeight: "1.3!important",
-      marginBottom: "20px!important",
-    },
-    backArrow: {
-      width: "55px",
-      height: "55px",
-    },
-  };
-});
-function SignupProfile() {
-  const classes = useStyles();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function SignupProfile(props: any) {
   const [SelectedGender, setSelectedGender] = useState("male");
+
+  useEffect(() => {
+    console.log(props.gender);
+    props.gender ? setSelectedGender(props.gender) : null;
+  }, [props.gender]);
 
   return (
     <Box className="h-center">
-      <Box sx={{width:"100%"}}>
+      <Box sx={{ width: "100%" }}>
         <Button
-          onClick={() => setSelectedGender("male")}
+          onClick={() => {
+            props.onChange("male");
+            setSelectedGender("male");
+          }}
           sx={{
             backgroundColor: SelectedGender == "male" ? "#22172A" : "#EFFBFC",
             color: SelectedGender == "male" ? "#ffffff" : "#323232",
@@ -60,7 +43,10 @@ function SignupProfile() {
           </Box>
         </Button>
         <Button
-          onClick={() => setSelectedGender("female")}
+          onClick={() => {
+            props.onChange("female");
+            setSelectedGender("female");
+          }}
           sx={{
             backgroundColor: SelectedGender == "female" ? "#22172A" : "#EFFBFC",
             color: SelectedGender == "female" ? "#ffffff" : "#323232",
@@ -81,10 +67,13 @@ function SignupProfile() {
           </Box>
         </Button>
         <Button
-          onClick={() => setSelectedGender("Other")}
+          onClick={() => {
+            props.onChange("other");
+            setSelectedGender("other");
+          }}
           sx={{
-            backgroundColor: SelectedGender == "Other" ? "#22172A" : "#EFFBFC",
-            color: SelectedGender == "Other" ? "#ffffff" : "#323232",
+            backgroundColor: SelectedGender == "other" ? "#22172A" : "#EFFBFC",
+            color: SelectedGender == "other" ? "#ffffff" : "#323232",
             maxWidth: "264px",
             display: "flex",
             justifyContent: "center",
