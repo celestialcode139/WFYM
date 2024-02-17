@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 import Header from "./components/header/header";
 import Footer from "./components/header/footer";
 import HeroSection
-  from "./components/heroSection";
+  from "./components/heroSection.js";
 import "./App.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -14,7 +14,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
-
+import Preloader from "./assets/images/preloader.png";
 import { gsap } from "gsap";
 import { useEffect } from "react";
 import Key from "./assets/gifs/key.gif";
@@ -84,7 +84,7 @@ void main() {
     scene.add(mainGroup, textGroup);
     // scene.background=new THREE.TextureLoader().load("/city_bg.jpg");
     rgbeLoader.load(
-      "src/threejs/hdr/rural_asphalt_road_4k.hdr",
+      "threejs/hdr/rural_asphalt_road_4k.hdr",
       (texture: any) => {
         const pmremGenerator = new THREE.PMREMGenerator(renderer);
         pmremGenerator.compileEquirectangularShader();
@@ -115,7 +115,13 @@ void main() {
     // const box = new THREE.Mesh(boxGeometry, boxMaterial);
     // scene.add(box);
 
-    gltfloader.load("src/threejs/GLTF/heart/scene.gltf", (gltf: any) => {
+    gltfloader.load("threejs/GLTF/heart/scene.gltf", (gltf: any) => {
+      let preloader = document.querySelector(".preloader");
+      let body = document.querySelector("body");
+      setTimeout(() => {
+        body.style.overflowY = "scroll"
+      }, 2000);
+      gsap.to(preloader, { opacity: 0, duration: 2, ease: "power1.inOut" })
       // Access the loaded model
       const model = gltf.scene;
       heartGlobal = model;
@@ -155,7 +161,7 @@ void main() {
         maxDistance: { value: 3 }, // Adjust the maximum distance
         imageTexture: {
           value: new THREE.TextureLoader().load(
-            "src/threejs/assets/matches/1.png"
+            "threejs/assets/matches/1.png"
           ),
         },
       },
@@ -172,7 +178,7 @@ void main() {
         maxDistance: { value: 3 }, // Adjust the maximum distance
         imageTexture: {
           value: new THREE.TextureLoader().load(
-            "src/threejs/assets/matches/2.png"
+            "threejs/assets/matches/2.png"
           ),
         },
       },
@@ -190,7 +196,7 @@ void main() {
         maxDistance: { value: 3 }, // Adjust the maximum distance
         imageTexture: {
           value: new THREE.TextureLoader().load(
-            "src/threejs/assets/matches/3.png"
+            "threejs/assets/matches/3.png"
           ),
         },
       },
@@ -207,7 +213,7 @@ void main() {
         maxDistance: { value: 3 }, // Adjust the maximum distance
         imageTexture: {
           value: new THREE.TextureLoader().load(
-            "src/threejs/assets/matches/4.png"
+            "threejs/assets/matches/4.png"
           ),
         },
       },
@@ -227,7 +233,7 @@ void main() {
         maxDistance: { value: 3 }, // Adjust the maximum distance
         imageTexture: {
           value: new THREE.TextureLoader().load(
-            "src/threejs/assets/matches/5.png"
+            "threejs/assets/matches/5.png"
           ),
         },
       },
@@ -243,11 +249,11 @@ void main() {
     // TControl(mainGroup,"R");
 
     //===================================================== Create text geometry
-    Font_Loader.load("src/assets/font/roboto.json", function (font: any) {
+    Font_Loader.load("font/roboto.json", function (font: any) {
       const textGeometry = new TextGeometry("More than", {
         font: font,
         size: 0.02,
-        height: 0.005,
+        height: .0,
         curveSegments: 12,
       });
 
@@ -262,17 +268,19 @@ void main() {
     });
 
 
-    Font_Loader.load("src/assets/font/roboto.json", function (font: any) {
+    Font_Loader.load("font/roboto.json", function (font: any) {
       const textGeometry1 = new TextGeometry("matches real connections", {
         font: font,
         size: 0.02,
-        height: 0.005,
+        height: .0,
         curveSegments: 12,
       });
 
       const textMaterial1 = new THREE.MeshBasicMaterial({ color: "#000000" });
       const textMesh1 = new THREE.Mesh(textGeometry1, textMaterial1);
       textGroup.add(textMesh1);
+      console.log("textMesh1:", textMesh1);
+
       const boundingBox = new THREE.Box3().setFromObject(textMesh1);
       const center = new THREE.Vector3();
       boundingBox.getCenter(center);
@@ -488,12 +496,24 @@ void main() {
   };
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
     heartAnimation();
   }, []);
 
   return (
     <Box className={`landingPage`}>
+      <img src={Preloader} className="preloader" width={"100%"} style={{
+        filter: "blur(5px)",
+        position: "fixed",
+        top: 0,
+        zIndex: 999999
+      }} />
       <Header />
+      <>
+      </>
       <HeroSection />
       <div className="p-relative animationHeight">
         <div>

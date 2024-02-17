@@ -38,6 +38,7 @@ const useStyles = makeStyles(() => {
     pageContainer: {
       // maxWidth: "1000px",
       width: "90%",
+      position: "relative"
     },
     matchMessages: {
       backgroundColor: "#F0F9F9",
@@ -106,8 +107,13 @@ const useStyles = makeStyles(() => {
     },
     stickyTop20: {
       position: "sticky",
+      width: "100%",
       bottom: "20px",
     },
+    overScroll: {
+      overflow: "scroll",
+      height: "calc(100vh - 185px)"
+    }
   };
 });
 const Chat = () => {
@@ -155,6 +161,7 @@ const Chat = () => {
     });
   };
 
+
   useEffect(() => {
     getAllMessages();
   }, []);
@@ -165,7 +172,7 @@ const Chat = () => {
         <HeaderApp sx={{ position: "relative", top: "15px" }} />
         <Box
           sx={{ marginTop: "30px", padding: "20px 0px", position: "relative" }}
-          className={`blurBg min100vh h-center`}
+          className={`blurBg min100vh h-center ${classes.overScroll}`}
         >
           <Box
             className={`${classes.pageContainer}`}
@@ -175,25 +182,22 @@ const Chat = () => {
               {messages.map((data: any, i: number) => {
                 return (
                   <Box
-                    className={`${
-                      data.id == myId ? classes.myMessagesParent : null
-                    }`}
+                    className={`${data.id == myId ? classes.myMessagesParent : null
+                      }`}
                     key={i}
                   >
                     <Box sx={{ maxWidth: { md: "50%", xs: "80%" } }}>
                       <Typography
-                        className={`${
-                          data.id == myId
-                            ? classes.myMessages
-                            : classes.matchMessages
-                        }`}
+                        className={`${data.id == myId
+                          ? classes.myMessages
+                          : classes.matchMessages
+                          }`}
                       >
                         {data.text}
                       </Typography>
                       <Typography
-                        className={`${
-                          data.id == myId ? classes.rightTime : classes.leftTime
-                        }`}
+                        className={`${data.id == myId ? classes.rightTime : classes.leftTime
+                          }`}
                       >
                         2:55 PM
                       </Typography>

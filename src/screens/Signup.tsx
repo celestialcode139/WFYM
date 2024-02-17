@@ -54,7 +54,7 @@ function Signup() {
     <Box className={`${classes.signup}`}>
       <Container maxWidth="lg">
         <OnBoardingHeader
-          heading="Make friends with the people like you"
+          heading="Discover Your Perfect Match with Us"
           subheading="Interact with people with the same interest like you"
         />
 

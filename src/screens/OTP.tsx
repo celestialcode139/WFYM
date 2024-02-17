@@ -57,7 +57,7 @@ function OTP() {
   const navigate = useNavigate();
 
   const [otp, setOtp] = useState("");
-  const [seconds, setSeconds] = useState(60);
+  const [seconds, setSeconds] = useState(300);
   const [Resend, setResend] = useState(false);
 
   const classes = useStyles();
@@ -81,7 +81,7 @@ function OTP() {
     if (Resend == false) {
       APIHelper.CallApi(config.Endpoints.auth.OTP.VarifyOtp, { email: Email, otp: OTP },null,'').then((result: any) => {
         console.log(result);
-        navigate("/signup-profile")
+        // navigate("/signup-profile")
         if (result?.data.varify_otp != null) {
           console.log("Yupeeeee");
           navigate("/signup-profile")
@@ -107,7 +107,7 @@ function OTP() {
     })
   }
   const handleResend = () => {
-    setSeconds(60)
+    setSeconds(300)
     setResend(false)
 }
 

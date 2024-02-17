@@ -16,6 +16,7 @@
 }
 body{
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 .canvas {
   position: sticky;
@@ -77,7 +78,7 @@ a {
   left: 190px;
 }
 .MuiDialogActions-root.MuiDialogActions-spacing.MuiPickersLayout-actionBar.css-knqc4i-MuiDialogActions-root {
-  display: none !important;
+  /* display: none !important; */
 }
 span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
   display: none !important;
@@ -292,6 +293,9 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 }
 .mgif{
   width:50px
+}
+.css-4jnixx-MuiStack-root .MuiTextField-root{
+  min-width: unset!important;
 }
 
 @-webkit-keyframes bounce {

@@ -26,8 +26,8 @@ const useStyles = makeStyles(() => {
       WebkitBackgroundClip: "text",
       color: "transparent",
       fontSize: "100px!important",
-      textAlign: "end",
-      marginRight: "80px!important",
+      textAlign: "center",
+      // marginRight: "80px!important",
       [theme.breakpoints.down("md")]: {
         fontSize: "60px!important",
         marginRight: "30px!important",
@@ -40,9 +40,9 @@ const useStyles = makeStyles(() => {
     h2: {
       color: "black",
       fontSize: "100px!important",
-      textAlign: "start",
+      textAlign: "center",
       lineHeight: "70px!important",
-      marginLeft: "80px!important",
+      // marginLeft: "80px!important",
       [theme.breakpoints.down("md")]: {
         fontSize: "60px!important",
         marginLeft: "30px!important",
@@ -73,9 +73,9 @@ const HeroSection = () => {
   return (
     <Box className={`${classes.heroSection}`}>
       <Container maxWidth="lg">
-        <Typography className={`${classes.h1}`}>Start your heart's</Typography>
+        <Typography className={`${classes.h1}`}>Connecting hearts</Typography>
         <Typography className={`${classes.h2}`}>
-          adventure today <img className="mgif" src={ChocolateIcon} />
+        with us <img className="mgif" src={ChocolateIcon} />
         </Typography>
         <Grid container>
           <Grid item sm={6.5} xs={12}>
@@ -85,10 +85,10 @@ const HeroSection = () => {
           <Grid item sm={5.5} xs={12}>
           <img className="mgif" src={LoveYou} />
             <Typography className={`${classes.p1}`}>
-              At We Find Your Match, we're passionate about connecting hearts.
+              At <b>We Find Your Match</b>, we're passionate about connecting hearts.
               Our mission is simple: create genuine connections in a welcoming,
               safe space. We believe love is about shared experiences, not just
-              profiles. Join us to explore the possibilities of love and
+              profiles. Join <b>We Find Your Match</b> us to explore the possibilities of love and
               friendship.
             </Typography>
           </Grid>

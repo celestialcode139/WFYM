@@ -9,6 +9,9 @@ import Button from "../components/button";
 import DatepickerSticky from "../components/datepickerSticky";
 import OnBoardingHeader from "../components/onBoardingHeader";
 import { Link, useNavigate } from "react-router-dom";
+import CircularProgress from "../components/CircularProgress";
+import MediaHelper from "../Helpers/MediaHelper";
+
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
 import moment from "moment";
@@ -73,6 +76,14 @@ const useStyles = makeStyles(() => {
       width: "20px",
       cursor: "pointer",
     },
+    imageCircularProgress: {
+      background: "#055cce00",
+      height: "100%",
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }
   };
 });
 function SignupProfile() {
@@ -81,6 +92,8 @@ function SignupProfile() {
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
   const [DOB, setDOB] = useState("");
+  const [progress, setprogress] = useState(0);
+  const [profileImage, setProfileImage] = useState({ image_url: avatar, file_name: "" });
 
   const Validation = () => {
     if (FirstName != "" && LastName != "") {
@@ -112,6 +125,10 @@ function SignupProfile() {
   useEffect(() => {
     featchData();
   }, []);
+  useEffect(() => {
+    console.log(DOB);
+  }, [DOB]);
+
 
   return (
     <Box className={`${classes.SignupProfile}`}>
@@ -143,14 +160,20 @@ function SignupProfile() {
                 className="h-center"
                 sx={{ marginBottom: { md: "0px", xs: "10px" } }}
               >
-                <Box className={`${classes.profileImage}`}>
+                <Box className={`${classes.profileImage}`} style={{ backgroundImage: `url(${profileImage.image_url})`, }}>
+                  <Box className={`${classes.imageCircularProgress}`}>
+                    <CircularProgress progress={progress} />
+                  </Box>
                   <input
-                    accept="image/*"
+                    // accept="image/*"
                     style={{ display: "none" }}
                     id="raised-button-file"
                     type="file"
-                    onChange={(e) => {
-                      console.log("Image : ", e.target.value);
+                    onChange={async (e: any) => {
+                      MediaHelper.UploadImage(e.target.files, onprogress).then((resp) => {
+                        console.log("image upload resp:", resp);
+                        setProfileImage({ ...profileImage, image_url: resp[0].url, file_name: resp[0].file_name })
+                      })
                     }}
                   />
                   <label htmlFor="raised-button-file">
@@ -160,6 +183,7 @@ function SignupProfile() {
                       src={camera}
                     ></Box>
                   </label>
+
                 </Box>
               </Grid>
               <Grid item md={7} xs={12}>
@@ -169,10 +193,10 @@ function SignupProfile() {
                       sx={{
                         width: "100%",
                         "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root":
-                          {
-                            borderRadius: "15px!important",
-                            width: "100%",
-                          },
+                        {
+                          borderRadius: "15px!important",
+                          width: "100%",
+                        },
                       }}
                       type="text"
                       label="First Name"
@@ -187,10 +211,10 @@ function SignupProfile() {
                       sx={{
                         width: "100%",
                         "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root":
-                          {
-                            borderRadius: "15px!important",
-                            width: "100%",
-                          },
+                        {
+                          borderRadius: "15px!important",
+                          width: "100%",
+                        },
                       }}
                       type="text"
                       label="Last Name"
@@ -201,20 +225,7 @@ function SignupProfile() {
                     />
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
-                    <DatepickerSticky Default={DOB} onChange={handleDOBChange}>
-                      <Button
-                        sx={{ backgroundColor: "#EFFBFC", color: "#323232" }}
-                      >
-                        {
-                          DOB == ""?
-                            "Choose birthday date"
-                            :
-                            moment(DOB).format("D MMM YYYY")
-                            // DOB
-
-                        }
-                      </Button>
-                    </DatepickerSticky>
+                    <DatepickerSticky Default={DOB} onChange={handleDOBChange} />
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
                     {/* <Link to={{ pathname: "/gender" }}> */}
