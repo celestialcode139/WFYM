@@ -69,7 +69,7 @@ void main() {
         const scene = new THREE.Scene();
         scene.add(mainGroup, textGroup);
         // scene.background=new THREE.TextureLoader().load("/city_bg.jpg");
-        rgbeLoader.load("src/threejs/hdr/rural_asphalt_road_4k.hdr", (texture) => {
+        rgbeLoader.load("threejs/hdr/rural_asphalt_road_4k.hdr", (texture) => {
             const pmremGenerator = new THREE.PMREMGenerator(renderer);
             pmremGenerator.compileEquirectangularShader();
             const envMap = pmremGenerator.fromEquirectangular(texture).texture;
@@ -94,7 +94,7 @@ void main() {
         // const boxMaterial = new THREE.MeshBasicMaterial({ color: "red" });
         // const box = new THREE.Mesh(boxGeometry, boxMaterial);
         // scene.add(box);
-        gltfloader.load("src/threejs/GLTF/heart/scene.gltf", (gltf) => {
+        gltfloader.load("threejs/GLTF/heart/scene.gltf", (gltf) => {
             // Access the loaded model
             const model = gltf.scene;
             heartGlobal = model;
@@ -129,7 +129,7 @@ void main() {
             uniforms: {
                 maxDistance: { value: 3 },
                 imageTexture: {
-                    value: new THREE.TextureLoader().load("src/threejs/assets/matches/1.png"),
+                    value: new THREE.TextureLoader().load("threejs/assets/matches/1.png"),
                 },
             },
         });
@@ -144,7 +144,7 @@ void main() {
             uniforms: {
                 maxDistance: { value: 3 },
                 imageTexture: {
-                    value: new THREE.TextureLoader().load("src/threejs/assets/matches/2.png"),
+                    value: new THREE.TextureLoader().load("threejs/assets/matches/2.png"),
                 },
             },
         });
@@ -159,7 +159,7 @@ void main() {
             uniforms: {
                 maxDistance: { value: 3 },
                 imageTexture: {
-                    value: new THREE.TextureLoader().load("src/threejs/assets/matches/3.png"),
+                    value: new THREE.TextureLoader().load("threejs/assets/matches/3.png"),
                 },
             },
         });
@@ -174,7 +174,7 @@ void main() {
             uniforms: {
                 maxDistance: { value: 3 },
                 imageTexture: {
-                    value: new THREE.TextureLoader().load("src/threejs/assets/matches/4.png"),
+                    value: new THREE.TextureLoader().load("threejs/assets/matches/4.png"),
                 },
             },
         });
@@ -192,7 +192,7 @@ void main() {
             uniforms: {
                 maxDistance: { value: 3 },
                 imageTexture: {
-                    value: new THREE.TextureLoader().load("src/threejs/assets/matches/5.png"),
+                    value: new THREE.TextureLoader().load("threejs/assets/matches/5.png"),
                 },
             },
         });

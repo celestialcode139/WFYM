@@ -1,6 +1,6 @@
 const Base_Url = {
-    // url: "https://witty-eel-leg-warmers.cyclic.app/api/v1/",
-    url: "http://localhost:8000/api/v1/"
+    url: "https://witty-eel-leg-warmers.cyclic.app/api/v1/",
+    // url: "http://localhost:8000/api/v1/"
 };
 const Endpoints = {
     auth: {

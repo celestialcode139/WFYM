@@ -116,12 +116,6 @@ void main() {
     // scene.add(box);
 
     gltfloader.load("threejs/GLTF/heart/scene.gltf", (gltf: any) => {
-      let preloader = document.querySelector(".preloader");
-      let body = document.querySelector("body");
-      setTimeout(() => {
-        body.style.overflowY = "scroll"
-      }, 2000);
-      gsap.to(preloader, { opacity: 0, duration: 2, ease: "power1.inOut" })
       // Access the loaded model
       const model = gltf.scene;
       heartGlobal = model;
