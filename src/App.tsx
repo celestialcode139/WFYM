@@ -499,12 +499,7 @@ void main() {
 
   return (
     <Box className={`landingPage`}>
-      <img src={Preloader} className="preloader" width={"100%"} style={{
-        filter: "blur(5px)",
-        position: "fixed",
-        top: 0,
-        zIndex: 999999
-      }} />
+      
       <Header />
       <>
       </>

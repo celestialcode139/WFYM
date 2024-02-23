@@ -14,10 +14,7 @@
   font-family: "Mori-light"; /* Replace with your preferred font name */
   src: url("./assets/font/moriGothic/MoriGothic-Light.woff2") format("woff2");
 }
-body{
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
+
 .canvas {
   position: sticky;
   top: 0px;
