@@ -3,7 +3,7 @@ import { makeStyles } from "@mui/styles";
 import "../App.css";
 import Button from "../components/buttonSm";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // import $ from "jquery";
 
@@ -34,7 +34,9 @@ const useStyles = makeStyles(() => {
 });
 function Sidebar() {
   const classes = useStyles();
-  const [activeBtn, setactiveBtn] = useState("settings");
+  const { pathname } = useLocation();
+  const [activeBtn, setactiveBtn] = useState(pathname);
+  console.log("location ------>>>", location);
 
   return (
     <Box
@@ -43,9 +45,11 @@ function Sidebar() {
     >
       <Link to={{ pathname: "/profile/page-1" }}>
         <Button
-          onClick={() => setactiveBtn("settings")}
+          onClick={() => setactiveBtn("/profile/page-1")}
           className={`${
-            activeBtn == "settings" ? classes.activeBtn : classes.deactiveBtn
+            activeBtn.includes("profile/page")
+              ? classes.activeBtn
+              : classes.deactiveBtn
           }`}
         >
           Profile
@@ -53,9 +57,11 @@ function Sidebar() {
       </Link>
       <Link to={{ pathname: "/ideal-personality/general-info" }}>
         <Button
-          onClick={() => setactiveBtn("bio")}
+          onClick={() => setactiveBtn("/ideal-personality/general-info")}
           className={`${
-            activeBtn == "bio" ? classes.activeBtn : classes.deactiveBtn
+            activeBtn.includes("ideal-personality")
+              ? classes.activeBtn
+              : classes.deactiveBtn
           }`}
         >
           Ideal Personality
@@ -63,9 +69,11 @@ function Sidebar() {
       </Link>
       <Link to={{ pathname: "/profile/media" }}>
         <Button
-          onClick={() => setactiveBtn("media")}
+          onClick={() => setactiveBtn("/profile/media")}
           className={`${
-            activeBtn == "media" ? classes.activeBtn : classes.deactiveBtn
+            activeBtn == "/profile/media"
+              ? classes.activeBtn
+              : classes.deactiveBtn
           }`}
         >
           Media

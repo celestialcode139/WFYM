@@ -49,7 +49,7 @@ function Race() {
   const [Token, setToken] = useState("");
   const [SelectedGender, setSelectedGender] = useState("male");
 
-// Getting Profile
+  // Getting Profile
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
@@ -64,7 +64,7 @@ function Race() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        setSelectedGender(result.data.looking_for)
+        setSelectedGender(result.data.looking_for);
       } else {
         GeneralHelper.ShowToast(String(result.message));
       }
@@ -106,9 +106,9 @@ function Race() {
   return (
     <Box className={`${classes.appheader}`}>
       <Container maxWidth="xl">
-        <HeaderApp sx={{ position: "relative", top: "15px" }} />
+        {/* <HeaderApp sx={{ position: "relative", top: "15px" }} /> */}
         <Box
-          sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
+          // sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
           className={`blurBg min100vh h-center`}
         >
           <Box

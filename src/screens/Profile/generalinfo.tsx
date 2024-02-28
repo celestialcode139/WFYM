@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => {
     },
     pageContainer: {
       width: "100%",
-      maxWidth: "500px",
+      maxWidth: "800px",
     },
     TextFieldParent: {
       marginBottom: "20px",
@@ -141,15 +141,15 @@ function Generalinfo() {
 
   return (
     <Box className={`${classes.appheader}`}>
-      <Container maxWidth="xl">
-        <HeaderApp sx={{ position: "relative", top: "15px" }} />
+      {/* <Container maxWidth="xl"> */}
+        {/* <HeaderApp sx={{ position: "relative", top: "15px" }} /> */}
         <Box
-          sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
+          sx={{  padding: "20px", position: "relative" }}
           className={`blurBg min100vh h-center`}
         >
           <Box
             className={`${classes.pageContainer}`}
-            sx={{ marginTop: { md: "100px", sm: "60px", xs: "30px" } }}
+            
           >
             {body.description != "" && (
               <GeneralinfoComp
@@ -174,7 +174,7 @@ function Generalinfo() {
             </Button>
           </Box>
         </Box>
-      </Container>
+      {/* </Container> */}
     </Box>
   );
 }

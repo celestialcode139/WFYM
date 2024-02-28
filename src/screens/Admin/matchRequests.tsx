@@ -315,7 +315,7 @@ function MatchRequests() {
             : val?.user_id?.user_subscriptions?.remaining_matches
             }`}
         </Box>,
-        <Box className={`${classes.Parent}`}>
+        <Box className={`${classes.Parent}`}> 
           <Box
             className={`${classes.ViewIcon}`}
             onClick={() => {

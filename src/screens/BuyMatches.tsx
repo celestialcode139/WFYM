@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => {
     },
     paymentCard: {
       backgroundColor: "#ffffff",
-      padding: "20px 30px",
+      padding: "20px 13px",
       borderRadius: "13px",
       boxShadow: "0px 0px 10px 0px #00000030!important",
       cursor: "pointer",
@@ -121,7 +121,7 @@ function Race() {
     "AYoh8drAroRtRyeLuk8M8Wsp0rqFgdHehZsmpnWYPn19VifykjiZ8nt9Qs8rY3W5NdJ0AZqBcmELdzX9";
   const createOrder = (data: any, actions: any) => {
     console.log(data);
-    
+
     return actions.order
       .create({
         purchase_units: [
@@ -144,8 +144,8 @@ function Race() {
   const onApprove = (data: any, actions: any) => {
     return actions.order.capture().then(function (details: any) {
       const { payer } = details;
-      console.log(data,payer);
-      
+      console.log(data, payer);
+
       setSuccess(true);
     });
   };
@@ -165,7 +165,6 @@ function Race() {
         userId,
         subscription_id,
       });
-
     }
   }, [success]);
 
@@ -194,11 +193,9 @@ function Race() {
                 </Box>
                 <Box sx={{ marginBottom: "20px" }}>
                   <Typography className={`f-35-bold mb-10 pText text-center`}>
-                    Unlimited Match
+                    Connect with people{" "}
                   </Typography>
-                  <Typography className={`p-12 text-center`}>
-                    Connect with people
-                  </Typography>
+                  <Typography className={`p-12 text-center`}></Typography>
                 </Box>
 
                 {paymentButton == false ? (
@@ -227,8 +224,13 @@ function Race() {
                               className={`${classes.matchNumber}`}
                               sx={{ color: i == 1 ? "#ffffff" : "#9B9B9B" }}
                             >
+                              <Typography
+                                style={{ position: "relative", bottom: "24px" }}
+                              >
+                                Upto{" "}
+                              </Typography>
                               {subscription.matches_per_months}
-                              <Typography>matches</Typography>
+                              <Typography>matches/Months</Typography>
                             </Typography>
                             <Typography
                               className={`${classes.saveAmount}`}

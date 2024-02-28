@@ -57,6 +57,7 @@ function Race() {
     }
   };
   const GetProfile = (Token: string) => {
+    alert('32323')
     APIHelper.CallApi(
       config.Endpoints.user.GetIdealPersonality,
       {},
@@ -106,7 +107,7 @@ function Race() {
       Token
     ).then((result: any) => {
       if (result.status == "success") {
-        // console.log(result.data);
+        console.log("result.data =====> ",result.data);
         handleSort(result.data);
       } else {
         console.log(result.message);
@@ -123,6 +124,7 @@ function Race() {
   };
   // Other functions
   useEffect(() => {
+    // alert(222)
     if (Token != "") {
       GetProfile(Token);
       GetRace();
@@ -134,9 +136,9 @@ function Race() {
   return (
     <Box className={`${classes.appheader}`}>
       <Container maxWidth="xl">
-        <HeaderApp sx={{ position: "relative", top: "15px" }} />
+        {/* <HeaderApp sx={{ position: "relative", top: "15px" }} /> */}
         <Box
-          sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
+          // sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
           className={`blurBg min100vh h-center`}
         >
           <Box

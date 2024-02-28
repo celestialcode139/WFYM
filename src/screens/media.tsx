@@ -322,7 +322,7 @@ function Media() {
                     type="file"
                     ref={bodyShortRef}
                     onChange={async (e: any) => {
-                      setprogress(1);
+                      // setprogress(1);
                       MediaHelper.UploadImage(e.target.files, onprogress1).then(async (resp) => {
                         console.log("image upload resp:", resp[0].file_name);
                         setbodyShort(resp[0].file_name)

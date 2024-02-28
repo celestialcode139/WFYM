@@ -160,6 +160,11 @@ function Dashboard() {
                     setRequestMatchLoading(false);
                     NavigateTo("/buy-matches");
                 }
+                else if (result.data.isProfileMediaVerified.status == false) {
+                    Alert.notify("Please Complete your profile media first.", 3000);
+                    setRequestMatchLoading(false);
+                    NavigateTo("/profile/media");
+                }
                 else {
                     RequestMatch();
                 }

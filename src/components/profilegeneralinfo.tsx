@@ -88,7 +88,7 @@ function Generalinfo(props: any) {
   return (
     <Box>
       <Grid container spacing={2}>
-        <Grid item md={12}>
+        <Grid item sm={12}>
           <Box sx={{ marginBottom: "30px" }}>
             <RangeSlider
               title="Age"
@@ -100,7 +100,7 @@ function Generalinfo(props: any) {
           </Box>
         </Grid>
 
-        <Grid item md={12}>
+        <Grid item sm={6}>
           <Box className={`${classes.TextFieldParent}`}>
             <TextField
               fullWidth
@@ -132,7 +132,7 @@ function Generalinfo(props: any) {
             </TextField>
           </Box>
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={6}>
           <Box className={`${classes.TextFieldParent}`}>
             <TextField
               fullWidth
@@ -149,7 +149,7 @@ function Generalinfo(props: any) {
             />
           </Box>
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={6}>
           <Box className={`${classes.TextFieldParent}`}>
             <TextField
               fullWidth
@@ -166,28 +166,28 @@ function Generalinfo(props: any) {
             />
           </Box>
         </Grid>
-        <Grid item md={12}>
-          <Box className={`${classes.TextFieldParent}`}>
-            <TextField
-              sx={{
-                width: "100%",
-                "& div": {
-                  borderRadius: "12px!important",
-                  width: "100%",
-                },
-              }}
-              type="text"
-              label="Description"
-              multiline
-              rows={4}
-              value={body.description}
-              onChange={(e: any) =>
-                setbody({ ...body, description: e.target.value })
-              }
-            />
-          </Box>
-        </Grid>
-        <Grid item md={12}>
+        {body.beforeChildren !== 0 && (
+          <Grid item md={6}>
+            <Box className={`${classes.TextFieldParent}`}>
+              <TextField
+                fullWidth
+                sx={{
+                  "& div": {
+                    borderRadius: "15px!important",
+                  },
+                }}
+                label="Children's"
+                value={body.beforeChildren}
+                type="number"
+                onChange={(e) => {
+                  setbody({ ...body, beforeChildren: parseInt(e.target.value) });
+                }}
+              />
+            </Box>
+          </Grid>
+        )}
+       
+        <Grid item md={6}>
           <Box className={`${classes.TextFieldParent}`}>
             <FormControl component="fieldset">
               <FormGroup aria-label="position" row>
@@ -212,25 +212,28 @@ function Generalinfo(props: any) {
             </FormControl>
           </Box>
         </Grid>
-        {body.beforeChildren !== 0 && (
-          <Grid item md={12}>
-            <Box className={`${classes.TextFieldParent}`}>
-              <TextField
-                fullWidth
-                sx={{
-                  "& div": {
-                    borderRadius: "15px!important",
-                  },
-                }}
-                label="Children's"
-                value={String(body.beforeChildren)}
-                onChange={(e) => {
-                  setbody({ ...body, beforeChildren: parseInt(e.target.value) });
-                }}
-              />
-            </Box>
-          </Grid>
-        )}
+        <Grid item md={12}>
+          <Box className={`${classes.TextFieldParent}`}>
+            <TextField
+              sx={{
+                width: "100%",
+                "& div": {
+                  borderRadius: "12px!important",
+                  width: "100%",
+                },
+              }}
+              type="text"
+              label="Description"
+              multiline
+              rows={4}
+              value={body.description}
+              onChange={(e: any) =>
+                setbody({ ...body, description: e.target.value })
+              }
+            />
+          </Box>
+        </Grid>
+        
       </Grid>
     </Box>
   );

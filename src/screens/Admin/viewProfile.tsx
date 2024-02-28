@@ -2,8 +2,8 @@ import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Video from "../../components/video";
-import IntroVideo from "../../assets/videos/intro.mp4";
-import BodyShort from "../../assets/videos/bodyshort.mp4";
+// import IntroVideo from "../../assets/videos/intro.mp4";
+// import BodyShort from "../../assets/videos/bodyshort.mp4";
 import Lightbox from "../../components/lightbox";
 import { useEffect, useState } from "react";
 import GeneralHelper from "../../Helpers/GeneralHelper";
@@ -12,11 +12,10 @@ import config from "../../../config";
 import MediaHelper from "../../Helpers/MediaHelper";
 
 const useStyles = makeStyles(() => {
-
   return {
     profileImage: {
       width: "100%",
-      borderRadius: "20px"
+      borderRadius: "20px",
     },
     quickProfileContainer: {
       padding: "15px",
@@ -54,8 +53,8 @@ const useStyles = makeStyles(() => {
       borderRadius: "30px",
       height: "50px",
       marginTop: "50px",
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   };
 });
 function ViewProfile(props: any) {
@@ -64,6 +63,9 @@ function ViewProfile(props: any) {
   const [isOpen, setisOpen] = useState(false);
   const [User, setUser] = useState<any>({});
   const [Token, setToken] = useState("");
+  const [Image, setImage] = useState("");
+  const [IntroVideo, setIntroVideo] = useState("");
+  const [FullShort, setFullShort] = useState("");
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -73,9 +75,7 @@ function ViewProfile(props: any) {
   };
   useEffect(() => {
     console.log("User:", User);
-
-  }, [User])
-
+  }, [User]);
 
   const GetLatestMatch = () => {
     console.log("Getting Latest Match With Token ", Token);
@@ -85,10 +85,13 @@ function ViewProfile(props: any) {
       {},
       props.Id,
       Token
-    ).then((result: any) => {
+    ).then(async (result: any) => {
       if (result.status == "success") {
         console.log("Matches:", result.data);
         setUser(result.data);
+        getImageURL(result.data.user_details.images);
+        setIntroVideo(result.data.media_id.introVideo);
+        setFullShort(result.data.media_id.bodyShort);
       } else {
         console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
@@ -98,17 +101,15 @@ function ViewProfile(props: any) {
 
   const getImageURL = (img: string) => {
     console.log("asdfasdfasdfasdfaEasdfasdfasdfasdfaE");
-    
+
     MediaHelper.GetImage(img).then((e: string) => {
+      setImage(e);
       console.log("asdfasdfasdfasdfaE:", e);
-    })
-  }
+    });
+  };
   const init = () => {
     GetLatestMatch();
-    getImageURL("xyz.png");
   };
-
-
 
   useEffect(() => {
     if (Token != "") {
@@ -117,8 +118,7 @@ function ViewProfile(props: any) {
       featchToken();
     }
   }, [Token, props]);
-
-
+  console.log("IntroVideoIntroVideo", IntroVideo);
 
   return (
     <>
@@ -127,7 +127,7 @@ function ViewProfile(props: any) {
           <Box
             component="img"
             className={`${classes.profileImage}`}
-            src={User?.profile_images}
+            src={Image}
           ></Box>
         </Grid>
         <Grid item md={7} xs={12}>
@@ -175,7 +175,9 @@ function ViewProfile(props: any) {
               <Box className={`${classes.pt20}`}>
                 <Typography className={`f-15-bold mb-10`}>Location</Typography>
                 <Typography className={`p-12`}>
-                  {`${User?.user_details?.location ?? ""}, ${User?.user_details?.city ?? ""}, ${User?.user_details?.country ?? ""}`}
+                  {`${User?.user_details?.location ?? ""}, ${
+                    User?.user_details?.city ?? ""
+                  }, ${User?.user_details?.country ?? ""}`}
                 </Typography>
               </Box>
               <Box className={`${classes.pt20}`}>
@@ -219,7 +221,10 @@ function ViewProfile(props: any) {
                 Look
               </Typography>
               <Typography className={`p-12`}>
-                {String(User?.user_details?.personality ?? "").replace("_", " ")}
+                {String(User?.user_details?.personality ?? "").replace(
+                  "_",
+                  " "
+                )}
               </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
@@ -290,7 +295,7 @@ function ViewProfile(props: any) {
                 <Video onClick={() => alert("Clicked")} src={IntroVideo} />
               </Grid>
               <Grid item xs={6}>
-                <Video onClick={() => alert("Clicked")} src={BodyShort} />
+                <Video onClick={() => alert("Clicked")} src={FullShort} />
               </Grid>
             </Grid>
           </Box>

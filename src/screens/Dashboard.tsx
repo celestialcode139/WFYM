@@ -164,17 +164,21 @@ function Dashboard() {
       if (result.status == "success") {
         console.log("result ", result.data);
         if (result.data.isProfileVerified.status == false) {
-          Alert.notify(`Compleate Your Profile First. ${result.data.isProfileVerified.msg}`, 3000);
+          Alert.notify(`Compleate Your Profile First. ${result.data.isProfileVerified.msg ?? ""}`, 3000);
           setRequestMatchLoading(false);
           NavigateTo("/profile/page-1");
         } else if (result.data.isIdealPersonVerified.status == false) {
-          Alert.notify(`Compleate Your Ideal Personality Profile. ${result.data.isIdealPersonVerified.msg}`, 3000);
+          Alert.notify(`Compleate Your Ideal Personality Profile. ${result.data.isIdealPersonVerified.msg ?? ""}`, 3000);
           setRequestMatchLoading(false);
           NavigateTo("/ideal-personality/general-info");
         } else if (result.data.isSubscriptionActive == false) {
           Alert.notify("Please Buy A Subscription First.", 3000);
           setRequestMatchLoading(false);
           NavigateTo("/buy-matches");
+        }  else if (result.data.isProfileMediaVerified.status == false) {
+          Alert.notify(`Compleat Your Profile media. ${result.data.isProfileMediaVerified.msg ?? ""}`, 3000);
+          setRequestMatchLoading(false);
+          NavigateTo("/profile/media");
         } else {
           RequestMatch();
         }

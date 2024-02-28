@@ -82,8 +82,8 @@ const useStyles = makeStyles(() => {
       width: "100%",
       display: "flex",
       justifyContent: "center",
-      alignItems: "center"
-    }
+      alignItems: "center",
+    },
   };
 });
 function SignupProfile() {
@@ -93,7 +93,10 @@ function SignupProfile() {
   const [LastName, setLastName] = useState("");
   const [DOB, setDOB] = useState("");
   const [progress, setprogress] = useState(0);
-  const [profileImage, setProfileImage] = useState({ image_url: avatar, file_name: "" });
+  const [profileImage, setProfileImage] = useState({
+    image_url: avatar,
+    file_name: "",
+  });
 
   const Validation = () => {
     if (FirstName != "" && LastName != "") {
@@ -107,9 +110,10 @@ function SignupProfile() {
   };
   const handleNext = () => {
     const data = JSON.stringify({
-      FirstName: FirstName,
-      LastName: LastName,
-      DOB: DOB,
+      FirstName,
+      LastName,
+      DOB,
+      ProfileImage: profileImage.file_name,
     });
     GeneralHelper.storeData("UserDetails_Names", data);
     navigate("/gender");
@@ -128,7 +132,6 @@ function SignupProfile() {
   useEffect(() => {
     console.log(DOB);
   }, [DOB]);
-
 
   return (
     <Box className={`${classes.SignupProfile}`}>
@@ -160,7 +163,10 @@ function SignupProfile() {
                 className="h-center"
                 sx={{ marginBottom: { md: "0px", xs: "10px" } }}
               >
-                <Box className={`${classes.profileImage}`} style={{ backgroundImage: `url(${profileImage.image_url})`, }}>
+                <Box
+                  className={`${classes.profileImage}`}
+                  style={{ backgroundImage: `url(${profileImage.image_url})` }}
+                >
                   <Box className={`${classes.imageCircularProgress}`}>
                     <CircularProgress progress={progress} />
                   </Box>
@@ -170,10 +176,16 @@ function SignupProfile() {
                     id="raised-button-file"
                     type="file"
                     onChange={async (e: any) => {
-                      MediaHelper.UploadImage(e.target.files, onprogress).then((resp) => {
-                        console.log("image upload resp:", resp);
-                        setProfileImage({ ...profileImage, image_url: resp[0].url, file_name: resp[0].file_name })
-                      })
+                      MediaHelper.UploadImage(e.target.files, onprogress).then(
+                        (resp) => {
+                          console.log("image upload resp:", resp);
+                          setProfileImage({
+                            ...profileImage,
+                            image_url: resp[0].url,
+                            file_name: resp[0].file_name,
+                          });
+                        }
+                      );
                     }}
                   />
                   <label htmlFor="raised-button-file">
@@ -183,7 +195,6 @@ function SignupProfile() {
                       src={camera}
                     ></Box>
                   </label>
-
                 </Box>
               </Grid>
               <Grid item md={7} xs={12}>
@@ -193,10 +204,10 @@ function SignupProfile() {
                       sx={{
                         width: "100%",
                         "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root":
-                        {
-                          borderRadius: "15px!important",
-                          width: "100%",
-                        },
+                          {
+                            borderRadius: "15px!important",
+                            width: "100%",
+                          },
                       }}
                       type="text"
                       label="First Name"
@@ -211,10 +222,10 @@ function SignupProfile() {
                       sx={{
                         width: "100%",
                         "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root":
-                        {
-                          borderRadius: "15px!important",
-                          width: "100%",
-                        },
+                          {
+                            borderRadius: "15px!important",
+                            width: "100%",
+                          },
                       }}
                       type="text"
                       label="Last Name"
@@ -225,7 +236,10 @@ function SignupProfile() {
                     />
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
-                    <DatepickerSticky Default={DOB} onChange={handleDOBChange} />
+                    <DatepickerSticky
+                      Default={DOB}
+                      onChange={handleDOBChange}
+                    />
                   </Grid>
                   <Grid item xs={6} sx={{ p: 1 }}>
                     {/* <Link to={{ pathname: "/gender" }}> */}

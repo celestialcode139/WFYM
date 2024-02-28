@@ -86,9 +86,9 @@ function MaleLooks() {
   return (
     <Box className={`${classes.appheader}`}>
       <Container maxWidth="xl">
-        <HeaderApp sx={{ position: "relative", top: "15px" }} />
+        {/* <HeaderApp sx={{ position: "relative", top: "15px" }} /> */}
         <Box
-          sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
+          // sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
           className={`blurBg min100vh h-center`}
         >
           <Box
