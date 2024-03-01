@@ -11,6 +11,7 @@ import VideoIcon from "../assets/icons/video.svg";
 import HeaderApp from "../components/header/AppHeader";
 // import _ from "lodash";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 const useStyles = makeStyles(() => {
   return {
@@ -38,11 +39,12 @@ const useStyles = makeStyles(() => {
     pageContainer: {
       // maxWidth: "1000px",
       width: "90%",
-      position: "relative"
+      position: "relative",
     },
     matchMessages: {
       backgroundColor: "#F0F9F9",
       fontSize: "14px!important",
+      color: "#000",
       padding: "15px",
       borderRadius: "10px",
       marginBottom: "10px!important",
@@ -50,6 +52,7 @@ const useStyles = makeStyles(() => {
     },
     myMessages: {
       backgroundColor: "#F3F3F3",
+      color: "#000",
       fontSize: "14px!important",
       padding: "15px",
       borderRadius: "10px",
@@ -112,8 +115,8 @@ const useStyles = makeStyles(() => {
     },
     overScroll: {
       overflow: "scroll",
-      height: "calc(100vh - 185px)"
-    }
+      height: "calc(100vh - 185px)",
+    },
   };
 });
 const Chat = () => {
@@ -157,10 +160,9 @@ const Chat = () => {
         messages.push(doc.data());
       });
       setMessages(messages);
-      // console.log(messages);
+      console.log(messages);
     });
   };
-
 
   useEffect(() => {
     getAllMessages();
@@ -182,24 +184,28 @@ const Chat = () => {
               {messages.map((data: any, i: number) => {
                 return (
                   <Box
-                    className={`${data.id == myId ? classes.myMessagesParent : null
-                      }`}
+                    className={`${
+                      data.id == myId ? classes.myMessagesParent : null
+                    }`}
                     key={i}
                   >
                     <Box sx={{ maxWidth: { md: "50%", xs: "80%" } }}>
                       <Typography
-                        className={`${data.id == myId
-                          ? classes.myMessages
-                          : classes.matchMessages
-                          }`}
+                        className={`${
+                          data.id == myId
+                            ? classes.myMessages
+                            : classes.matchMessages
+                        }`}
                       >
                         {data.text}
                       </Typography>
                       <Typography
-                        className={`${data.id == myId ? classes.rightTime : classes.leftTime
-                          }`}
+                        className={`${
+                          data.id == myId ? classes.rightTime : classes.leftTime
+                        }`}
                       >
-                        2:55 PM
+                        {moment.unix(data.timestemp?.seconds).format("hh : mm A")}
+                        {/* 2:55 PM */}
                       </Typography>
                     </Box>
                   </Box>
