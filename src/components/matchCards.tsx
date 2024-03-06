@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import MediaHelper from "../Helpers/MediaHelper";
 
 const useStyles = makeStyles(() => {
-
   return {
     MatchContainer: {
       backgroundSize: "cover",
@@ -41,7 +40,7 @@ const useStyles = makeStyles(() => {
       left: "10px",
       fontFamily: "Mori-bold!important",
       fontSize: "16px",
-      mixBlendMode: "difference"
+      mixBlendMode: "difference",
     },
   };
 });
@@ -55,19 +54,26 @@ function MatchCards(props: any) {
   const getImageURL = async (img: string) => {
     let imgurl = await MediaHelper.GetImage(img);
     setProfileImage(imgurl);
-  }
+  };
 
   useEffect(() => {
     setFavourite(props.is_fav);
-    getImageURL(props.img)
+    getImageURL(props.img);
   }, [props.is_fav]);
 
   return (
     <Box
-      onClick={() => navigate(`/dash/view-matchprofile/${props._id}`)}
       className={`${classes.MatchContainer}`}
-      sx={{ backgroundImage: `url(${profileImage})`, backgroundSize: "cover", backgroundPosition: "center" }}
+      sx={{
+        backgroundImage: `url(${profileImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
+      <Box
+        onClick={() => navigate(`/dash/view-matchprofile/${props._id}`)}
+        style={{ width: "100%", height: "160px" }}
+      ></Box>
       <Typography className={`${classes.name}`}>
         {props.name}, {props.age}
       </Typography>
@@ -83,7 +89,7 @@ function MatchCards(props: any) {
               _id: props.request_id,
               is_fav: Favourite,
               is_discard: !Discard,
-            })
+            });
           }}
         >
           <Box
@@ -103,7 +109,7 @@ function MatchCards(props: any) {
               _id: props.request_id,
               is_fav: !Favourite,
               is_discard: Discard,
-            })
+            });
           }}
         >
           <Box

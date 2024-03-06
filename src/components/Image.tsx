@@ -26,6 +26,7 @@ function Image(props: any) {
                         src={img}
                         sx={props.sx}
                         loading="lazy"
+                        onClick={props.onClick}
                     ></Box> :
                     <Skeleton animation="wave" variant="rounded" width={"100%"} height={120} />
             }

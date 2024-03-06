@@ -10,6 +10,7 @@ import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 import MediaHelper from "../../Helpers/MediaHelper";
+import ImageBox from "../../components/Image";
 
 const useStyles = makeStyles(() => {
   return {
@@ -303,12 +304,12 @@ function ViewProfile(props: any) {
             <Typography className={`f-15-bold mb-10`}>Gallery</Typography>
             <Grid container spacing={1}>
               <Grid item xs={4}>
-                <Box
+                <ImageBox
                   onClick={() => setisOpen(true)}
                   component="img"
                   className={`${classes.galleryImage}`}
                   src={User?.user_details?.images}
-                ></Box>
+                />
               </Grid>
               {/* {User?.user_details?.images.map((img: string, i: number) => (
                 <Grid item xs={4} key={i}>

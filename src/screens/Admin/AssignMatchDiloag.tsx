@@ -146,7 +146,7 @@ export default function AssignMatchDiloag(props: any) {
               value={SelectedMatch}
               label="Matches"
               onChange={handleChange}
-              style={{ border: "2px solid red" }}
+              // style={{ border: "2px solid red" }}
             >
               {Matches.map((item: UserInterface) => (
                 <MenuItem key={item.first_name} value={item._id}>

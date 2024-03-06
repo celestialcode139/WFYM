@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
+import { TokenResponse } from "../types";
 // import { useAlert } from 'react-alert'
-import { TokenResponse } from "../components/PrivateRoute";
 
 const ShowToast = (msg: string) => {
   // const alert = useAlert();

@@ -10,8 +10,8 @@ import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 import { useNavigate } from "react-router-dom";
-
-
+import Image from "../../components/Image";
+import { IUser } from "../../types";
 
 const columns = ["Name", "Image", "Email", "Gender", "Status", "Action"];
 
@@ -115,8 +115,8 @@ const useStyles = makeStyles(() => {
     Parent: {
       justifyContent: "center",
       alignItems: "center",
-      display: "flex"
-    }
+      display: "flex",
+    },
   };
 });
 function AllUsers() {
@@ -124,34 +124,24 @@ function AllUsers() {
   const classes = useStyles();
   const [Token, setToken] = useState("");
   const [Loading, setLoading] = useState(false);
-  const [matches, setmatches] = useState([]);
-
-  interface UserInterface {
-    _id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-    gender: string;
-    profile_images: string;
-    status: string
-  }
+  const [matches, setmatches] = useState<IUser[]>([]);
 
   const featchToken = async () => {
-    const result: any = await GeneralHelper.retrieveData("Token");
+    const result = await GeneralHelper.retrieveData("Token");
     if (result.status == 1) {
       setToken(String(result.data));
     }
   };
   const GetAllMatches = () => {
     console.log(Loading);
-    
+
     setLoading(true);
-    APIHelper.CallApi(
+    APIHelper.CallApi<IUser[]>(
       config.Endpoints.user.GetAllUsers,
       {},
       null,
       Token
-    ).then((result: any) => {
+    ).then((result) => {
       if (result.status == "success") {
         console.log("Matches:", result.data);
         setmatches(result.data);
@@ -164,10 +154,9 @@ function AllUsers() {
       }
     });
   };
-  const handleViewProfile = (e: number) => {
-    navigate(`/dash/view-matchprofile/${e}`)
-
-  }
+  const handleViewProfile = (e: string) => {
+    navigate(`/dash/view-matchprofile/${e}`);
+  };
 
   useEffect(() => {
     if (Token != "") {
@@ -178,21 +167,27 @@ function AllUsers() {
   }, [Token]);
 
   const tableData = useMemo(() => {
-    return matches.map((val:UserInterface) => {
+    return matches.map((val: IUser) => {
       return [
         <Box className={`${classes.Parent}`}>
           {`${val?.first_name} ${val?.last_name}`}
         </Box>,
         <Box className={`${classes.Parent}`}>
-          <Box
+          <Image
+            className={`${classes.avatarImage}`}
+            src={
+              typeof val?.user_details === "string"
+                ? ""
+                : val?.user_details?.images
+            }
+          />
+          {/* <Box
             className={`${classes.avatarImage}`}
             component="img"
             src={`${val?.profile_images}`}
-          ></Box>
+          ></Box> */}
         </Box>,
-        <Box className={`${classes.Parent}`}>
-          {val?.email}
-        </Box>,
+        <Box className={`${classes.Parent}`}>{val?.email}</Box>,
         <Box className={`${classes.Parent}`}>
           {val?.gender.charAt(0).toUpperCase() + val?.gender.slice(1)}
         </Box>,
@@ -202,17 +197,19 @@ function AllUsers() {
         <Box className={`${classes.Parent}`}>
           <Box
             className={`${classes.ViewIcon}`}
-            onClick={() => { handleViewProfile(val?._id) }}
+            onClick={() => {
+              handleViewProfile(val?._id);
+            }}
           >
-            <img src={ViewProfileIcon} style={{ width: 20, height: 20, objectFit: "cover" }} />
+            <img
+              src={ViewProfileIcon}
+              style={{ width: 20, height: 20, objectFit: "cover" }}
+            />
           </Box>
         </Box>,
-      ]
-    })
-
-
-  }, [matches])
-
+      ];
+    });
+  }, [matches]);
 
   return (
     <>
@@ -221,7 +218,7 @@ function AllUsers() {
         data={tableData}
         columns={columns}
         options={{
-          filterType: "checkbox"
+          filterType: "checkbox",
         }}
       />
     </>

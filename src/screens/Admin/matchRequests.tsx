@@ -11,6 +11,9 @@ import config from "../../../config";
 import ViewProfileIcon from "../../assets/icons/ViewIcon.png";
 import AssignMatchDiloag from "./AssignMatchDiloag";
 import { debounce } from "lodash";
+import { IMatchRequest, IUser, IUserSubscription } from "../../types";
+import { useAuth } from "../../context/AuthContextProvider";
+import Image from "../../components/Image";
 
 const columns = [
   "Name",
@@ -142,59 +145,25 @@ const useStyles = makeStyles(() => {
   };
 });
 function MatchRequests() {
+  const { authToken } = useAuth();
   const classes = useStyles();
-  const [Token, setToken] = useState("");
   const [DiloagOpen, setDiloagOpen] = useState(false);
   const [RequesterId, setRequesterId] = useState("");
   const [RequesterMatchRequestId, setRequesterMatchRequestId] = useState("");
   const [RequesterSubscriptionId, setRequesterSubscriptionId] = useState("");
   const [Loading, setLoading] = useState(false);
-  const [matches, setmatches] = useState([]);
+  const [matches, setmatches] = useState<IMatchRequest[]>([]);
   const [AllAvailableMatches, setAllAvailableMatches] = useState([]);
 
-  interface MatchesRequests {
-    _id: string;
-    status: string;
-    user_id: UserId;
-  }
-  interface UserId {
-    _id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    gender: string;
-    profile_images: string;
-    user_subscriptions: User_Subscriptions;
-  }
-  interface User_Subscriptions {
-    subscription_id: SubscriptionId;
-    remaining_matches: string;
-    _id: string;
-  }
-  interface SubscriptionId {
-    title: string;
-  }
-  interface ResultInterface {
-    data: [];
-    status: string;
-    message: string;
-  }
-
-  const featchToken = async () => {
-    const result: any = await GeneralHelper.retrieveData("Token");
-    if (result.status == 1) {
-      setToken(String(result.data));
-    }
-  };
   const GetAllMatches = () => {
     console.log(Loading);
     setLoading(true);
-    APIHelper.CallApi(
+    APIHelper.CallApi<IMatchRequest[]>(
       config.Endpoints.Match.GetAllMatches,
       {},
       "&execpt=completed",
-      Token
-    ).then((result: any) => {
+      authToken
+    ).then((result) => {
       if (result.status == "success") {
         if (result.data !== null && result.data !== undefined) {
           setmatches(result.data);
@@ -243,36 +212,35 @@ function MatchRequests() {
       config.Endpoints.Match.MarkAsCompleted,
       { RequestId: RequestId },
       null,
-      Token
-    ).then((result: any) => {
+      authToken
+    ).then((result) => {
       if (result.status == "success") {
         GetAllMatches();
       } else {
-        console.log(result.message);
         GeneralHelper.ShowToast(String(result.message));
       }
     });
   };
 
   useEffect(() => {
-    if (Token != "") {
-      GetAllMatches();
-    } else {
-      featchToken();
-    }
-  }, [Token]);
+    GetAllMatches();
+  }, []);
 
   useEffect(() => {
     if (matches.length != 0) {
       const pendingRecord = matches.filter(
-        (record: MatchesRequests) => record.status != "completed"
+        (record) => record.status != "completed"
       );
-      const UsersName = pendingRecord.map((item: MatchesRequests) => ({
-        first_name: item?.user_id?.first_name,
-        last_name: item?.user_id?.last_name,
-        _id: item?.user_id?._id,
-        SubscriptionId: item?.user_id?.user_subscriptions,
-      }));
+      const UsersName = pendingRecord.map(({ user_id }) => {
+        if (typeof user_id !== "string") {
+          return {
+            first_name: user_id?.first_name || "",
+            last_name: user_id?.last_name || "",
+            _id: user_id?._id || "",
+            SubscriptionId: user_id?.user_subscriptions || "",
+          };
+        }
+      });
       if (UsersName.length > 0) {
         setAllAvailableMatches(UsersName);
       }
@@ -280,66 +248,79 @@ function MatchRequests() {
   }, [matches]);
 
   const tableData = useMemo(() => {
-    return matches.map((val: MatchesRequests) => {
-      return [
-        <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.first_name} ${val?.user_id?.last_name}`}
-        </Box>,
-        <Box className={`${classes.Parent}`}>
-          <Box
-            className={`${classes.avatarImage}`}
-            component="img"
-            src={`${val?.user_id?.profile_images}`}
-          ></Box>
-        </Box>,
-        <Box className={`${classes.Parent}`}>{`${val?.user_id?.email}`}</Box>,
-        <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.gender.charAt(0).toUpperCase() +
-            val?.user_id?.gender.slice(1)
-            }`}
-        </Box>,
-        <Box className={`${classes.Parent}`}>
-          <Box className={`${classes.SubscriptionBadge}`}>
-            <Typography className={`${classes.SubscriptionText}`}>
-              {`${val?.user_id?.user_subscriptions?.subscription_id?.title ==
-                undefined
-                ? "Don't have"
-                : val?.user_id?.user_subscriptions?.subscription_id?.title
-                }`}
-            </Typography>
-          </Box>
-        </Box>,
-        <Box className={`${classes.Parent}`}>
-          {`${val?.user_id?.user_subscriptions?.remaining_matches == undefined
-            ? 0
-            : val?.user_id?.user_subscriptions?.remaining_matches
-            }`}
-        </Box>,
-        <Box className={`${classes.Parent}`}> 
-          <Box
-            className={`${classes.ViewIcon}`}
-            onClick={() => {
-              handleOpenDiloag(
-                val._id,
-                val.user_id?.user_subscriptions?._id,
-                val.user_id?._id
-              );
-            }}
-          >
-            <img
-              src={ViewProfileIcon}
-              style={{ width: 20, height: 20, objectFit: "cover" }}
+    return matches.map((val) => {
+      if (
+        typeof val.user_id !== "string" &&
+        typeof val?.user_id?.user_details !== "string" &&
+        typeof val?.user_id?.user_subscriptions !== "string" &&
+        typeof val?.user_id?.user_subscriptions?.subscription_id !== "string"
+      ) {
+        return [
+          <Box className={`${classes.Parent}`}>
+            {`${val?.user_id?.first_name} ${val?.user_id?.last_name}`}
+          </Box>,
+          <Box className={`${classes.Parent}`}>
+            <Image
+              className={`${classes.avatarImage}`}
+              component="img"
+              src={`${val?.user_id?.user_details?.images}`}
             />
-          </Box>
-        </Box>,
-        <Box className={`${classes.Parent}`}>
-          <Switch
-            onChange={(e: any) => {
-              handleMarkAsCompleted(e.target.checked, val._id);
-            }}
-          />
-        </Box>,
-      ];
+          </Box>,
+          <Box className={`${classes.Parent}`}>{`${val?.user_id?.email}`}</Box>,
+          <Box className={`${classes.Parent}`}>
+            {`${
+              val?.user_id?.gender.charAt(0).toUpperCase() +
+              val?.user_id?.gender.slice(1)
+            }`}
+          </Box>,
+          <Box className={`${classes.Parent}`}>
+            <Box className={`${classes.SubscriptionBadge}`}>
+              <Typography className={`${classes.SubscriptionText}`}>
+                {`${
+                  val?.user_id?.user_subscriptions?.subscription_id?.title ==
+                  undefined
+                    ? "Don't have"
+                    : val?.user_id?.user_subscriptions?.subscription_id?.title
+                }`}
+              </Typography>
+            </Box>
+          </Box>,
+          <Box className={`${classes.Parent}`}>
+            {`${
+              val?.user_id?.user_subscriptions?.remaining_matches == undefined
+                ? 0
+                : val?.user_id?.user_subscriptions?.remaining_matches
+            }`}
+          </Box>,
+          <Box className={`${classes.Parent}`}>
+            <Box
+              className={`${classes.ViewIcon}`}
+              onClick={() => {
+                handleOpenDiloag(
+                  val._id,
+                  (
+                    (val.user_id as IUser)
+                      .user_subscriptions as IUserSubscription
+                  )._id,
+                  (val.user_id as IUser)._id
+                );
+              }}
+            >
+              <img
+                src={ViewProfileIcon}
+                style={{ width: 20, height: 20, objectFit: "cover" }}
+              />
+            </Box>
+          </Box>,
+          <Box className={`${classes.Parent}`}>
+            <Switch
+              onChange={(e) => {
+                handleMarkAsCompleted(e.target.checked, val._id);
+              }}
+            />
+          </Box>,
+        ];
+      }
     });
   }, [matches]);
 
