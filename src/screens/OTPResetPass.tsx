@@ -70,7 +70,7 @@ function OTPResetPass() {
         navigate("/SetNewPassword")
       } else {
         console.log(result);
-        alert("Something went wrong")
+        // alert("Something went wrong")
       }
     })
   }

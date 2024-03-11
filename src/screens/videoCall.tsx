@@ -2,7 +2,7 @@
 import VideoApp from "../components/agora/App";
 
 const VideoCall = () => {
-  return <VideoApp></VideoApp>;
+  return <VideoApp/>;
 };
 
 export default VideoCall;

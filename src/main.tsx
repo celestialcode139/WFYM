@@ -48,85 +48,168 @@ import Matches from "./screens/Admin/Matches.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthContextProvider } from "./context/AuthContextProvider.tsx";
+import {
+	CallReceiverContextProvider,
+	CallCreatorContextProvider,
+} from "./context/SignalsContextProvider.tsx";
 
 const options = {
-  // you can also just use 'bottom center'
-  position: positions.TOP_RIGHT,
-  timeout: 5000,
-  offset: "30px",
-  // you can also just use 'scale'
-  transition: transitions.SCALE,
+	// you can also just use 'bottom center'
+	position: positions.TOP_RIGHT,
+	timeout: 5000,
+	offset: "30px",
+	// you can also just use 'scale'
+	transition: transitions.SCALE,
 };
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1 * 60 * 1000, // 1min
-    },
-  },
+	defaultOptions: {
+		queries: {
+			staleTime: 1 * 60 * 1000, // 1min
+		},
+	},
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  // <React.StrictMode>
-  <QueryClientProvider client={queryClient}>
-    <ReactQueryDevtools initialIsOpen={true} />
-    <AlertProvider template={AlertTemplate} {...options}>
-      <AuthContextProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" Component={LandingPage} />
-            <Route path="/signup" Component={Signup} />
-            <Route path="/signup-form" Component={SignupForm} />
-            <Route path="/otp" Component={OTP} />
-            <Route path="/signup-profile" Component={SignupProfile} />
-            <Route path="/gender" Component={Gender} />
-            <Route path="/signin" Component={SigninForm} />
-            <Route path="/forgetpass" Component={ForgetPassForm} />
-            <Route path="/otpresetpassword" Component={OTPResetPass} />
-            <Route path="/interests" Component={Interests} />
-            <Route path="/SetNewPassword" Component={SetNewPass} />
-            <Route path="/" Component={PrivateRoute}>
-              <Route path="/dashboard" Component={Dashboard} />
-              <Route path="buy-matches" Component={BuyMatches} />
-              <Route path="paypal" Component={Paypal} />
-              <Route path="chat/:myId/:matchId" Component={Chat} />
-              <Route path="video-call/:myId/:matchId" Component={VideoCall} />
-              <Route path="/ideal-personality" Component={PLayout}>
-                <Route path="general-info" Component={ProfileGeneralinfo} />
-                <Route
-                  path="looking-for"
-                  Component={GenderSelectionIdealPerson}
-                />
-                <Route path="looks" Component={MaleLooks} />
-                <Route path="race" Component={Race} />
-              </Route>
-              <Route path="/dash" Component={DashLayout}>
-                <Route path="view-matchprofile/:id" Component={ViewProfile} />
-              </Route>
+	// <React.StrictMode>
+	<QueryClientProvider client={queryClient}>
+		<ReactQueryDevtools initialIsOpen={true} />
+		<AlertProvider template={AlertTemplate} {...options}>
+			<AuthContextProvider>
+				<>
+					<>
+						<BrowserRouter>
+							<Routes>
+								<Route path="/" Component={LandingPage} />
 
-              <Route path="/profile" Component={PLayout}>
-                <Route path="page-1" Component={profileScreen1} />
-                <Route path="page-2" Component={profileScreen2} />
-                <Route path="page-3" Component={profileScreen3} />
-                <Route path="page-4" Component={profileScreen4} />
-                <Route path="page-5" Component={profileScreen5} />
-                <Route path="change-password" Component={ChangePassword} />
-                <Route path="media" Component={Media} />
-              </Route>
+								<Route path="/signup" Component={Signup} />
+								<Route
+									path="/signup-form"
+									Component={SignupForm}
+								/>
+								<Route path="/otp" Component={OTP} />
+								<Route
+									path="/signup-profile"
+									Component={SignupProfile}
+								/>
+								<Route path="/gender" Component={Gender} />
+								<Route path="/signin" Component={SigninForm} />
+								<Route
+									path="/forgetpass"
+									Component={ForgetPassForm}
+								/>
+								<Route
+									path="/otpresetpassword"
+									Component={OTPResetPass}
+								/>
+								<Route
+									path="/interests"
+									Component={Interests}
+								/>
+								<Route
+									path="/SetNewPassword"
+									Component={SetNewPass}
+								/>
+								<Route path="/admin" Component={AdminLayout}>
+									<Route
+										path="dashboard"
+										Component={Admin_Dashboard}
+									/>
+									<Route
+										path="all-users"
+										Component={AllUsers}
+									/>
+									<Route
+										path="match-requests"
+										Component={MatchRequests}
+									/>
+									<Route
+										path="team"
+										Component={TeamMembers}
+									/>
+									<Route
+										path="subscriptions"
+										Component={Matches}
+									/>
+								</Route>
+								<Route path="/" Component={PrivateRoute}>
+									<Route
+										path="/dashboard"
+										Component={Dashboard}
+									/>
+									<Route
+										path="buy-matches"
+										Component={BuyMatches}
+									/>
+									<Route path="paypal" Component={Paypal} />
+									<Route
+										path="chat/:myId/:matchId"
+										Component={Chat}
+									/>
+									<Route
+										path="video-call/:myId/:matchId"
+										Component={VideoCall}
+									/>
+									<Route
+										path="/ideal-personality"
+										Component={PLayout}
+									>
+										<Route
+											path="general-info"
+											Component={ProfileGeneralinfo}
+										/>
+										<Route
+											path="looking-for"
+											Component={
+												GenderSelectionIdealPerson
+											}
+										/>
+										<Route
+											path="looks"
+											Component={MaleLooks}
+										/>
+										<Route path="race" Component={Race} />
+									</Route>
+									<Route path="/dash" Component={DashLayout}>
+										<Route
+											path="view-matchprofile/:id"
+											Component={ViewProfile}
+										/>
+									</Route>
 
-              <Route path="/admin" Component={AdminLayout}>
-                <Route path="dashboard" Component={Admin_Dashboard} />
-                <Route path="all-users" Component={AllUsers} />
-                <Route path="match-requests" Component={MatchRequests} />
-                <Route path="team" Component={TeamMembers} />
-                <Route path="subscriptions" Component={Matches} />
-              </Route>
-            </Route>
-
-
-          </Routes>
-        </BrowserRouter>
-      </AuthContextProvider>
-    </AlertProvider>
-  </QueryClientProvider>
-  // </React.StrictMode>
+									<Route path="/profile" Component={PLayout}>
+										<Route
+											path="page-1"
+											Component={profileScreen1}
+										/>
+										<Route
+											path="page-2"
+											Component={profileScreen2}
+										/>
+										<Route
+											path="page-3"
+											Component={profileScreen3}
+										/>
+										<Route
+											path="page-4"
+											Component={profileScreen4}
+										/>
+										<Route
+											path="page-5"
+											Component={profileScreen5}
+										/>
+										<Route
+											path="change-password"
+											Component={ChangePassword}
+										/>
+										<Route path="media" Component={Media} />
+									</Route>
+								</Route>
+							</Routes>
+						</BrowserRouter>
+					</>
+				</>
+			</AuthContextProvider>
+		</AlertProvider>
+	</QueryClientProvider>
+	// </React.StrictMode>
 );

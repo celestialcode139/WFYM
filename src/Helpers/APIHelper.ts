@@ -5,6 +5,7 @@ interface Options {
   method: string;
 }
 interface Response<T> {
+  error?: any;
   status?: string;
   data?: T;
   message: string;

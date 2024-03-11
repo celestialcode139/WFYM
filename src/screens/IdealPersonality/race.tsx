@@ -57,7 +57,7 @@ function Race() {
     }
   };
   const GetProfile = (Token: string) => {
-    alert('32323')
+    // alert('32323')
     APIHelper.CallApi(
       config.Endpoints.user.GetIdealPersonality,
       {},

@@ -22,7 +22,7 @@ import Alert from "../Helpers/Alert";
 import Carousel from "../components/Carousel";
 import ButtonSm from "../components/buttonSm";
 import GeneralHelper from "../Helpers/GeneralHelper";
-import APIHelper, { useCallApi } from "../Helpers/APIHelper";
+import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
 import NoMatches from "../assets/images/no_matches.svg";
 import { ToastContainer } from "react-toastify";
@@ -114,7 +114,7 @@ const useStyles = makeStyles(() => {
   };
 });
 function Dashboard() {
-  const {data} = useCallApi()
+  // const {data} = useCallApi()
   const classes = useStyles();
   const navigate = useNavigate();
   const [Loading, setLoading] = useState(false);
@@ -129,6 +129,8 @@ function Dashboard() {
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
+    console.log("🚀 ~ featchToken ~ result:", result)
+    
     if (result.status == 1) {
       setToken(String(result.data));
     }

@@ -19,13 +19,14 @@ function App() {
 
     checkCameraPermission();
   }, []);
+  
 
   return (
     <div className="App">
       {cameraPermission === null && <h1>Checking camera permission...</h1>}
       {cameraPermission === false && <h1>Camera permission denied.</h1>}
 
-      {cameraPermission === true ? <VideoCall setInCall={null} /> : null}
+      {cameraPermission === true ? <VideoCall /> : null}
     </div>
   );
 }
