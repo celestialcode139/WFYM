@@ -131,6 +131,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 										Component={Matches}
 									/>
 								</Route>
+								<Route path="/dash" Component={DashLayout}>
+									<Route
+										path="view-matchprofile/:id"
+										Component={ViewProfile}
+									/>
+								</Route>
 								<Route path="/" Component={PrivateRoute}>
 									<Route
 										path="/dashboard"
@@ -168,12 +174,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 											Component={MaleLooks}
 										/>
 										<Route path="race" Component={Race} />
-									</Route>
-									<Route path="/dash" Component={DashLayout}>
-										<Route
-											path="view-matchprofile/:id"
-											Component={ViewProfile}
-										/>
 									</Route>
 
 									<Route path="/profile" Component={PLayout}>

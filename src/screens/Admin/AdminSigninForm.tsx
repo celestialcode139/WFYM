@@ -82,7 +82,7 @@ function AdminSigninForm() {
 	const navigate = useNavigate();
 	const classes = useStyles();
 	const alert = useAlert();
-	const { setAuthToken } = useAuth();
+	const { setAuthToken, loadSession } = useAuth();
 
 	const [Loading, setLoading] = React.useState(false);
 	const [Email, setEmail] = React.useState("");
@@ -102,13 +102,13 @@ function AdminSigninForm() {
 			{ email: Email, password: Password },
 			null,
 			""
-		).then((result: any) => {
+		).then(async (result: any) => {
 			if (result.status == "success") {
 				console.log("Success", result.data.token);
 				GeneralHelper.storeData("Token", result.data.token);
 				console.log("Token ", result.data.token);
 				setAuthToken(result.data.token);
-
+				await loadSession();
 				GeneralHelper.storeData("UserId", result.data.user_id);
 				setLoading(false);
 				navigate("/admin/dashboard");
