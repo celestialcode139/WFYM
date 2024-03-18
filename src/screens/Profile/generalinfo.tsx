@@ -51,7 +51,7 @@ function Generalinfo() {
       description?: string;
       religion?: string;
       political_party?: string;
-      children_before?: boolean;
+      children_before?: string;
       location?: string;
   }
 

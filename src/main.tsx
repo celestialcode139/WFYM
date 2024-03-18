@@ -131,13 +131,13 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 										Component={Matches}
 									/>
 								</Route>
-								<Route path="/dash" Component={DashLayout}>
-									<Route
-										path="view-matchprofile/:id"
-										Component={ViewProfile}
-									/>
-								</Route>
 								<Route path="/" Component={PrivateRoute}>
+									<Route path="/dash" Component={DashLayout}>
+										<Route
+											path="view-matchprofile/:id"
+											Component={ViewProfile}
+										/>
+									</Route>
 									<Route
 										path="/dashboard"
 										Component={Dashboard}

@@ -56,7 +56,7 @@ function Race(props: any) {
       </Box> */}
       <Box>
         <Typography className={`f-bold v-center`} sx={{ marginBottom: "30px",color:"#000000" }}>
-          Race
+          Ethnicity
         </Typography>
         <Grid container spacing={2}>
           {props.data?.map((val: any, i: number) => (

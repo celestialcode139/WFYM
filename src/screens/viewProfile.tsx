@@ -88,8 +88,8 @@ function Media() {
 		religion: string;
 		personality: string;
 		images: Array<string>;
-		drink_habits: boolean;
-		smoking_habits: boolean;
+		drink_habits: string;
+		smoking_habits: string;
 		political_party: string;
 		race: string;
 		children_before: string;
@@ -329,7 +329,7 @@ function Media() {
 							<Typography
 								className={`p-12 ${classes.detailHeading}`}
 							>
-								Race
+								Ethnicity
 							</Typography>
 							<Typography className={`p-12`}>
 								{User?.user_details?.race}
@@ -382,9 +382,7 @@ function Media() {
 								Smoking Habits
 							</Typography>
 							<Typography className={`p-12`}>
-								{User?.user_details?.smoking_habits == true
-									? "True"
-									: "False"}
+								{User?.user_details?.smoking_habits}
 							</Typography>
 						</Grid>
 						<Grid item md={4} xs={12}>
@@ -394,9 +392,7 @@ function Media() {
 								Drinking Habits
 							</Typography>
 							<Typography className={`p-12`}>
-								{User?.user_details?.drink_habits == true
-									? "True"
-									: "False"}
+								{User?.user_details?.drink_habits }
 							</Typography>
 						</Grid>
 					</Grid>

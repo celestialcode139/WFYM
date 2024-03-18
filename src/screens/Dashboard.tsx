@@ -429,7 +429,7 @@ function Dashboard() {
 																: "black",
 													}}
 												>
-													Favourite
+													Favorite
 												</Box>
 											</Box>
 											<Box

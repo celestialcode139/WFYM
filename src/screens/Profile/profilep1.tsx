@@ -374,7 +374,7 @@ function ProfileP1() {
                     onClick={() => handleNext()}
                     className={`${classes.marginTop100}`}
                   >
-                    Save Changes
+                    Next
                   </Button>
                 </Grid>
                 <Grid

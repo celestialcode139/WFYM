@@ -163,7 +163,7 @@ function ProfileScreen4() {
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button Loading={Loading} onClick={() => handleNext()}>Save Changes</Button>
+          <Button Loading={Loading} onClick={() => handleNext()}>Next</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
           <Button onClick={() => {

@@ -125,7 +125,7 @@ const Footer = () => {
             </Box>
             <Box>
               <Typography className={`${classes.footerItems}`}>
-                info@WeFindYourMatch.com
+                info@WeFindUrMatch.com
               </Typography>
             </Box>
           </Grid>

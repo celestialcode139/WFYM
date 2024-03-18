@@ -230,7 +230,7 @@ function ViewProfile(props: any) {
             </Grid>
             <Grid item md={4} xs={12}>
               <Typography className={`p-12 ${classes.detailHeading}`}>
-                Race
+                Ethnicity
               </Typography>
               <Typography className={`p-12`}>
                 {User?.user_details?.race}
@@ -273,7 +273,7 @@ function ViewProfile(props: any) {
                 Smoking Habits
               </Typography>
               <Typography className={`p-12`}>
-                {User?.user_details?.smoking_habits == true ? "True" : "False"}
+                {User?.user_details?.smoking_habits}
               </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
@@ -281,7 +281,7 @@ function ViewProfile(props: any) {
                 Drinking Habits
               </Typography>
               <Typography className={`p-12`}>
-                {User?.user_details?.drink_habits == true ? "True" : "False"}
+                {User?.user_details?.drink_habits}
               </Typography>
             </Grid>
           </Grid>

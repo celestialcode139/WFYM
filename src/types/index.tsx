@@ -20,15 +20,15 @@ export interface IUsersDetails {
 		| "Hispanic/Latino"
 		| "Other";
 	profession?: string;
-	children_before?: number;
+	children_before?: string;
 	political_party?: string;
 	images?: string;
 	religion?: "Islam" | "Christianity" | "Buddhism" | "Hinduism" | "Judaism";
 	deal_breaker?: string;
 	description?: string;
 	highest_degree?: string;
-	smoking_habits?: boolean;
-	drink_habits?: boolean;
+	smoking_habits?: string;
+	drink_habits?: string;
 	intro_video?: string;
 	full_body_video_short?: string;
 	country?: string;

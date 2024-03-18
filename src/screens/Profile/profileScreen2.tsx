@@ -99,7 +99,7 @@ function ProfileScreen2() {
     personality: string;
     images: Array<string>;
     drink_habits: boolean;
-    smoking_habits: boolean;
+    smoking_habits: string;
     political_party: string;
     race: string;
     children_before: string;
@@ -316,7 +316,7 @@ function ProfileScreen2() {
       </Grid>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button Loading={Loading} onClick={() => handleNext()}>Save Changes</Button>
+          <Button Loading={Loading} onClick={() => handleNext()}>Next</Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
           <Button onClick={() => {
