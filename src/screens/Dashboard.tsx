@@ -581,7 +581,7 @@ function Dashboard() {
 											onClick={() =>
 												matchStatus == "completed" ||
 												matchStatus == ""
-													? RequestMatch()
+													? VerifyAccountCompletion()
 													: null
 											}
 											sx={{

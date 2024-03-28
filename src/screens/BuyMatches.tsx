@@ -12,6 +12,9 @@ import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import ButtonSm from "../components/buttonSm";
+import { useAuth } from "../context/AuthContextProvider";
+import { ISubscription, IUserSubscription } from "../types";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -55,14 +58,24 @@ const useStyles = makeStyles(() => {
   };
 });
 function Race() {
+  const { sessionUser } = useAuth();
+  const subscriptionData: IUserSubscription =
+    typeof sessionUser.user_subscriptions !== "string"
+      ? sessionUser.user_subscriptions
+      : null;
+  console.log("sessionUsersessionUser", subscriptionData);
+
   const classes = useStyles();
-  const [subscriptions, setsubscriptions] = useState([]);
+  const [subscriptions, setsubscriptions] = useState<ISubscription[]>([]);
   const [Token, setToken] = useState("");
   const [paymentButton, setpaymentButton] = useState(false);
   const [success, setSuccess] = useState(false);
   const [orderID, setOrderID] = useState(false);
   const [amount, setamount] = useState(0);
-  const [subscription_id, setsubscription_id] = useState(0);
+  const [subscription_id, setsubscription_id] = useState(
+    subscriptionData.subscription_id as string
+  );
+  console.log("subscription_idsubscription_id", subscription_id);
   const [userId, setuserId] = useState("0");
 
   const featchToken = async () => {
@@ -175,10 +188,28 @@ function Race() {
       <Box className={`${classes.appheader}`}>
         <Container maxWidth="xl">
           <HeaderApp sx={{ position: "relative", top: "15px" }} />
+
           <Box
             sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
             className={`blurBg min100vh h-center`}
           >
+            <Box>
+              {paymentButton == true ? (
+                <ButtonSm
+                  onClick={() => {
+                    setpaymentButton(false);
+                  }}
+                  sx={{
+                    width: "150px!important",
+                    height: "50px!important",
+                    margin: "0 auto!important",
+                    fontSize: "20px!important",
+                  }}
+                >
+                  Back
+                </ButtonSm>
+              ) : null}
+            </Box>
             <Box
               className={`${classes.pageContainer}`}
               sx={{ marginTop: { md: "30px", sm: "30px", xs: "20px" } }}
@@ -200,7 +231,13 @@ function Race() {
 
                 {paymentButton == false ? (
                   <Grid container spacing={1}>
-                    {subscriptions.map((subscription: any, i: number) => {
+                    {subscriptions.map((subscription, i) => {
+                      console.log(
+                        subscription._id == subscription_id
+                          ? "#065BCE"
+                          : "#ffffff"
+                      );
+
                       let matchicon = [matchicon1, matchicon2, matchicon3];
                       return (
                         <Grid item md={4} xs={12} key={i}>
@@ -212,7 +249,10 @@ function Race() {
                             }}
                             className={`${classes.paymentCard}`}
                             sx={{
-                              backgroundColor: i == 1 ? "#065BCE" : "#ffffff",
+                              backgroundColor:
+                                subscription._id == subscription_id
+                                  ? "#065BCE"
+                                  : "#ffffff",
                             }}
                           >
                             <Box
@@ -222,7 +262,7 @@ function Race() {
                             ></Box>
                             <Typography
                               className={`${classes.matchNumber}`}
-                              sx={{ color: i == 1 ? "#ffffff" : "#9B9B9B" }}
+                              sx={{ color: subscription._id == subscription_id? "#ffffff" : "#9B9B9B" }}
                             >
                               <Typography
                                 style={{ position: "relative", bottom: "24px" }}
@@ -234,11 +274,11 @@ function Race() {
                             </Typography>
                             <Typography
                               className={`${classes.saveAmount}`}
-                              sx={{ color: i == 1 ? "#ffffff" : "#9B9B9B" }}
+                              sx={{ color: subscription._id == subscription_id ? "#ffffff" : "#9B9B9B" }}
                             ></Typography>
                             <Typography
                               className={`${classes.subscriptionAmount}`}
-                              sx={{ color: i == 1 ? "#ffffff" : "#9B9B9B" }}
+                              sx={{ color: subscription._id == subscription_id ? "#ffffff" : "#9B9B9B" }}
                             >
                               ${subscription.amount}
                             </Typography>

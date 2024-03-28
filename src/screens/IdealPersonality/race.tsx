@@ -159,7 +159,7 @@ function Race() {
                 marginTop: { md: "80", sm: "50px", xs: "30px" },
               }}
             >
-              Next
+              Submit
             </Button>
           </Box>
           {/* <Box>

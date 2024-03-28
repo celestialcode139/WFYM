@@ -41,7 +41,7 @@ function Generalinfo() {
     description: "",
     religion: "",
     political_Party: "",
-    beforeChildren: false,
+    beforeChildren: "",
     location: "",
   });
 

@@ -150,7 +150,7 @@ function Generalinfo(props: any) {
 									borderRadius: "15px!important",
 								},
 							}}
-							label="Location"
+							label="City"
 							value={body.location}
 							onChange={(e) => {
 								setbody({ ...body, location: e.target.value });
