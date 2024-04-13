@@ -57,7 +57,7 @@ const useStyles = makeStyles(() => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function AppHeader(props: any) {
 	const { sessionUser } = useAuth();
-  const {incomingCall } = useCallReceiverData()
+	const { incomingCall } = useCallReceiverData();
 	const classes = useStyles();
 
 	return (
@@ -65,7 +65,14 @@ function AppHeader(props: any) {
 			className={`${classes.header}`}
 			sx={{ ...props.sx, position: "relative" }}
 		>
-			{incomingCall && <Incommingcall />}
+			{incomingCall && (
+				<Incommingcall
+					name={
+						incomingCall.sender.first_name + " " +
+						incomingCall.sender.last_name
+					}
+				/>
+			)}
 
 			<Grid container className={`${classes.headerContainer}`}>
 				<Grid item xs={6} className="d-flex">

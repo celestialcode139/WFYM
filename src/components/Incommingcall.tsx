@@ -4,7 +4,7 @@ import "./Incommingcall.css";
 import { useAuth } from "../context/AuthContextProvider";
 // import $ from "jquery";
 
-function Incommingcall() {
+function Incommingcall({ name }: { name: string }) {
 	const navigate = useNavigate();
 
 	const { acceptCall, incomingCall, rejectCall } = useCallReceiverData();
@@ -19,7 +19,7 @@ function Incommingcall() {
 					<div className="cercle three"></div>
 				</div>
 
-				<p className="phoneNumber">182 5843 6068</p>
+				<p className="phoneNumber">{name}</p>
 				<p className="calling">Calling</p>
 			</div>
 

@@ -190,7 +190,7 @@ function Media() {
 											{User?.user_details?.profession}
 										</Typography>
 									</Box>
-									<Box>
+									<Box style={{display:"flex"}} >
 										<Link
 											to={{
 												pathname: `/chat/${userId}/${
@@ -272,7 +272,7 @@ function Media() {
 								</Typography>
 								<Box>
 									{User?.user_details?.hobbies.map(
-										(hoby: any, i: number) => (
+										(hoby, i) => (
 											<Box
 												className={`${classes.badge} v-center`}
 												key={i}
@@ -291,7 +291,9 @@ function Media() {
 							>
 								Gender
 							</Typography>
-							<Typography className={`p-12`}>Men</Typography>
+							<Typography className={`p-12`}>
+								{User?.gender}
+							</Typography>
 						</Grid>
 						<Grid item md={4} xs={12}>
 							<Typography
@@ -392,7 +394,7 @@ function Media() {
 								Drinking Habits
 							</Typography>
 							<Typography className={`p-12`}>
-								{User?.user_details?.drink_habits }
+								{User?.user_details?.drink_habits}
 							</Typography>
 						</Grid>
 					</Grid>

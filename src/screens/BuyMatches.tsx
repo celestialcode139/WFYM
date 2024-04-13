@@ -15,6 +15,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import ButtonSm from "../components/buttonSm";
 import { useAuth } from "../context/AuthContextProvider";
 import { ISubscription, IUserSubscription } from "../types";
+import moment from "moment";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -64,7 +65,9 @@ function Race() {
       ? sessionUser.user_subscriptions
       : null;
   console.log("sessionUsersessionUser", subscriptionData);
-
+  const isSubscriptionActive = moment(subscriptionData.expire_at).isAfter(
+    moment()
+  ) && !!subscriptionData.remaining_matches
   const classes = useStyles();
   const [subscriptions, setsubscriptions] = useState<ISubscription[]>([]);
   const [Token, setToken] = useState("");
@@ -233,7 +236,7 @@ function Race() {
                   <Grid container spacing={1}>
                     {subscriptions.map((subscription, i) => {
                       console.log(
-                        subscription._id == subscription_id
+                        isSubscriptionActive && subscription._id == subscription_id
                           ? "#065BCE"
                           : "#ffffff"
                       );
@@ -250,7 +253,7 @@ function Race() {
                             className={`${classes.paymentCard}`}
                             sx={{
                               backgroundColor:
-                                subscription._id == subscription_id
+                                isSubscriptionActive && subscription._id == subscription_id
                                   ? "#065BCE"
                                   : "#ffffff",
                             }}
@@ -262,7 +265,7 @@ function Race() {
                             ></Box>
                             <Typography
                               className={`${classes.matchNumber}`}
-                              sx={{ color: subscription._id == subscription_id? "#ffffff" : "#9B9B9B" }}
+                              sx={{ color: isSubscriptionActive && subscription._id == subscription_id? "#ffffff" : "#9B9B9B" }}
                             >
                               <Typography
                                 style={{ position: "relative", bottom: "24px" }}
@@ -274,11 +277,11 @@ function Race() {
                             </Typography>
                             <Typography
                               className={`${classes.saveAmount}`}
-                              sx={{ color: subscription._id == subscription_id ? "#ffffff" : "#9B9B9B" }}
+                              sx={{ color: isSubscriptionActive && subscription._id == subscription_id ? "#ffffff" : "#9B9B9B" }}
                             ></Typography>
                             <Typography
                               className={`${classes.subscriptionAmount}`}
-                              sx={{ color: subscription._id == subscription_id ? "#ffffff" : "#9B9B9B" }}
+                              sx={{ color: isSubscriptionActive && subscription._id == subscription_id ? "#ffffff" : "#9B9B9B" }}
                             >
                               ${subscription.amount}
                             </Typography>

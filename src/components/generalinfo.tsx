@@ -281,7 +281,7 @@ function Generalinfo(props: any) {
 									borderRadius: "15px!important",
 								},
 							}}
-							label="Deal Bracker"
+							label="Dealbreaker"
 							value={body.dealBracker}
 							onChange={(e) => {
 								setbody({

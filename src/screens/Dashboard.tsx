@@ -277,7 +277,13 @@ function Dashboard() {
 		).then((result: any) => {
 			if (result.status == "success") {
 				console.log(result.data);
-				setmatchFavourite(result?.data[0]?.match_result ?? []);
+				setmatchFavourite(
+					result?.data
+						.map((request) => {
+							return request?.match_result;
+						})
+						.flat() ?? []
+				);
 				setLoading(false);
 				// setmatchHistory(result.data[0].match_result);
 				// setGender(result?.data?.gender ? result.data.gender : "");
@@ -298,7 +304,7 @@ function Dashboard() {
 		).then((result: any) => {
 			if (result.status == "success") {
 				console.log(result.data);
-				init();
+				// init();
 				// setmatchHistory(result.data[0].match_result);
 				// setGender(result?.data?.gender ? result.data.gender : "");
 			} else {
@@ -396,9 +402,10 @@ function Dashboard() {
 									<Grid
 										item
 										xs={6}
-										onClick={() =>
-											setmatchMessage("message")
-										}
+										onClick={() => {
+											setmatchMessage("message");
+											GetFavourites();
+										}}
 									>
 										<Box
 											className={`${classes.toggleBtn} ${
@@ -517,11 +524,8 @@ function Dashboard() {
 														img={
 															favourite
 																.result_user_id
-																?.profile_images
-																? favourite
-																		.result_user_id
-																		.profile_images
-																: "https://i.pravatar.cc/150"
+																?.user_details
+																?.images
 														}
 														_id={
 															favourite
@@ -546,7 +550,11 @@ function Dashboard() {
 							)}
 						</Box>
 					</Grid>
-					<Grid item xs={12} md={currentMatches?.length > 0 ? 5 : 8.5}>
+					<Grid
+						item
+						xs={12}
+						md={currentMatches?.length > 0 ? 5 : 8.5}
+					>
 						<Box
 							className={`blurBg h100  ${classes.BorderedBG} `}
 							sx={{ minHeight: "400px", padding: "15px" }}
@@ -555,7 +563,7 @@ function Dashboard() {
 								className="sticky"
 								sx={{
 									display:
-                  currentMatches?.length > 0
+										currentMatches?.length > 0
 											? "block"
 											: "none",
 								}}
@@ -572,7 +580,8 @@ function Dashboard() {
 											Discover
 										</Typography>
 										<Typography className={`p-12`}>
-											{currentMatches?.length} matches found
+											{currentMatches?.length} matches
+											found
 										</Typography>
 									</Box>
 									<Box>
@@ -663,7 +672,8 @@ function Dashboard() {
 						xs={12}
 						md={3.5}
 						sx={{
-							display: currentMatches?.length <= 0 ? "none" : null,
+							display:
+								currentMatches?.length <= 0 ? "none" : null,
 						}}
 					>
 						<Box

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useClient } from "./settings";
 import { Grid, IconButton } from "@mui/material";
 import CallEndIcon from "@mui/icons-material/CallEnd";
 import VideocamIcon from "@mui/icons-material/Videocam";
@@ -9,7 +8,7 @@ import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import { useCallCreatorData } from "../../context/SignalsContextProvider";
 
 export default function Controls(props: any) {
-	const client = useClient();
+	const client = props.client;
 	const { cancelCall } = useCallCreatorData();
 	const { tracks, setStart, setInCall } = props;
 	const [trackState, setTrackState] = useState({ video: true, audio: true });

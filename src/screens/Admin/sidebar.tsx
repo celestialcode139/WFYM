@@ -80,7 +80,7 @@ export default function Sidebar(props: any) {
     <Box sx={{ width: "100%", maxWidth: 360 }}>
       <nav aria-label="main mailbox folders">
         <List>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton
 
               onClick={() => handleSelectingPage(0)}
@@ -94,7 +94,7 @@ export default function Sidebar(props: any) {
               ></Box>
               <ListItemText className={`${classes.Text}`} primary="Dashboard" />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
           <ListItem disablePadding>
             <ListItemButton
               onClick={() => handleSelectingPage(1)}

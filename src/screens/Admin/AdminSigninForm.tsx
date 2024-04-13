@@ -111,7 +111,7 @@ function AdminSigninForm() {
 				await loadSession();
 				GeneralHelper.storeData("UserId", result.data.user_id);
 				setLoading(false);
-				navigate("/admin/dashboard");
+				navigate("/admin/all-users");
 			} else {
 				setLoading(false);
 				alert.error(String(result.message));

@@ -1,5 +1,5 @@
 // App.js
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { firestore } from "../../firebaseConfig";
 import { Box, Container, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -120,33 +120,35 @@ const useStyles = makeStyles(() => {
 	};
 });
 const Chat = () => {
+	const listRef = useRef(null);
 	const classes = useStyles();
 	const { myId, matchId } = useParams();
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState<any>([]);
-	let compositJoin = [myId, matchId].sort().join("");
+	const compositJoin = [myId, matchId].sort().join("");
 
 	const sendMessage = async () => {
-		try {
-			// Add message to Firestore
+		listRef.current?.lastElementChild?.scrollIntoView()
+		// try {
+		// 	// Add message to Firestore
 
-			const messagesRef = firestore.collection(`chat_${compositJoin}`);
-			await messagesRef.add({
-				text: message,
-				id: myId,
-				displayName: "ABCD",
-				timestemp: new Date(),
-			});
+		// 	const messagesRef = firestore.collection(`chat_${compositJoin}`);
+		// 	await messagesRef.add({
+		// 		text: message,
+		// 		id: myId,
+		// 		displayName: "ABCD",
+		// 		timestemp: new Date(),
+		// 	});
 
-			// Clear the input field
-			setMessages([
-				...messages,
-				{ text: message, id: myId, displayName: "ABCD" },
-			]);
-			setMessage("");
-		} catch (error) {
-			console.error("Error sending message:", error);
-		}
+		// 	// Clear the input field
+		// 	setMessages([
+		// 		...messages,
+		// 		{ text: message, id: myId, displayName: "ABCD" },
+		// 	]);
+		// 	setMessage("");
+		// } catch (error) {
+		// 	console.error("Error sending message:", error);
+		// }
 	};
 	const getAllMessages = () => {
 		const messagesRef = firestore
@@ -168,16 +170,11 @@ const Chat = () => {
 
 	useEffect(() => {
 		getAllMessages();
+		// listRef.current?.lastElementChild?.scrollIntoView()
 	}, []);
-
-	const acceptCall = () => {
-		alert("update");
-		firestore
-			.collection("chat_65d90baba8dfa15a5491ca2b65dcf4eabf9343776c1a03d9")
-			.doc("uxC97n6MomttzyOPrnb5")
-			.update({ text: "accepted Kubre" });
-		// Add logic to handle call acceptance
-	};
+	useEffect(() => {
+		listRef.current?.lastElementChild?.scrollIntoView();
+	}, [messages]);
 
 	return (
 		<Box className={`${classes.appheader}`}>
@@ -189,6 +186,7 @@ const Chat = () => {
 						padding: "20px 0px",
 						position: "relative",
 					}}
+					ref={listRef}
 					className={`blurBg min100vh h-center ${classes.overScroll}`}
 				>
 					<Box
@@ -275,17 +273,16 @@ const Chat = () => {
 										placeholder="Type your message..."
 									/>
 									<Box
-                    onClick={sendMessage}
-                    component="img"
-                    src={SendMsg}
-                    className="hover"
-                    sx={{
-                      width: "25px",
-                      position: "absolute",
-                      right: "10px",
-                      top: "14px",
-                    }}
-                  ></Box>
+										onClick={sendMessage}
+										component="img"
+										src={SendMsg}
+										className="hover"
+										sx={{
+											width: "35px",
+											position: "absolute",
+											right: "10px",
+										}}
+									></Box>
 									{/* <Box
 										onClick={acceptCall}
 										component="img"
