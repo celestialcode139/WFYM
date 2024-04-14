@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 import {
-	config,
 	useMicrophoneAndCameraTracks,
 	channelName,
 } from "./settings.js";
@@ -15,7 +14,7 @@ import {
 import { useParams } from "react-router-dom";
 import { IAgoraRTCRemoteUser } from "agora-rtc-react";
 
-export default function VideoCall({client}) {
+export default function VideoCall({client,config}) {
 	const {  createCallData, cancelCall } = useCallCreatorData();
 	const { incomingCall } = useCallReceiverData();
 	const [users, setUsers] = useState<IAgoraRTCRemoteUser[]>([]);
