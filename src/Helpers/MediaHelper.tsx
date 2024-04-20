@@ -32,7 +32,7 @@ const GetSignedURL = async (fileName: string): Promise<string> => {
     return ''
 }
 const UploadImage = async (files: File[], onprogress: any) => {
-    let signedUrl: signedUrlInterface[] = []
+    const signedUrl: signedUrlInterface[] = []
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const resp = await axios.put(`${await GetSignedURL(file.name)}`, file, {
@@ -41,8 +41,8 @@ const UploadImage = async (files: File[], onprogress: any) => {
             },
         });
         if (resp.status == 200) {
-            let url = await GetImage(file.name);
-            let object = { url, file_name: file.name }
+            const url = await GetImage(file.name);
+            const object = { url, file_name: file.name }
             signedUrl.push(object)
         }
     }

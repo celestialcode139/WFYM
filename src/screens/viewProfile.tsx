@@ -148,7 +148,7 @@ function Media() {
 	};
 
 	const getImageURL = async (img: string) => {
-		let imgurl = await MediaHelper.GetImage(img);
+		const imgurl = await MediaHelper.GetImage(img);
 		setProfileImage(imgurl);
 	};
 

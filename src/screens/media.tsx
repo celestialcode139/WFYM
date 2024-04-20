@@ -133,7 +133,7 @@ function Media() {
     if (type == "new") {
       setgallery([...(gallery.filter((x) => x)), name, ""])
     } else {
-      let updatedGallery = [...gallery];
+      const updatedGallery = [...gallery];
       updatedGallery[indx]=name;
       setgallery(updatedGallery);
       // debugger

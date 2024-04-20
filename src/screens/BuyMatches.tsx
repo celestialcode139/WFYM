@@ -241,7 +241,7 @@ function Race() {
                           : "#ffffff"
                       );
 
-                      let matchicon = [matchicon1, matchicon2, matchicon3];
+                      const matchicon = [matchicon1, matchicon2, matchicon3];
                       return (
                         <Grid item md={4} xs={12} key={i}>
                           <Box

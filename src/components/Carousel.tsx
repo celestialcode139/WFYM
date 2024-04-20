@@ -43,13 +43,13 @@ const useStyles = makeStyles(() => {
     },
   };
 });
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export default function Carousel(props: any) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const handleIndexChanged = (index: any) => {
     setCurrentIndex(index.activeIndex);
   };
@@ -58,7 +58,7 @@ export default function Carousel(props: any) {
     props.currentIndex(currentIndex);
   }, [currentIndex, props]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const calculateAge = (birthDate: any) => {
     const birthDateObject: any = new Date(birthDate);
     const currentDate: any = new Date();

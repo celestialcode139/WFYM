@@ -12,7 +12,7 @@ function Image(props: any) {
     }, [props.src])
 
     const getSignedURL = async () => {
-        let imageURL = await MediaHelper.GetImage(props.src);
+        const imageURL = await MediaHelper.GetImage(props.src);
         setimg(imageURL);
     }
 

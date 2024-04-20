@@ -9,11 +9,11 @@ function App({ token }: { token: string }) {
 	const config = {
 		mode: "rtc",
 		appId: appId,
-		codec:"vp8",
-    token
+		codec: "vp8",
+		token,
 	};
-  
-	const client = createClient({ ...config,codec:"vp8",mode:"rtc" })();
+
+	const client = createClient({ ...config, codec: "vp8", mode: "rtc" })();
 	console.log("clientclient11212121,", client);
 
 	useEffect(() => {
@@ -39,7 +39,9 @@ function App({ token }: { token: string }) {
 			)}
 			{cameraPermission === false && <h1>Camera permission denied.</h1>}
 
-			{cameraPermission === true ? <VideoCall client={client} config={config}/> : null}
+			{cameraPermission === true ? (
+				<VideoCall client={client} config={config} />
+			) : null}
 		</div>
 	);
 }

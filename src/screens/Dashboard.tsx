@@ -125,7 +125,7 @@ function Dashboard() {
 	const [currentMatches, setCurrentMatch] = useState([]);
 	const [matchFavourite, setmatchFavourite] = useState([]);
 	const [matches, setmatches] = useState<any[]>([]);
-	const [matchStatus, setmatchStatus] = useState<String>("");
+	const [matchStatus, setmatchStatus] = useState<string>("");
 	const [Token, setToken] = useState("");
 
 	const featchToken = async () => {
@@ -295,7 +295,7 @@ function Dashboard() {
 		});
 	};
 	const FavDecline = (body: any) => {
-		let data = { ...body };
+		const data = { ...body };
 		APIHelper.CallApi(
 			config.Endpoints.Match.FavDecline,
 			data,
@@ -329,10 +329,10 @@ function Dashboard() {
 	}, [Token]);
 
 	const calculateAge = (birthDate: any) => {
-		var birthDateObject: any = new Date(birthDate);
-		var currentDate: any = new Date();
-		var timeDifference = currentDate - birthDateObject;
-		var age = Math.floor(timeDifference / (365.25 * 24 * 60 * 60 * 1000));
+		const birthDateObject: any = new Date(birthDate);
+		const currentDate: any = new Date();
+		const timeDifference = currentDate - birthDateObject;
+		const age = Math.floor(timeDifference / (365.25 * 24 * 60 * 60 * 1000));
 
 		return age;
 	};

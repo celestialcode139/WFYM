@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => {
 	};
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function AppHeader(props: any) {
 	const { sessionUser } = useAuth();
 	const { incomingCall } = useCallReceiverData();
