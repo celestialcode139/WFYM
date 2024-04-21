@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => {
       position: "absolute",
       bottom: "-11px",
       right: "-11px",
-      width: "20px",
+      width: "45px",
       cursor: "pointer",
     },
     profileImage: {
@@ -377,7 +377,7 @@ function ProfileP1() {
                     Next
                   </Button>
                 </Grid>
-                <Grid
+                {/* <Grid
                   item
                   md={6}
                   xs={12}
@@ -388,7 +388,7 @@ function ProfileP1() {
                   }} className={`${classes.cancelBtn} ${classes.marginTop100}`}>
                     Cancel
                   </Button>
-                </Grid>
+                </Grid> */}
               </Grid>
             </Grid>
             <Grid item md={3} xs={12}>

@@ -204,7 +204,7 @@ function ProfileScreen5() {
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
           <Button onClick={() => {
             navigate(-1);
-          }} className={`${classes.cancelBtn}`}>Cancel</Button>
+          }} className={`${classes.cancelBtn}`}>Previous</Button>
         </Grid>
       </Grid>
       <ToastContainer />

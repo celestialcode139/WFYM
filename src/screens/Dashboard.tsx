@@ -111,6 +111,10 @@ const useStyles = makeStyles(() => {
 			position: "relative",
 			top: "150px",
 		},
+		leftPanel: {
+			overflowY: "scroll",
+			height: "100vh",
+		},
 	};
 });
 function Dashboard() {
@@ -148,6 +152,7 @@ function Dashboard() {
 				console.log("Setting Matches:", result.data);
 				setmatches(result.data[0]?.match_result ?? []);
 				setmatchStatus(result.data[0]?.status ?? "");
+				// alert(result.data[0]?.status ?? "")
 				setLoading(false);
 			} else {
 				setLoading(false);
@@ -466,7 +471,10 @@ function Dashboard() {
 								<Grid
 									container
 									spacing={1}
-									sx={{ marginTop: "1px" }}
+									className={classes.leftPanel}
+									sx={{
+										marginTop: "1px",
+									}}
 								>
 									{Loading ? (
 										<CircularProgress

@@ -5,7 +5,7 @@ import { TokenResponse } from "../types";
 const ShowToast = (msg: string) => {
   // const alert = useAlert();
   // if (type=="success") {
-  alert(msg);
+  // alert(msg);
   // }
 };
 const storeData = (label: string, data: any) => {

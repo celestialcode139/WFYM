@@ -165,6 +165,27 @@ function AllUsers() {
       featchToken();
     }
   }, [Token]);
+  const UpdateProfile = (data) => {
+
+    APIHelper.CallApi(
+      config.Endpoints.user.UpdateUserProfile,
+      data,
+      null,
+      Token
+    )
+      .then((result) => {
+        setLoading(false)
+        if (result.status == "success") {
+          // UpdateBio();
+        } else {
+          console.log(result.message);
+          GeneralHelper.ShowToast(String(result.message));
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const tableData = useMemo(() => {
     return matches.map((val: IUser) => {
@@ -192,13 +213,13 @@ function AllUsers() {
           {val?.gender.charAt(0).toUpperCase() + val?.gender.slice(1)}
         </Box>,
         <Box className={`${classes.Parent}`}>
-          <Switch defaultChecked={val?.status == "active" ? true : false} />
+          <Switch onClick={(e)=>UpdateProfile({status:e.target?.checked})} defaultChecked={val?.status == "active" ? true : false} />
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box
             className={`${classes.ViewIcon}`}
             onClick={() => {
-              handleViewProfile(val?._id);
+              handleViewProfile(val?._id);  
             }}
           >
             <img
