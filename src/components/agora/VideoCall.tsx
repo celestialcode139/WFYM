@@ -20,7 +20,9 @@ export default function VideoCall({client,config}) {
 	const [users, setUsers] = useState<IAgoraRTCRemoteUser[]>([]);
 	const [start, setStart] = useState(false);
 	const { ready, tracks } = useMicrophoneAndCameraTracks();
-	const { matchId } = useParams<{ matchId: string }>();
+	const { myId, matchId } = useParams();
+	const room_id = [myId,matchId].sort().join("")
+	
 
 	useEffect(() => {
 		// console.log("Client ",client.get);
@@ -97,7 +99,7 @@ export default function VideoCall({client,config}) {
 			};
 			if (ready && tracks) {
 				try {
-					init(channelName);
+					init(room_id);
 				} catch (error) {
 					console.log("Error in try catch : ", error);
 				}

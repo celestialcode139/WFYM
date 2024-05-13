@@ -8,8 +8,9 @@ const VideoCall = () => {
 
   const { myId, matchId } = useParams();
 const room_id = [myId,matchId].sort().join("")
+
   const [token,setToken] = useState(null)
-  axios.get("https://us-central1-agore-node-express.cloudfunctions.net/app/access_token?channelName=WFYM").then((data)=>{
+  axios.get("https://us-central1-agore-node-express.cloudfunctions.net/app/access_token?channelName="+room_id).then((data)=>{
     console.log("datadata",data.data.token);
     setToken(data.data.token)
   })
