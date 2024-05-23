@@ -52,6 +52,7 @@ import {
 	CallReceiverContextProvider,
 	CallCreatorContextProvider,
 } from "./context/SignalsContextProvider.tsx";
+import buyMatchesPublic from "./screens/BuyMatchesPublic.tsx";
 
 const options = {
 	// you can also just use 'bottom center'
@@ -109,6 +110,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 									path="/SetNewPassword"
 									Component={SetNewPass}
 								/>
+								<Route
+										path="buy-matches-app"
+										Component={buyMatchesPublic}
+									/>
 								<Route path="/admin" Component={AdminLayout}>
 									<Route
 										path="dashboard"
