@@ -9,7 +9,6 @@ function App({ token }: { token: string }) {
 	const config = {
 		mode: "rtc",
 		appId: appId,
-		codec: "vp8",
 		token,
 	};
 
