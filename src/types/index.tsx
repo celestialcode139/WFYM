@@ -129,8 +129,16 @@ export interface IMatchRequest {
 	user_id: string | IUser;
 	status: "pending" | "inprogress" | "completed";
 	attended_by: string;
-	match_result: string[];
+	match_result: string[] | IMatchResult[];
 	match_review?: string;
+	deleted_at?: Date;
+	deleted_by?: string;
+}
+export interface IMatchResult {
+	match_req_id: string | IMatchRequest;
+	result_user_id: string | IUser;
+	is_fav: boolean;
+	is_discard: boolean;
 	deleted_at?: Date;
 	deleted_by?: string;
 }
