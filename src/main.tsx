@@ -52,7 +52,7 @@ import {
 	CallReceiverContextProvider,
 	CallCreatorContextProvider,
 } from "./context/SignalsContextProvider.tsx";
-import buyMatchesPublic from "./screens/BuyMatchesPublic.tsx";
+import buyMatchesPublic from "./screens/buyMatchesPublic.tsx";
 
 const options = {
 	// you can also just use 'bottom center'

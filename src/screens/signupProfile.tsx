@@ -5,6 +5,7 @@ import "../App.css";
 import backArrow from "../assets/icons/backArrow.svg";
 import camera from "../assets/icons/camera.svg";
 import avatar from "../assets/images/avatar.png";
+// import avatar from "../assets/images/UserAvatar.svg";
 import Button from "../components/button";
 import DatepickerSticky from "../components/datepickerSticky";
 import OnBoardingHeader from "../components/onBoardingHeader";
@@ -59,8 +60,7 @@ const useStyles = makeStyles(() => {
       height: "120px",
       width: "120px",
       backgroundImage: `url(${avatar})`,
-      // backgroundImage: `url(${avatar})`,
-      backgroundSize: "contain",
+      backgroundSize: "cover",
       marginTop: "8px",
       borderRadius: "15px",
       position: "relative",
@@ -73,7 +73,7 @@ const useStyles = makeStyles(() => {
       position: "absolute",
       bottom: "-11px",
       right: "-11px",
-      width: "20px",
+      width: "50px",
       cursor: "pointer",
     },
     imageCircularProgress: {
@@ -91,7 +91,8 @@ function SignupProfile() {
   const classes = useStyles();
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
-  const [DOB, setDOB] = useState("");
+  const [DOB, setDOB] = useState("Sat, 01 Jan 2000 19:00:00 GMT");
+  const [Loading, setLoading] = useState(false);
   const [progress, setprogress] = useState(0);
   const [profileImage, setProfileImage] = useState({
     image_url: avatar,
@@ -106,9 +107,13 @@ function SignupProfile() {
     }
   };
   const handleDOBChange = (e: string) => {
-    setDOB(String(e));
+    const SelectedDate = moment(String(e),"ddd, DD MMM YYYY HH:mm:ss [GMT]").add(1,"days")
+    console.log("On Change ",SelectedDate);
+    
+    setDOB(String(SelectedDate));
   };
   const handleNext = () => {
+    setLoading(true);
     const data = JSON.stringify({
       FirstName,
       LastName,
@@ -116,6 +121,7 @@ function SignupProfile() {
       ProfileImage: profileImage.file_name,
     });
     GeneralHelper.storeData("UserDetails_Names", data);
+    setLoading(false);
     navigate("/gender");
   };
   const featchData = async () => {
@@ -130,7 +136,7 @@ function SignupProfile() {
     featchData();
   }, []);
   useEffect(() => {
-    console.log(DOB);
+    console.log("DOB",DOB);
   }, [DOB]);
 
   return (
@@ -248,7 +254,11 @@ function SignupProfile() {
                         Validation();
                       }}
                     >
-                      Confirm
+                      {Loading == true ? (
+                        <CircularProgress color="inherit" size={20} />
+                      ) : (
+                        "Confirm"
+                      )}
                     </Button>
                     {/* </Link> */}
                   </Grid>

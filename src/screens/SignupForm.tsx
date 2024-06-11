@@ -79,16 +79,20 @@ function Signup() {
   const [Password, setPassword] = React.useState("");
   const [CPassword, setCPassword] = React.useState("");
 
+  const handleShowToast = (msg) => {
+    alert.error(msg);
+  }
+
   const Validation = () => {
     if (Email != "" && Password != "" && CPassword != "") {
       if (Password == CPassword) {
         StoreData()
       } else {
-        GeneralHelper.ShowToast("Confirm Password does not match.")
+        handleShowToast("Confirm Password does not match.")
       }
     }
     else {
-      GeneralHelper.ShowToast("Please fill out all fields.")
+      handleShowToast("Please fill out all fields.")
     }
   }
   const StoreData = () => {

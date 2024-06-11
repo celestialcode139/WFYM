@@ -113,7 +113,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 export default function ResponsiveDatePickers(props) {
-  const [defDate, setdefDate] = useState("01 January 1900")
+  const [defDate, setdefDate] = useState("01 January 2000")
   useEffect(() => {
     props.Default && (setdefDate(props.Default))
 
@@ -128,15 +128,19 @@ export default function ResponsiveDatePickers(props) {
       >
         {
           defDate != "" ? (
-            <MobileDatePicker sx={{
-              // width: "100%",
-              "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline":
+            <MobileDatePicker
+            label="Select DOB"
+             sx={{
+                width: "100%",
+                "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline":
               {
                 borderRadius: "15px!important",
-              }
-            }} onAccept={(e) => {
+                }
+              }} 
+            onAccept={(e) => {
               props.onChange(e)
-            }} defaultValue={dayjs(defDate)} />
+            }} 
+            defaultValue={dayjs(defDate)} />
           ) : null
         }
       </DemoContainer>

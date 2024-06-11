@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Typography, Container } from "@mui/material";
+import { Box, Typography, Container, CircularProgress} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import backArrow from "../assets/icons/backArrow.svg";
@@ -83,6 +83,7 @@ function SignupProfile() {
   const navigate = useNavigate();
 
   const [SelectedGender, setSelectedGender] = useState("male");
+  const [Loading, setLoading] = useState(false);
 
   const featchData = async () => {
     const Signup_Details: any = await GeneralHelper.retrieveData(
@@ -102,21 +103,24 @@ function SignupProfile() {
         password: SignupDetails.Password,
         gender: SelectedGender,
         dob: UserDetailsNames.DOB,
-        images: UserDetailsNames.ProfileImage,
+        //images: UserDetailsNames.ProfileImage === "" ? avatar : UserDetailsNames.ProfileImage,
       };
       SignUp(data);
     }
   };
   const SignUp = (data: object) => {
+    setLoading(true);
     APIHelper.CallApi(config.Endpoints.auth.SignUp, data, null, "").then(
       (result: any) => {
         if (result.status == "success") {
           GeneralHelper.ClearData("Signup_Details").then(() => {
             GeneralHelper.ClearData("UserDetails_Names").then(() => {
+              setLoading(false);
               navigate("/signin");
             });
           });
         } else {
+          setLoading(false);
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));
         }
@@ -207,7 +211,11 @@ function SignupProfile() {
               }}
             >
               <Box className="v-center">
-                <Typography>Continue</Typography>
+                {Loading == true ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : (
+                  "Continue"
+                )}
               </Box>
             </Button>
             {/* </Link> */}
