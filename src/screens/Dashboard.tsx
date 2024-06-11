@@ -190,10 +190,6 @@ function Dashboard() {
 					);
 					setRequestMatchLoading(false);
 					NavigateTo("/ideal-personality/general-info");
-				} else if (result.data.isSubscriptionActive == false) {
-					Alert.notify("Please Buy A Subscription First.", 3000);
-					setRequestMatchLoading(false);
-					NavigateTo("/buy-matches");
 				} else if (result.data.isProfileMediaVerified.status == false) {
 					Alert.notify(
 						`Compleat Your Profile media. ${
@@ -203,7 +199,11 @@ function Dashboard() {
 					);
 					setRequestMatchLoading(false);
 					NavigateTo("/profile/media");
-				} else {
+				} else if (result.data.isSubscriptionActive == false) {
+					Alert.notify("Please Buy A Subscription First.", 3000);
+					setRequestMatchLoading(false);
+					NavigateTo("/buy-matches");
+				}  else {
 					RequestMatch();
 				}
 			} else {

@@ -148,8 +148,8 @@ function buyMatchesPublic() {
 		return actions.order.capture().then(async function (details: any) {
 			const { payer } = details;
 			console.log("detailsdetailsdetails", details);
-			window.ReactNativeWebView &&
-				window.ReactNativeWebView.postMessage(JSON.stringify(details));
+			(window as any).ReactNativeWebView &&
+			(window as any).ReactNativeWebView.postMessage(JSON.stringify(details));
 			// await loadSession();
 			setSuccess(true);
 		});

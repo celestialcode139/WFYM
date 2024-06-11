@@ -1,6 +1,7 @@
 const Base_Url = {
   // url: 'https://witty-eel-leg-warmers.cyclic.app/api/v1/'
-    url: 'http://wefindyourmatch.online/api/v1/'
+    url: 'https://api.wefindyourmatch.online/api/v1/'
+    // url: 'http://localhost:1234/api/v1/'
 };
 const Endpoints = {
   auth: {

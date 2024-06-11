@@ -129,26 +129,26 @@ const Chat = () => {
 
 	const sendMessage = async () => {
 		listRef.current?.lastElementChild?.scrollIntoView()
-		// try {
+		try {
 		// 	// Add message to Firestore
 
-		// 	const messagesRef = firestore.collection(`chat_${compositJoin}`);
-		// 	await messagesRef.add({
-		// 		text: message,
-		// 		id: myId,
-		// 		displayName: "ABCD",
-		// 		timestemp: new Date(),
-		// 	});
+			const messagesRef = firestore.collection(`chat_${compositJoin}`);
+			await messagesRef.add({
+				text: message,
+				id: myId,
+				displayName: "ABCD",
+				timestemp: new Date(),
+			});
 
-		// 	// Clear the input field
-		// 	setMessages([
-		// 		...messages,
-		// 		{ text: message, id: myId, displayName: "ABCD" },
-		// 	]);
-		// 	setMessage("");
-		// } catch (error) {
-		// 	console.error("Error sending message:", error);
-		// }
+			// Clear the input field
+			setMessages([
+				...messages,
+				{ text: message, id: myId, displayName: "ABCD" },
+			]);
+			setMessage("");
+		} catch (error) {
+			console.error("Error sending message:", error);
+		}
 	};
 	const getAllMessages = () => {
 		const messagesRef = firestore

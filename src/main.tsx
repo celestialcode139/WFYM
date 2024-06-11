@@ -52,7 +52,7 @@ import {
 	CallReceiverContextProvider,
 	CallCreatorContextProvider,
 } from "./context/SignalsContextProvider.tsx";
-import buyMatchesPublic from "./screens/BuyMatchesPublic.tsx";
+import buyMatchesPublic from "./screens/buyMatchesPublic.tsx";
 
 const options = {
 	// you can also just use 'bottom center'
@@ -135,6 +135,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 										path="subscriptions"
 										Component={Matches}
 									/>
+										<Route path="dash" Component={DashLayout}>
+										<Route
+											path="view-matchprofile/:id"
+											Component={ViewProfile}
+										/>
+									</Route>
 								</Route>
 								<Route path="/" Component={PrivateRoute}>
 									<Route path="/dash" Component={DashLayout}>
@@ -148,6 +154,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 										Component={Dashboard}
 									/>
 									<Route
+									
 										path="buy-matches"
 										Component={BuyMatches}
 									/>

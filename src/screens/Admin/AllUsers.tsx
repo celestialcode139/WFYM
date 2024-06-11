@@ -155,7 +155,7 @@ function AllUsers() {
     });
   };
   const handleViewProfile = (e: string) => {
-    navigate(`/dash/view-matchprofile/${e}`);
+    navigate(`/admin/view-matchprofile/${e}`);
   };
 
   useEffect(() => {
@@ -213,13 +213,19 @@ function AllUsers() {
           {val?.gender.charAt(0).toUpperCase() + val?.gender.slice(1)}
         </Box>,
         <Box className={`${classes.Parent}`}>
-          <Switch onClick={(e)=>UpdateProfile({status:e.target?.checked})} defaultChecked={val?.status == "active" ? true : false} />
+          <Switch
+            onClick={(e) => {
+              const target = e.target as HTMLInputElement;
+              UpdateProfile({ status: target.checked });
+            }}
+            defaultChecked={val?.status === "active" ? true : false}
+          />
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box
             className={`${classes.ViewIcon}`}
             onClick={() => {
-              handleViewProfile(val?._id);  
+              handleViewProfile(val?._id);
             }}
           >
             <img
