@@ -9,8 +9,8 @@ import { Link, useNavigate } from "react-router-dom";
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
+import { useAlert } from "react-alert";
 import config from "../../config";
-
 
 const useStyles = makeStyles(() => {
   return {
@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => {
       textAlign: "center",
       marginTop: "35px!important",
       lineHeight: "1.3!important",
-      color:"#000000"
+      color: "#000000",
     },
     otpMsg: {
       fontSize: "12px!important",
@@ -55,68 +55,84 @@ const useStyles = makeStyles(() => {
 });
 function OTP() {
   const navigate = useNavigate();
+  const alert = useAlert();
 
   const [otp, setOtp] = useState("");
-  const [seconds, setSeconds] = useState(300);
+  const [seconds, setSeconds] = useState(60);
   const [Resend, setResend] = useState(false);
 
   const classes = useStyles();
 
   const handleOTPVerification = (OTP: string) => {
-    retrieveData(OTP, "Varify")
+    retrieveData(OTP, "Varify");
+  };
+  const handleShowToast = (msg) => {
+    alert.error(msg);
   }
 
   const retrieveData = async (OTP: string, For: string) => {
-    const result:any = await GeneralHelper.retrieveData("Signup_Details")
+    const result: any = await GeneralHelper.retrieveData("Signup_Details");
     if (result.status == 1) {
-      const data = JSON.parse(result.data as string)
+      const data = JSON.parse(result.data as string);
+      console.log("IN retrieveData");
+
       if (For == "Varify") {
-        CallApi(String(data.Email), OTP)
+        console.log("IN CallAPI");
+        CallApi(String(data.Email), OTP);
       } else {
-        ResenOTP(String(data.Email))
+        console.log("IN ResendOTP");
+        ResenOTP(String(data.Email));
       }
     }
-  }
+  };
   const CallApi = async (Email: string, OTP: string) => {
+    console.log("Resend is equal to ",String(Resend));
+    
     if (Resend == false) {
-      APIHelper.CallApi(config.Endpoints.auth.OTP.VarifyOtp, { email: Email, otp: OTP },null,'').then((result: any) => {
+      APIHelper.CallApi(
+        config.Endpoints.auth.OTP.VarifyOtp,
+        { email: Email, otp: OTP },
+        null,
+        ""
+      ).then((result: any) => {
         console.log(result);
         // navigate("/signup-profile")
         if (result?.data.varify_otp != null) {
-          console.log("Yupeeeee");
-          navigate("/signup-profile")
+          navigate("/signup-profile");
         } else {
-          GeneralHelper.ShowToast("Please enter a valid OTP.")
+          handleShowToast("Please enter a valid OTP.")
         }
-      })
+      });
     } else {
-      GeneralHelper.ShowToast("OTP has expired.")
+      handleShowToast("OTP has expired.")
     }
-
-  }
+  };
   const ResenOTP = async (Email: string) => {
-    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email },null,'').then((result) => {
+    APIHelper.CallApi(
+      config.Endpoints.auth.OTP.SendOtp,
+      { email: Email },
+      null,
+      ""
+    ).then((result) => {
       if (result?.status == "success") {
-        handleResend()
+        handleResend();
       } else {
-        GeneralHelper.ShowToast(String(result.message))
+        handleShowToast(String(result.message));
       }
       console.log("Result : ", result);
-
-
-    })
-  }
+    });
+  };
   const handleResend = () => {
-    setSeconds(300)
-    setResend(false)
-}
+    setSeconds(60);
+    setResend(false);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (seconds > 0) {
         setSeconds((prevSeconds) => prevSeconds - 1);
       } else {
-        setResend(true)
+        setResend(true);
       }
     }, 1000);
 
@@ -129,12 +145,13 @@ function OTP() {
     }
   }, [otp]);
 
-
   return (
     <Box className={`${classes.OTP}`}>
       <Container maxWidth="lg">
         <OnBoardingHeader />
-        <Typography className={`${classes.h1}`}>{`00:${seconds < 10 ? `0` + seconds : seconds}`}</Typography>
+        <Typography className={`${classes.h1}`}>{`00:${
+          seconds < 10 ? `0` + seconds : seconds
+        }`}</Typography>
         <Typography className={`${classes.otpMsg}`}>
           Type the verification code we’ve sent you
         </Typography>
@@ -183,19 +200,25 @@ function OTP() {
             sx={{ display: { sm: "block", xs: "none" } }}
           ></Grid>
         </Grid>
-        {
-          Resend == true &&
+        {Resend == true && (
           <Typography
             className={`${classes.signupOthers}`}
-            sx={{ marginBottom: "25px", }}
-            
+            sx={{ marginBottom: "25px" }}
           >
-            <Box sx={{ color: "#9B9B9B!important", textDecoration: "none",cursor:"pointer" }} onClick={()=>{retrieveData("0000", "Resend")}}>
+            <Box
+              sx={{
+                color: "#9B9B9B!important",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                retrieveData("0000", "Resend");
+              }}
+            >
               Send again
             </Box>
           </Typography>
-        }
-
+        )}
       </Container>
     </Box>
   );

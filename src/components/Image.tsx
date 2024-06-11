@@ -7,9 +7,15 @@ import Stack from '@mui/material/Stack';
 
 function Image(props: any) {
     const [img, setimg] = useState<string>("0")
+    console.log("here us to", props.fallbackSrc );
+    
     useEffect(() => {
-        getSignedURL();
-    }, [props.src])
+        if (props.src) {
+            getSignedURL();
+        } else if (props.fallbackSrc) {
+            setimg(props.fallbackSrc);
+        }
+    }, [props.src, props.fallbackSrc]);
 
     const getSignedURL = async () => {
         const imageURL = await MediaHelper.GetImage(props.src);

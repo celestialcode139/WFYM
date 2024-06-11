@@ -213,13 +213,7 @@ function AllUsers() {
           {val?.gender.charAt(0).toUpperCase() + val?.gender.slice(1)}
         </Box>,
         <Box className={`${classes.Parent}`}>
-          <Switch
-            onClick={(e) => {
-              const target = e.target as HTMLInputElement;
-              UpdateProfile({ status: target.checked });
-            }}
-            defaultChecked={val?.status === "active" ? true : false}
-          />
+          <Switch onClick={(e:any)=>UpdateProfile({status:e.target?.checked})} defaultChecked={val?.status == "active" ? true : false} />
         </Box>,
         <Box className={`${classes.Parent}`}>
           <Box

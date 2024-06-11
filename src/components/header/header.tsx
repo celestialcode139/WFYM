@@ -13,12 +13,11 @@ import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
 const pages = [
-  { label: "Home", url: "/home" },
-  { label: "About", url: "/about" },
-  { label: "Log in", url: "/login" },
+  { label: "Home", url: "/" },
+  { label: "About", url: "/" },
+  { label: "Log in", url: "/signup" },
 ];
 const useStyles = makeStyles(() => {
-
   return {
     button: {
       "&:focus": {
@@ -77,10 +76,11 @@ function ResponsiveAppBar() {
           ></Box>
           <Box sx={{ flexGrow: 1, display: { xs: "flex" } }}></Box>
           <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-            <Link to={{pathname: "/signup"}} className={`${classes.loginBtn}`}>
-              
-                Log in
-              
+            <Link
+              to={{ pathname: "/signup" }}
+              className={`${classes.loginBtn}`}
+            >
+              Log in
             </Link>
           </Box>
           <Box sx={{ flexGrow: 0, display: { xs: "flex" } }}>
@@ -120,7 +120,12 @@ function ResponsiveAppBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page.label} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page.label}</Typography>
+                  <Link
+                    to={page.url}
+                    style={{color: "black"}}
+                  >
+                    <Typography textAlign="center">{page.label}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
