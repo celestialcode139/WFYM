@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
+import { useAlert } from "react-alert";
 
 
 const useStyles = makeStyles(() => {
@@ -54,80 +55,88 @@ const useStyles = makeStyles(() => {
 });
 function OTPResetPass() {
   const navigate = useNavigate();
-
+  const alert = useAlert();
   const [otp, setOtp] = useState("");
   const [seconds, setSeconds] = useState(60);
   const [Resend, setResend] = useState(false);
-
   const classes = useStyles();
-
-  const handleOTPVerification = (OTP: string) => {
-    retrieveData(OTP, "Varify")
+  
+  const handleShowToast = (msg) => {
+    alert.error(msg);
   }
-  const StoreData = (id:string) => {
+  const handleOTPVerification = (OTP: string) => {
+    retrieveData(OTP, "Varify");
+  };
+  const StoreData = (id: string) => {
     GeneralHelper.storeData("OTP_ID", id).then((result: any) => {
       if (result.status == 1) {
-        navigate("/SetNewPassword")
+        navigate("/SetNewPassword");
       } else {
         console.log(result);
         // alert("Something went wrong")
       }
-    })
-  }
+    });
+  };
 
   const retrieveData = async (OTP: string, For: string) => {
-    const result = await GeneralHelper.retrieveData("Email") as any
+    const result = (await GeneralHelper.retrieveData("Email")) as any;
     if (result.status == 1) {
       console.log(result);
-      
+
       const data = result.data;
       if (For == "Varify") {
-        CallApi(String(data), OTP)
+        CallApi(String(data), OTP);
       } else {
-        ResenOTP(String(data))
+        ResenOTP(String(data));
       }
     }
-  }
+  };
   const CallApi = async (Email: string, OTP: string) => {
     if (Resend == false) {
-      APIHelper.CallApi(config.Endpoints.auth.OTP.VarifyOtp, { email: Email, otp: OTP },null,'').then((result: any) => {
+      APIHelper.CallApi(
+        config.Endpoints.auth.OTP.VarifyOtp,
+        { email: Email, otp: OTP },
+        null,
+        ""
+      ).then((result: any) => {
         console.log(result);
         if (result?.data?.varify_otp != null) {
-          StoreData(String(result.data?.varify_otp?._id))
+          StoreData(String(result.data?.varify_otp?._id));
         } else {
-          GeneralHelper.ShowToast("Please enter a valid OTP.")
+          handleShowToast("Please enter a valid OTP.")
         }
-      })
+      });
     } else {
-      GeneralHelper.ShowToast("OTP has expired.")
+      handleShowToast("OTP has expired.")
     }
-
-  }
-
+  };
 
   const ResenOTP = async (Email: string) => {
-    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email },null,'').then((result) => {
+    APIHelper.CallApi(
+      config.Endpoints.auth.OTP.SendOtp,
+      { email: Email },
+      null,
+      ""
+    ).then((result) => {
       if (result?.status == "success") {
-        handleResend()
+        handleResend();
       } else {
-        GeneralHelper.ShowToast(String(result.message))
+        handleShowToast(String(result.message));
       }
       console.log("Result : ", result);
-
-
-    })
-  }
+    });
+  };
   const handleResend = () => {
-    setSeconds(60)
-    setResend(false)
-  }
+    setSeconds(60);
+    setResend(false);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (seconds > 0) {
         setSeconds((prevSeconds) => prevSeconds - 1);
       } else {
-        setResend(true)
+        setResend(true);
       }
     }, 1000);
 
@@ -140,12 +149,14 @@ function OTPResetPass() {
     }
   }, [otp]);
 
-
   return (
     <Box className={`${classes.OTP}`}>
       <Container maxWidth="lg">
         <OnBoardingHeader />
-        <Typography className={`${classes.h1}`}>{`00:${seconds < 10 ? `0` + seconds : seconds}`}</Typography>
+        <Typography
+          sx={{ color: "#000000" }}
+          className={`${classes.h1}`}
+        >{`00:${seconds < 10 ? `0` + seconds : seconds}`}</Typography>
         <Typography className={`${classes.otpMsg}`}>
           Type the verification code we’ve sent you
         </Typography>
@@ -194,19 +205,25 @@ function OTPResetPass() {
             sx={{ display: { sm: "block", xs: "none" } }}
           ></Grid>
         </Grid>
-        {
-          Resend == true &&
+        {Resend == true && (
           <Typography
             className={`${classes.signupOthers}`}
-            sx={{ marginBottom: "25px", }}
-
+            sx={{ marginBottom: "25px" }}
           >
-            <Box sx={{ color: "#9B9B9B!important", textDecoration: "none", cursor: "pointer" }} onClick={() => { retrieveData("0000", "Resend") }}>
+            <Box
+              sx={{
+                color: "#9B9B9B!important",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                retrieveData("0000", "Resend");
+              }}
+            >
               Send again
             </Box>
           </Typography>
-        }
-
+        )}
       </Container>
     </Box>
   );

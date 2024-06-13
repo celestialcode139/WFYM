@@ -12,6 +12,7 @@ import OnBoardingHeader from "../components/onBoardingHeader";
 import { Link, useNavigate } from "react-router-dom";
 import CircularProgress from "../components/CircularProgress";
 import MediaHelper from "../Helpers/MediaHelper";
+import { useAlert } from "react-alert";
 
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
@@ -87,6 +88,7 @@ const useStyles = makeStyles(() => {
   };
 });
 function SignupProfile() {
+  const alert = useAlert();
   const navigate = useNavigate();
   const classes = useStyles();
   const [FirstName, setFirstName] = useState("");
@@ -94,18 +96,34 @@ function SignupProfile() {
   const [DOB, setDOB] = useState("Sat, 01 Jan 2000 19:00:00 GMT");
   const [Loading, setLoading] = useState(false);
   const [progress, setprogress] = useState(0);
+  const [IsDisabled, setIsDisabled] = useState(true);
   const [profileImage, setProfileImage] = useState({
     image_url: avatar,
     file_name: "",
   });
 
+  useEffect(() => {
+    if (FirstName != "" && LastName != "" && DOB != "") {
+      setIsDisabled(false);
+    }else{
+      setIsDisabled(true);
+    }
+  }, [FirstName, LastName, DOB]);
+
+  const handleShowToast = (msg) => {
+    alert.error(msg);
+  }
+
   const Validation = () => {
-    if (FirstName != "" && LastName != "") {
+    if (FirstName != "" && LastName != "" && DOB != "") {
       handleNext();
     } else {
-      GeneralHelper.ShowToast("Please fill out all fields.");
+      handleShowToast("Please fill out all fields.");
+      setIsDisabled(true);
     }
   };
+  console.log("DOB is", DOB);
+  
   const handleDOBChange = (e: string) => {
     const SelectedDate = moment(String(e),"ddd, DD MMM YYYY HH:mm:ss [GMT]").add(1,"days")
     console.log("On Change ",SelectedDate);
@@ -118,7 +136,7 @@ function SignupProfile() {
       FirstName,
       LastName,
       DOB,
-      ProfileImage: profileImage.file_name,
+      ProfileImage: profileImage.file_name ?? profileImage.image_url,
     });
     GeneralHelper.storeData("UserDetails_Names", data);
     setLoading(false);
@@ -177,7 +195,7 @@ function SignupProfile() {
                     <CircularProgress progress={progress} />
                   </Box>
                   <input
-                    // accept="image/*"
+                    accept=".jpg,.jpeg,.png,.PNG"
                     style={{ display: "none" }}
                     id="raised-button-file"
                     type="file"
@@ -250,6 +268,7 @@ function SignupProfile() {
                   <Grid item xs={6} sx={{ p: 1 }}>
                     {/* <Link to={{ pathname: "/gender" }}> */}
                     <Button
+                     Disabled={IsDisabled}
                       onClick={() => {
                         Validation();
                       }}

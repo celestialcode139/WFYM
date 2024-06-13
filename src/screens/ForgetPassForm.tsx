@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, TextField, Grid } from "@mui/material";
+import { Box, Container, TextField, Grid,CircularProgress } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
+import { useAlert } from "react-alert";
+
 
 
 const useStyles = makeStyles(() => {
@@ -59,34 +61,57 @@ const useStyles = makeStyles(() => {
   };
 });
 function ForgetPassForm() {
+  const alert = useAlert();
   const navigate = useNavigate();
   const classes = useStyles();
-
   const [Email, setEmail] = React.useState("");
+  const [IsDisabled, setIsDisabled] = React.useState(true);
+  const [Loading, setLoading] = React.useState(false);
+
+
+  React.useEffect(() => {
+    if (Email != "") {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [Email]);
+
+  const handleShowToast = (msg) => {
+    alert.error(msg);
+  };
 
   const Validation = () => {
     if (Email != "") {
       CallApi()
     } else {
-      GeneralHelper.ShowToast("Email can't be empty.")
+      handleShowToast("Email can't be empty.");
+      setIsDisabled(true);
     }
   }
   const CallApi = async () => {
+    setLoading(true);
     APIHelper.CallApi(config.Endpoints.auth.forgetPass, { email: Email },null,'').then((result:any) => {
       if (result?.status == "success") {
         StoreData()
+        setLoading(false);
       } else {
-        GeneralHelper.ShowToast(String(result.message))
+        setIsDisabled(true);
+        handleShowToast(String(result.message));
+        setLoading(false);
       }
     })
   }
   const StoreData = () => {
+    setLoading(true);
     GeneralHelper.storeData("Email", Email).then((result: any) => {
       if (result.status == 1) {
+        setLoading(false);
         navigate("/otpresetpassword")
       } else {
         console.log(result);
-        alert("Something went wrong")
+        setLoading(false);
+        handleShowToast("Something went wrong.");
 
       }
 
@@ -132,8 +157,12 @@ function ForgetPassForm() {
           </Grid>
         </Box>
         <Box sx={{ marginTop: "20px" }}>
-          <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
-            Continue
+          <Button  Disabled={IsDisabled} sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
+          {Loading == true ? (
+              <CircularProgress color="inherit" size={20} />
+            ) : (
+              "Continue"
+            )}
           </Button>
         </Box>
       </Container>
