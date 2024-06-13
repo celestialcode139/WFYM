@@ -58,7 +58,7 @@ function Signup() {
           subheading="Interact with people with the same interest like you"
         />
 
-        <Box>
+        <Box sx={{ maxWidth: "280px", margin: "0 auto!important" }}>
           <Link to={{ pathname: "/signup-form" }}>
             <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }}>
               Continue with email
@@ -72,7 +72,9 @@ function Signup() {
         </Box>
         <Typography
           className={`${classes.signupOthers}`}
-          sx={{ marginTop: "10px!important", marginBottom: "30px" }}
+          sx={{ marginTop: "10px!important", marginBottom: "30px" ,maxWidth:"120px",
+            margin: "0 auto!important",
+          }}
         >
           <Link to={{ pathname: "/signin" }}>
             <Box sx={{ color: "#075bce!important", textDecoration: "none" }}>

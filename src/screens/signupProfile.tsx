@@ -4,7 +4,7 @@ import { makeStyles } from "@mui/styles";
 import "../App.css";
 import backArrow from "../assets/icons/backArrow.svg";
 import camera from "../assets/icons/camera.svg";
-import avatar from "../assets/images/avatar.png";
+import avatar from "../assets/images/UserAvatar.svg";
 // import avatar from "../assets/images/UserAvatar.svg";
 import Button from "../components/button";
 import DatepickerSticky from "../components/datepickerSticky";
@@ -65,6 +65,8 @@ const useStyles = makeStyles(() => {
       marginTop: "8px",
       borderRadius: "15px",
       position: "relative",
+      border: "2px solid #c4c4c4",
+      backgroundColor:'white'
     },
     imagePicker: {
       backgroundColor: "#075bce",
@@ -93,7 +95,7 @@ function SignupProfile() {
   const classes = useStyles();
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
-  const [DOB, setDOB] = useState("Sat, 01 Jan 2000 19:00:00 GMT");
+  const [DOB, setDOB] = useState("01 Jan 2000");
   const [Loading, setLoading] = useState(false);
   const [progress, setprogress] = useState(0);
   const [IsDisabled, setIsDisabled] = useState(true);

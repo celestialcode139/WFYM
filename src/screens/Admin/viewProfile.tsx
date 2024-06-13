@@ -67,6 +67,7 @@ function ViewProfile(props: any) {
   const [Image, setImage] = useState("");
   const [IntroVideo, setIntroVideo] = useState("");
   const [FullShort, setFullShort] = useState("");
+  const [IsLoading, setIsLoading] = useState(true);
 
   const featchToken = async () => {
     const result: any = await GeneralHelper.retrieveData("Token");
@@ -119,32 +120,51 @@ function ViewProfile(props: any) {
       featchToken();
     }
   }, [Token, props]);
-  console.log("IntroVideoIntroVideo", IntroVideo);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+  }, []);
 
   return (
     <>
-      <Grid container spacing={5}>
-        <Grid item md={2} xs={12}>
-          <Box
-            component="img"
-            className={`${classes.profileImage}`}
-            src={Image}
-          ></Box>
-        </Grid>
-        <Grid item md={7} xs={12}>
-          <Grid container spacing={2}>
-            <Grid item md={6} xs={12}>
-              <Box className={`${classes.quickProfileContainer}`}>
-                <Box sx={{ display: "flex" }}>
-                  <Box>
-                    <Typography className={`f-22-bold mb-10 ${classes.name}`}>
-                      {User?.first_name ?? ""}, 23
-                    </Typography>
-                    <Typography className={`p-12`}>
-                      {User?.user_details?.profession}
-                    </Typography>
-                  </Box>
-                  {/* <Box>
+      {IsLoading ? (
+        <Box
+          sx={{
+            width: innerWidth * 0.9,
+            height: window.innerHeight * 0.8,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography sx={{ fontSize: 12, color: "red" }}>
+            Loading....
+          </Typography>
+        </Box>
+      ) : (
+        <Grid container spacing={5}>
+          <Grid item md={2} xs={12}>
+            <Box
+              component="img"
+              className={`${classes.profileImage}`}
+              src={Image}
+            ></Box>
+          </Grid>
+          <Grid item md={7} xs={12}>
+            <Grid container spacing={2}>
+              <Grid item md={6} xs={12}>
+                <Box className={`${classes.quickProfileContainer}`}>
+                  <Box sx={{ display: "flex" }}>
+                    <Box>
+                      <Typography className={`f-22-bold mb-10 ${classes.name}`}>
+                        {User?.first_name ?? ""}, 23
+                      </Typography>
+                      <Typography className={`p-12`}>
+                        {User?.user_details?.profession}
+                      </Typography>
+                    </Box>
+                    {/* <Box>
                     <Link to={{ pathname: `/chat/${userId}/${User._id}` }}>
                       <Box
                         component="img"
@@ -162,156 +182,158 @@ function ViewProfile(props: any) {
                       ></Box>
                     </Link>
                   </Box> */}
-                </Box>
+                  </Box>
 
+                  <Box className={`${classes.pt20}`}>
+                    <Typography className={`f-15-bold mb-10`}>About</Typography>
+                    <Typography className={`p-12`}>
+                      {User?.user_details?.description}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid item md={6} xs={12}>
                 <Box className={`${classes.pt20}`}>
-                  <Typography className={`f-15-bold mb-10`}>About</Typography>
+                  <Typography className={`f-15-bold mb-10`}>
+                    Location
+                  </Typography>
                   <Typography className={`p-12`}>
-                    {User?.user_details?.description}
+                    {`${User?.user_details?.location ?? ""}, ${
+                      User?.user_details?.city ?? ""
+                    }, ${User?.user_details?.country ?? ""}`}
                   </Typography>
                 </Box>
-              </Box>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <Box className={`${classes.pt20}`}>
-                <Typography className={`f-15-bold mb-10`}>Location</Typography>
-                <Typography className={`p-12`}>
-                  {`${User?.user_details?.location ?? ""}, ${
-                    User?.user_details?.city ?? ""
-                  }, ${User?.user_details?.country ?? ""}`}
-                </Typography>
-              </Box>
-              <Box className={`${classes.pt20}`}>
-                <Typography
-                  className={`f-15-bold mb-10`}
-                  sx={{ marginBottom: "10px" }}
-                >
-                  Interests
-                </Typography>
-                <Box>
-                  {User?.user_details?.hobbies.map((hoby: any, i: number) => (
-                    <Box className={`${classes.badge} v-center`} key={i}>
-                      <Box component="img"></Box> {hoby}
-                    </Box>
-                  ))}
+                <Box className={`${classes.pt20}`}>
+                  <Typography
+                    className={`f-15-bold mb-10`}
+                    sx={{ marginBottom: "10px" }}
+                  >
+                    Interests
+                  </Typography>
+                  <Box>
+                    {User?.user_details?.hobbies.map((hoby: any, i: number) => (
+                      <Box className={`${classes.badge} v-center`} key={i}>
+                        <Box component="img"></Box> {hoby}
+                      </Box>
+                    ))}
+                  </Box>
                 </Box>
-              </Box>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Gender
-              </Typography>
-              <Typography className={`p-12`}>{User?.gender}</Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Age
-              </Typography>
-              <Typography className={`p-12`}>26 year</Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Religion
-              </Typography>
-              <Typography className={`p-12`}>
-                {User?.user_details?.religion}
-              </Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Look
-              </Typography>
-              <Typography className={`p-12`}>
-                {String(User?.user_details?.personality ?? "").replace(
-                  "_",
-                  " "
-                )}
-              </Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Ethnicity
-              </Typography>
-              <Typography className={`p-12`}>
-                {User?.user_details?.race}
-              </Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Occupations
-              </Typography>
-              <Typography className={`p-12`}>
-                {User?.user_details?.profession}
-              </Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Political Party
-              </Typography>
-              <Typography className={`p-12`}>
-                {User?.user_details?.political_party}
-              </Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Children’s
-              </Typography>
-              <Typography className={`p-12`}>
-                {User?.user_details?.children_before}
-              </Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Highest Degree
-              </Typography>
-              <Typography className={`p-12`}>
-                {User?.user_details?.highest_degree}
-              </Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Smoking Habits
-              </Typography>
-              <Typography className={`p-12`}>
-                {User?.user_details?.smoking_habits}
-              </Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography className={`p-12 ${classes.detailHeading}`}>
-                Drinking Habits
-              </Typography>
-              <Typography className={`p-12`}>
-                {User?.user_details?.drink_habits}
-              </Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Gender
+                </Typography>
+                <Typography className={`p-12`}>{User?.gender}</Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Age
+                </Typography>
+                <Typography className={`p-12`}>26 year</Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Religion
+                </Typography>
+                <Typography className={`p-12`}>
+                  {User?.user_details?.religion}
+                </Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Look
+                </Typography>
+                <Typography className={`p-12`}>
+                  {String(User?.user_details?.personality ?? "").replace(
+                    "_",
+                    " "
+                  )}
+                </Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Ethnicity
+                </Typography>
+                <Typography className={`p-12`}>
+                  {User?.user_details?.race}
+                </Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Occupations
+                </Typography>
+                <Typography className={`p-12`}>
+                  {User?.user_details?.profession}
+                </Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Political Party
+                </Typography>
+                <Typography className={`p-12`}>
+                  {User?.user_details?.political_party}
+                </Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Children’s
+                </Typography>
+                <Typography className={`p-12`}>
+                  {User?.user_details?.children_before}
+                </Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Highest Degree
+                </Typography>
+                <Typography className={`p-12`}>
+                  {User?.user_details?.highest_degree}
+                </Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Smoking Habits
+                </Typography>
+                <Typography className={`p-12`}>
+                  {User?.user_details?.smoking_habits}
+                </Typography>
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <Typography className={`p-12 ${classes.detailHeading}`}>
+                  Drinking Habits
+                </Typography>
+                <Typography className={`p-12`}>
+                  {User?.user_details?.drink_habits}
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item md={3} xs={12}>
-          <Box className={`${classes.pt20}`}>
-            <Typography className={`f-15-bold mb-10`}>
-              Intro & Body Short
-            </Typography>
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <Video onClick={() => alert("Clicked")} src={IntroVideo} />
+          <Grid item md={3} xs={12}>
+            <Box className={`${classes.pt20}`}>
+              <Typography className={`f-15-bold mb-10`}>
+                Intro & Body Short
+              </Typography>
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <Video onClick={() => alert("Clicked")} src={IntroVideo} />
+                </Grid>
+                <Grid item xs={6}>
+                  <Video onClick={() => alert("Clicked")} src={FullShort} />
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Video onClick={() => alert("Clicked")} src={FullShort} />
-              </Grid>
-            </Grid>
-          </Box>
-          <Box className={`${classes.pt20}`}>
-            <Typography className={`f-15-bold mb-10`}>Gallery</Typography>
-            <Grid container spacing={1}>
-              <Grid item xs={4}>
-                <ImageBox
-                  onClick={() => setisOpen(true)}
-                  component="img"
-                  className={`${classes.galleryImage}`}
-                  src={User?.user_details?.images}
-                />
-              </Grid>
-              {/* {User?.user_details?.images.map((img: string, i: number) => (
+            </Box>
+            <Box className={`${classes.pt20}`}>
+              <Typography className={`f-15-bold mb-10`}>Gallery</Typography>
+              <Grid container spacing={1}>
+                <Grid item xs={4}>
+                  <ImageBox
+                    onClick={() => setisOpen(true)}
+                    component="img"
+                    className={`${classes.galleryImage}`}
+                    src={User?.user_details?.images}
+                  />
+                </Grid>
+                {/* {User?.user_details?.images.map((img: string, i: number) => (
                 <Grid item xs={4} key={i}>
                   <Box
                     onClick={() => setisOpen(true)}
@@ -321,16 +343,17 @@ function ViewProfile(props: any) {
                   ></Box>
                 </Grid>
               ))} */}
-            </Grid>
-            <Lightbox
-              isOpen={isOpen}
-              setisOpen={(e: any) => {
-                setisOpen(e);
-              }}
-            />
-          </Box>
+              </Grid>
+              <Lightbox
+                isOpen={isOpen}
+                setisOpen={(e: any) => {
+                  setisOpen(e);
+                }}
+              />
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </>
   );
 }

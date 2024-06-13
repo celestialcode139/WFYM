@@ -6,7 +6,7 @@ import Stack from "@mui/material/Stack";
 import "../../App.css";
 import Button from "../../components/buttonSm";
 import DatepickerSticky from "../../components/datepickerSticky";
-import avatar from "../../assets/images/avatar.png";
+import avatar from "../../assets/images/UserAvatar.svg";
 import camera from "../../assets/icons/camera.svg";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
@@ -40,6 +40,8 @@ const useStyles = makeStyles(() => {
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover",
       backgroundPosition: "center",
+      border: "2px solid #c4c4c4",
+      backgroundColor:'white'
     },
     cancelBtn: {
       backgroundColor: "#ffffff",
@@ -94,6 +96,7 @@ function ProfileP1() {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       async (result: any) => {
         setLoading(false);
+        console.log("here is user data ", result.data);
         if (result.status == "success") {
           setFirstName(result?.data?.first_name ? result.data.first_name : "");
           setLastName(result?.data?.last_name ? result.data.last_name : "");
@@ -134,7 +137,7 @@ function ProfileP1() {
 
           if (result.data.dob) {
             const DateOfBirth = moment.utc(result?.data?.dob);
-            setDOB(DateOfBirth.format("DD MMMM YYYY"));
+            setDOB(DateOfBirth.format("MM DD YYYY"));
           }
         } else {
           setLoading(false);
@@ -242,7 +245,7 @@ function ProfileP1() {
         xs={12}
         item
         className="h-center"
-        sx={{ marginBottom: { md: "0px", xs: "10px" } }}
+        sx={{ marginBottom: { md: "0px", xs: "10px" ,paddingLeft:"16px !important"} }}
       >
         {!Loading ? (
           <Box
@@ -321,7 +324,7 @@ function ProfileP1() {
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </Grid>
-              <Grid item md={6} xs={12} sx={{ p: 1 }}>
+              <Grid item md={6} xs={12} sx={{ p: 1,marginTop:"8px" }}>
                 <TextField
                   sx={{
                     width: "100%",
@@ -415,7 +418,7 @@ function ProfileP1() {
           </Grid>
           <Grid item md={3} xs={12}>
             <Grid container>
-              <Grid item xs={12} sx={{ p: 1 }}>
+              <Grid item xs={12} sx={{ p: 1}}>
                 <TextField
                   sx={{
                     width: "100%",
@@ -432,7 +435,7 @@ function ProfileP1() {
                   onChange={(e: any) => setDescription(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12} sx={{ p: 1 }}>
+              <Grid item xs={12} sx={{ p: 1,marginTop:'8px' }}>
                 <TextField
                   sx={{
                     width: "100%",
@@ -447,11 +450,11 @@ function ProfileP1() {
                   onChange={(e: any) => setAddress(e.target.value)}
                 />
               </Grid>
-              <Grid
+              {/* <Grid
                 item
                 xs={4}
                 sx={{ p: 1, display: { md: "block", xs: "none" } }}
-              ></Grid>
+              ></Grid> */}
               <Grid
                 item
                 md={6}
@@ -477,7 +480,7 @@ function ProfileP1() {
                   Cancel
                 </Button>
               </Grid>
-              <Grid item md={8} xs={12} sx={{ p: 1 }}>
+              <Grid item md={12} xs={12} sx={{ p: 1 }}>
                 <Button
                   className={`${classes.delBtn}`}
                   sx={{ marginTop: { md: "80px" } }}

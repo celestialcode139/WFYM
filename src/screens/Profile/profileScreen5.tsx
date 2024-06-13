@@ -139,7 +139,7 @@ function ProfileScreen5() {
           Alert.notify("Profile Updated Successfully", 4000);
           setTimeout(() => {
             navigate("/dashboard")
-          }, 6000);
+          }, 4000);
         } else {
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));
@@ -207,7 +207,7 @@ function ProfileScreen5() {
           }} className={`${classes.cancelBtn}`}>Previous</Button>
         </Grid>
       </Grid>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </>
   );
 }

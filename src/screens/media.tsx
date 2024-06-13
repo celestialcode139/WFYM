@@ -12,6 +12,7 @@ import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import CircularProgress from "../components/CircularProgress";
+import { useNavigate } from "react-router-dom";
 import Alert from "../Helpers/Alert";
 
 // import $ from "jquery";
@@ -111,6 +112,7 @@ const useStyles = makeStyles(() => {
 });
 function Media() {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [gallery, setgallery] = useState<string[]>([]);
   const [introVideo, setintroVideo] = useState<string>("");
   const [bodyShort, setbodyShort] = useState<string>("");
@@ -171,6 +173,9 @@ function Media() {
       setLoading(false);
       if (result.status == "success") {
         Alert.notify(String("Media uploaded successfully"), 3000);
+        setTimeout(() => {
+          navigate("/dashboard")
+        }, 3000);
       } else {
         console.log(result.message);
         Alert.notify(String(result.message), 3000);

@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => {
   return {
     appheader: {
       backgroundColor: "#ffffff",
-      minHeight: "100vh",
+      //minHeight: "100vh",
       backgroundImage: `url(${AdminSignature})`,
       backgroundSize: "100%",
       backgroundRepeat: "no-repeat",
@@ -167,7 +167,7 @@ function Race() {
           </Box> */}
         </Box>
       </Container>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </Box>
   );
 }

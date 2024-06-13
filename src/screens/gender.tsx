@@ -11,7 +11,8 @@ import femaleBlack from "../assets/icons/femaleBlack.svg";
 import femaleWhite from "../assets/icons/femaleWhite.svg";
 import OnBoardingHeader from "../components/onBoardingHeader";
 import { Link, useNavigate } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify";
+import Alert from "../Helpers/Alert";
 // Helpers
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
@@ -84,6 +85,7 @@ function SignupProfile() {
 
   const [SelectedGender, setSelectedGender] = useState("male");
   const [Loading, setLoading] = useState(false);
+  const [IsDisabled, setIsDisabled] = useState(false);
 
   const featchData = async () => {
     console.log("In Featch Data");
@@ -132,13 +134,17 @@ function SignupProfile() {
           GeneralHelper.ClearData("Signup_Details").then(() => {
             GeneralHelper.ClearData("UserDetails_Names").then(() => {
               setLoading(false);
-              navigate("/signin");
+              setIsDisabled(true);
+              Alert.notify("Sign In Successful", 3000);
+               setTimeout(() => {
+                navigate("/signin");
+              }, 2000);
             });
           });
         } else {
           setLoading(false);
           console.log(result.message);
-          GeneralHelper.ShowToast(String(result.message));
+          Alert.notify(String(result.message), 3000);
         }
       }
     );
@@ -228,7 +234,7 @@ function SignupProfile() {
                 marginTop: "40px",
                 cursor: "pointer!important",
               }}
-              Disabled={false}
+              Disabled={IsDisabled}
             >
               <Box className="v-center">
                 {Loading == true ? (
@@ -249,6 +255,7 @@ function SignupProfile() {
           className={`${classes.backArrow} backButton hover`}
         ></Box>
       </Link>
+      <ToastContainer/>
     </Box>
   );
 }

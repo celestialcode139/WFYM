@@ -17,7 +17,10 @@ import signupForm from "../assets/images/signupForm.svg";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
-import { useAlert } from "react-alert";
+//import { useAlert } from "react-alert";
+import { ToastContainer } from "react-toastify";
+import Alert from "../Helpers/Alert";
+
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -67,7 +70,7 @@ const useStyles = makeStyles(() => {
 function Signup() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const alert = useAlert();
+  //const alert = useAlert();
   const [Loading, setLoading] = React.useState(false);
   const [Email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
@@ -84,11 +87,11 @@ function Signup() {
   }, [Email, Password, CPassword]);
 
   const handleShowToast = (msg) => {
-    alert.error(msg);
+    Alert.notify(msg, 4000);
   };
 
   const handleEmailChange = (e) => {
-    const emailValue = e.target.value;
+    const emailValue = e.target.value.toLowerCase().replace(/\s+/g, '');
     setEmail(emailValue);
 
     // Email validation regex pattern
@@ -156,14 +159,14 @@ function Signup() {
         setLoading(false);
         if (result.data.msg == "user exist") {
           setIsDisabled(true);
-          alert.error(`User already exist.`);
+          Alert.notify("User already exist.", 4000);
           // GeneralHelper.ShowToast(`User already exist. Try to loginin with ${Email}`,"success")
         } else {
           navigate("/otp");
         }
       } else {
         setLoading(false);
-        alert.error(String(result.message));
+        Alert.notify(String(result.message), 4000);
       }
     });
   };
@@ -253,6 +256,7 @@ function Signup() {
           {/* </Link> */}
         </Box>
       </Container>
+      <ToastContainer/>
     </Box>
   );
 }

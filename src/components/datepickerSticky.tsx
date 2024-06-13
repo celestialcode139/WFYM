@@ -113,10 +113,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 export default function ResponsiveDatePickers(props) {
-  const [defDate, setdefDate] = useState("01 January 2000")
+  const [defDate, setdefDate] = useState("")
+  console.log("here is DOsssB" ,props.Default);
+  console.log("here is date" ,defDate);
+  
   useEffect(() => {
-    props.Default && (setdefDate(props.Default))
-
+    props.Default && setdefDate(props.Default)
   }, [props.Default])
 
   return (

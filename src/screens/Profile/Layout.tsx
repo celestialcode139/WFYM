@@ -77,7 +77,7 @@ console.log("qwerqwerqwrqwrqwrqwrq");
             <Grid
               container
               spacing={2}
-              sx={{ paddingTop: "50px" }}
+              sx={{ paddingTop: "50px",}}
               className={`h100`}
             >
               {/* SIDEBAR */}
@@ -86,11 +86,11 @@ console.log("qwerqwerqwrqwrqwrqwrq");
                 item
                 lg={2}
                 md={3}
-                sx={{ display: { xs: "none", md: "flex" } }}
+                sx={{ display: { xs: "none", md: "flex" ,paddingLeft:"0px !important"} }}
               >
                 <Sidebar />
               </Grid>
-              <Grid item lg={10} md={9} sx={{margin:"0 auto"}}>
+              <Grid item lg={10} md={9} sx={{margin:"0 auto",paddingLeft:"0px !important" }}>
                 <Outlet />
               </Grid>
             </Grid>

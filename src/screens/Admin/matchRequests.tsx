@@ -332,6 +332,7 @@ function MatchRequests() {
         columns={columns}
         options={{
           filterType: "checkbox",
+          
         }}
       />
       <AssignMatchDiloag

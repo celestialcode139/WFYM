@@ -19,7 +19,9 @@ import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
 // Alert
-import { useAlert } from "react-alert";
+//import { useAlert } from "react-alert";
+import { ToastContainer } from "react-toastify";
+import Alert from "../Helpers/Alert";
 import { useAuth } from "../context/AuthContextProvider";
 
 const useStyles = makeStyles(() => {
@@ -82,7 +84,7 @@ function Signin() {
   const navigate = useNavigate();
   const { loadSession } = useAuth();
   const classes = useStyles();
-  const alert = useAlert();
+  //const alert = useAlert();
 
   const [Loading, setLoading] = React.useState(false);
   const [Email, setEmail] = React.useState("");
@@ -102,7 +104,8 @@ function Signin() {
       SignIn();
     } else {
       setIsDisabled(true);
-      alert.error("Please fill out all fields.");
+      //alert.error("Please fill out all fields.");
+      Alert.notify("Please fill out all fields.", 4000);
     }
   };
   const SignIn = () => {
@@ -123,7 +126,8 @@ function Signin() {
         navigate("/dashboard");
       } else {
         setLoading(false);
-        alert.error(String(result.message));
+        Alert.notify(String(result.message), 4000);
+        //alert.error(String(result.message));
         setIsDisabled(true);
         console.log(result.message);
       }
@@ -156,7 +160,7 @@ function Signin() {
                 label="Email"
                 value={Email}
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  setEmail(e.target.value.toLowerCase().replace(/\s+/g, ''));
                 }}
               />
             </Grid>
@@ -201,6 +205,7 @@ function Signin() {
           </Typography>
         </Box>
       </Container>
+      <ToastContainer />
     </Box>
   );
 }

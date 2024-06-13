@@ -11,7 +11,9 @@ import { useNavigate } from "react-router-dom";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
-import { useAlert } from "react-alert";
+//import { useAlert } from "react-alert";
+import { ToastContainer } from "react-toastify";
+import Alert from "../Helpers/Alert";
 
 
 
@@ -61,7 +63,7 @@ const useStyles = makeStyles(() => {
   };
 });
 function ForgetPassForm() {
-  const alert = useAlert();
+  //const alert = useAlert();
   const navigate = useNavigate();
   const classes = useStyles();
   const [Email, setEmail] = React.useState("");
@@ -77,15 +79,11 @@ function ForgetPassForm() {
     }
   }, [Email]);
 
-  const handleShowToast = (msg) => {
-    alert.error(msg);
-  };
-
   const Validation = () => {
     if (Email != "") {
       CallApi()
     } else {
-      handleShowToast("Email can't be empty.");
+      Alert.notify("Email can't be empty.", 4000);
       setIsDisabled(true);
     }
   }
@@ -97,7 +95,7 @@ function ForgetPassForm() {
         setLoading(false);
       } else {
         setIsDisabled(true);
-        handleShowToast(String(result.message));
+        Alert.notify(String(result.message), 4000);
         setLoading(false);
       }
     })
@@ -111,7 +109,7 @@ function ForgetPassForm() {
       } else {
         console.log(result);
         setLoading(false);
-        handleShowToast("Something went wrong.");
+        Alert.notify("Something went wrong.", 4000);
 
       }
 
@@ -150,7 +148,7 @@ function ForgetPassForm() {
                 }}
                 label="Email"
                 value={Email}
-                onChange={(e) => { setEmail(e.target.value) }}
+                onChange={(e) => { setEmail(e.target.value.toLowerCase().replace(/\s+/g, '')) }}
               />
             </Grid>
 
@@ -166,6 +164,7 @@ function ForgetPassForm() {
           </Button>
         </Box>
       </Container>
+      <ToastContainer/>
     </Box>
   );
 }

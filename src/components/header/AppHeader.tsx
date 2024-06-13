@@ -11,7 +11,7 @@ import Image from "../Image";
 import { IUsersDetails } from "../../types";
 import Incommingcall from "../Incommingcall";
 import { useCallReceiverData } from "../../context/SignalsContextProvider";
-import avatar from "../../assets/images/avatar.png";
+import avatar from "../../assets/images/UserAvatar.svg";
 import { useEffect } from "react";
 
 const useStyles = makeStyles(() => {

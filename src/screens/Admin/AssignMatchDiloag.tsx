@@ -2,7 +2,7 @@ import * as React from "react";
 import Dialog from "@mui/material/Dialog";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { Box, InputLabel } from "@mui/material";
+import { Box, InputLabel, CircularProgress } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import { useEffect } from "react";
 import ViewProfile from "./viewProfile";
@@ -13,7 +13,6 @@ import config from "../../../config";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import Alert from "../../Helpers/Alert";
 import { ToastContainer } from "react-toastify";
-
 
 interface PropsInterface {
   MatchRequestId?: string;
@@ -28,6 +27,7 @@ export default function AssignMatchDiloag(props: any) {
   const [SelectedMatch, setSelectedMatch] = React.useState("");
   const [Matches, setMatches] = React.useState([]);
   const [AssignMatchLoading, setAssignMatchLoading] = React.useState(false);
+  const [Loading, setLoading] = React.useState(false);
 
   interface UserInterface {
     _id: number;
@@ -86,7 +86,6 @@ export default function AssignMatchDiloag(props: any) {
   };
 
   useEffect(() => {
-
     const FilterAvailableMatches: any = props.Matches.filter(
       (item: UserInterface) => item?._id != props.RequesterId
     );
@@ -135,6 +134,7 @@ export default function AssignMatchDiloag(props: any) {
           paddingTop: "20px",
           borderColor: "red",
           borderWidth: "5px",
+          maxHeight: window.innerHeight * 0.8,
         }}
       >
         <Box sx={{ flexDirection: "row", display: "flex" }}>
@@ -150,7 +150,8 @@ export default function AssignMatchDiloag(props: any) {
             >
               {Matches.map((item: UserInterface) => (
                 <MenuItem key={item.first_name} value={item._id}>
-                  {item.first_name}{item.last_name}
+                  {item.first_name}
+                  {item.last_name}
                 </MenuItem>
               ))}
               {/* <MenuItem value={10}>Ten</MenuItem>

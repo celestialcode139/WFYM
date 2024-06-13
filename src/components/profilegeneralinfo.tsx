@@ -92,7 +92,7 @@ function Generalinfo(props: any) {
 	}, []);
 
 	return (
-		<Box>
+		<Box sx={{paddingLeft:'0px'}}>
 			<Grid container spacing={2}>
 				<Grid item sm={12}>
 					<Box sx={{ marginBottom: "30px" }}>
