@@ -111,7 +111,7 @@ const useStyles = makeStyles(() => {
 });
 function Media() {
   const classes = useStyles();
-  const [gallery, setgallery] = useState<string[]>([""]);
+  const [gallery, setgallery] = useState<string[]>([]);
   const [introVideo, setintroVideo] = useState<string>("");
   const [bodyShort, setbodyShort] = useState<string>("");
   const introVideoRef = useRef<HTMLInputElement>(null);
@@ -232,6 +232,7 @@ function Media() {
                           position: "relative",
                           display: "flex",
                           justifyContent: "center",
+                          height: 100,
                         }}
                       >
                         <MediaGallery

@@ -72,7 +72,7 @@ const useStyles = makeStyles(() => {
       width: "100%",
       borderRadius: "7px",
       height: "100%",
-      objectFit: "cover",
+      objectFit: "contain",
       minHeight: "100px",
     },
     galleryImageUpload: {
@@ -144,6 +144,7 @@ function Media({ handleMedia, img, indx }: IMediaGallery) {
     <>
       <Box
         className={`${classes.imageCircularProgress}`}
+        sx={{ cursor: "pointer" }}
         onClick={() => {
           if (fileUploader.current) {
             fileUploader.current.click();
@@ -154,8 +155,8 @@ function Media({ handleMedia, img, indx }: IMediaGallery) {
         {progress !== 100 && <CircularProgress progress={progress} />}
       </Box>
       <input
-        // accept="image/*"
-        style={{ display: "none" }}
+        accept=".jpg,.jpeg,.png,.PNG"
+        style={{ display: "none", cursor: "pointer" }}
         id="raised-button-file"
         type="file"
         ref={fileUploader}
@@ -171,8 +172,8 @@ function Media({ handleMedia, img, indx }: IMediaGallery) {
       />
       <Box
         key={profileImage.image_url}
-        sx={{ objectFit: `contain` }}
-        className={`${classes.galleryImage}`}
+        sx={{ objectFit: `contain`, cursor: "pointer" }}
+        className={`${classes.galleryImage} galleryImage`}
         component="img"
         src={
           profileImage.image_url != "" ? profileImage.image_url : UploadImage

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, TextField, Grid } from "@mui/material";
+import { Box, Container, TextField, Grid ,CircularProgress} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
+import { useAlert } from "react-alert";
+
 
 
 const useStyles = makeStyles(() => {
@@ -61,31 +63,50 @@ const useStyles = makeStyles(() => {
 function SetNewPass() {
   const navigate = useNavigate();
   const classes = useStyles();
-
+  const alert = useAlert();
   const [Password, setPassword] = React.useState("");
   const [CPassword, setCPassword] = React.useState("");
+  const [IsDisabled, setIsDisabled] = React.useState(true);
+  const [Loading, setLoading] = React.useState(false);
 
   interface AsyncResponseInterface {
     data: string;
     status: number
   }
 
+  React.useEffect(() => {
+    if (Password != "" && CPassword != "") {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [Password, CPassword]);
+
+  const handleShowToast = (msg) => {
+    alert.error(msg);
+  };
+
   const Validation = () => {
     if (Password != "") {
       if (Password == CPassword) {
         retrieveData()
       } else {
-        GeneralHelper.ShowToast("Confirm Password does not match.")
+        handleShowToast("Confirm Password does not match.");
+        setIsDisabled(true);
       }
     } else {
-      GeneralHelper.ShowToast("Password Can't be empty")
+      handleShowToast("Password Can't be empty.");
     }
   }
   const retrieveData = async () => {
+    setLoading(true);
     const Email: any = await GeneralHelper.retrieveData("Email")
     const OTP_ID: any = await GeneralHelper.retrieveData("OTP_ID")
     if (Email.status == 1 && OTP_ID.status == 1) {
       handleUpdatePass(Email.data, OTP_ID.data, Password)
+    }else{
+      setLoading(false);
+      handleShowToast("Something went wrong.");
     }
   }
   const handleUpdatePass = (Email: string, OTP_Id: string, Password: string) => {
@@ -94,11 +115,13 @@ function SetNewPass() {
         GeneralHelper.ClearData("Email").then(() => {
           GeneralHelper.ClearData("OTP_ID").then(() => {
             GeneralHelper.ShowToast("Password Updated Successfully.")
+            setLoading(false);
             navigate("/signin")
           })
         })
       } else {
-        GeneralHelper.ShowToast("Something wen't wrong.")
+        handleShowToast("Something went wrong.");
+        setLoading(false);
       }
     })
   };
@@ -146,8 +169,12 @@ function SetNewPass() {
           </Grid>
         </Box>
         <Box sx={{ marginTop: "20px" }}>
-          <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
-            Continue
+          <Button Disabled={IsDisabled} sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
+          {Loading == true ? (
+              <CircularProgress color="inherit" size={20} />
+            ) : (
+              "Continue"
+            )}
           </Button>
         </Box>
       </Container>
