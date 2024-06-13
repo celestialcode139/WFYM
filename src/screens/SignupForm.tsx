@@ -1,14 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 // MUI
-import {
-  Box,
-  Container,
-  TextField,
-  Grid,
-} from "@mui/material";
+import { Box, Container, TextField, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 // CSS
@@ -22,8 +17,7 @@ import signupForm from "../assets/images/signupForm.svg";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
-import { useAlert } from 'react-alert'
-
+import { useAlert } from "react-alert";
 
 const useStyles = makeStyles(() => {
   const theme = useTheme();
@@ -78,80 +72,105 @@ function Signup() {
   const [Email, setEmail] = React.useState("");
   const [Password, setPassword] = React.useState("");
   const [CPassword, setCPassword] = React.useState("");
+  const [emailError, setemailErroe] = React.useState(false);
+  const [IsDisabled, setIsDisabled] = React.useState(true);
+
+  useEffect(() => {
+    if (Email != "" && Password != "" && CPassword != "") {
+      setIsDisabled(false);
+    }else{
+      setIsDisabled(true);
+    }
+  }, [Email, Password, CPassword]);
 
   const handleShowToast = (msg) => {
     alert.error(msg);
-  }
+  };
+
+  const handleEmailChange = (e) => {
+    const emailValue = e.target.value;
+    setEmail(emailValue);
+
+    // Email validation regex pattern
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(emailValue)) {
+      setemailErroe(false);
+    } else {
+      setemailErroe(true);
+    }
+  };
 
   const Validation = () => {
     if (Email != "" && Password != "" && CPassword != "") {
       if (Password == CPassword) {
-        StoreData()
+        StoreData();
       } else {
-        handleShowToast("Confirm Password does not match.")
+        setIsDisabled(true);
+        handleShowToast("Confirm Password does not match.");
       }
+    } else {
+      
+      handleShowToast("Please fill out all fields.");
     }
-    else {
-      handleShowToast("Please fill out all fields.")
-    }
-  }
+  };
   const StoreData = () => {
     const data = JSON.stringify({
       Email: Email,
       Password: Password,
-      CPassword: CPassword
-    })
+      CPassword: CPassword,
+    });
     GeneralHelper.storeData("Signup_Details", data).then((result: any) => {
       if (result.status == 1) {
-        CallApi()
+        CallApi();
       } else {
         console.log(result);
-
       }
-
-    })
-  }
+    });
+  };
 
   const RetrieveData = () => {
     GeneralHelper.retrieveData("Signup_Details").then((result: any) => {
       if (result.status == 1) {
         if (result.status == 1) {
-          const data = JSON.parse(result.data as string)
-          setEmail(data.Email)
-          setPassword(data.Password)
-          setCPassword(data.CPassword)
+          const data = JSON.parse(result.data as string);
+          setEmail(data.Email);
+          setPassword(data.Password);
+          setCPassword(data.CPassword);
         }
       } else {
         console.log(result);
       }
-    })
-  }
+    });
+  };
 
   const CallApi = async () => {
-    setLoading(true)
-    APIHelper.CallApi(config.Endpoints.auth.OTP.SendOtp, { email: Email },null,'').then((result: any) => {
+    setLoading(true);
+    APIHelper.CallApi(
+      config.Endpoints.auth.OTP.SendOtp,
+      { email: Email },
+      null,
+      ""
+    ).then((result: any) => {
       if (result.status == "success") {
         console.log("Response is ", result);
-        setLoading(false)
+        setLoading(false);
         if (result.data.msg == "user exist") {
-          alert.error(`User already exist.`)
+          setIsDisabled(true);
+          alert.error(`User already exist.`);
           // GeneralHelper.ShowToast(`User already exist. Try to loginin with ${Email}`,"success")
         } else {
-          navigate("/otp")
+          navigate("/otp");
         }
       } else {
-        setLoading(false)
-        alert.error(String(result.message))
+        setLoading(false);
+        alert.error(String(result.message));
       }
-
-    })
-
-  }
+    });
+  };
 
   React.useEffect(() => {
-    RetrieveData()
-  }, [])
-
+    RetrieveData();
+  }, []);
 
   return (
     <Box className={`${classes.signupFrom}`}>
@@ -176,7 +195,12 @@ function Signup() {
                 }}
                 label="Email"
                 value={Email}
-                onChange={(e) => { setEmail(e.target.value) }}
+                onChange={handleEmailChange}
+                error={emailError}
+                helperText={
+                  emailError ? "Please enter a valid email address." : ""
+                }
+                onBlur={() => setemailErroe(false)}
               />
             </Grid>
             <Grid item xs={12} className="h-center" sx={{ marginTop: "25px" }}>
@@ -189,7 +213,9 @@ function Signup() {
                 type="password"
                 label="Password"
                 value={Password}
-                onChange={(e) => { setPassword(e.target.value) }}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12} className="h-center" sx={{ marginTop: "25px" }}>
@@ -202,19 +228,27 @@ function Signup() {
                 type="password"
                 label="Retry Password"
                 value={CPassword}
-                onChange={(e) => { setCPassword(e.target.value) }}
+                onChange={(e) => {
+                  setCPassword(e.target.value);
+                }}
               />
             </Grid>
           </Grid>
         </Box>
         <Box sx={{ marginTop: "20px" }}>
           {/* <Link to={{ pathname: "/otp" }}> */}
-          <Button sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }} >
-            {Loading ?
+          <Button
+            Disabled={IsDisabled}
+            sx={{ maxWidth: "280px", margin: "0 auto!important" }}
+            onClick={() => {
+              Validation();
+            }}
+          >
+            {Loading ? (
               <CircularProgress color="inherit" size={20} />
-              :
+            ) : (
               "Continue"
-            }
+            )}
           </Button>
           {/* </Link> */}
         </Box>

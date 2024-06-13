@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Typography, Container, CircularProgress} from "@mui/material";
+import { Box, Typography, Container, CircularProgress } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import backArrow from "../assets/icons/backArrow.svg";
@@ -86,6 +86,8 @@ function SignupProfile() {
   const [Loading, setLoading] = useState(false);
 
   const featchData = async () => {
+    console.log("In Featch Data");
+
     const Signup_Details: any = await GeneralHelper.retrieveData(
       "Signup_Details"
     );
@@ -103,11 +105,25 @@ function SignupProfile() {
         password: SignupDetails.Password,
         gender: SelectedGender,
         dob: UserDetailsNames.DOB,
-        //images: UserDetailsNames.ProfileImage === "" ? avatar : UserDetailsNames.ProfileImage,
+        // images: UserDetailsNames.ProfileImage,
       };
-      SignUp(data);
+      // if(UserDetailsNames.ProfileImage !== ""){
+      //   data.images : UserDetailsNames.ProfileImage;
+      // }
+      console.log("Selected Image ", data);
+      if (UserDetailsNames.ProfileImage !== "") {
+        SignUp({ ...data, images: UserDetailsNames?.ProfileImage });
+      } else {
+        SignUp(data);
+      }
+    } else {
+      console.log("Signup_Details.status ", Signup_Details.status);
+      console.log("UserDetails_Names.status ", UserDetails_Names.status);
+
+      console.log("In Else....");
     }
   };
+
   const SignUp = (data: object) => {
     setLoading(true);
     APIHelper.CallApi(config.Endpoints.auth.SignUp, data, null, "").then(
@@ -146,6 +162,7 @@ function SignupProfile() {
                 justifyContent: "center",
                 cursor: "pointer!important",
               }}
+              Disabled={false}
             >
               <Box className="v-center">
                 <Box
@@ -168,6 +185,7 @@ function SignupProfile() {
                 marginTop: "20px",
                 cursor: "pointer!important",
               }}
+              Disabled={false}
             >
               <Box className="v-center">
                 <Box
@@ -190,6 +208,7 @@ function SignupProfile() {
                 marginTop: "20px",
                 cursor: "pointer!important",
               }}
+              Disabled={false}
             >
               <Box className="v-center">
                 <Typography>Other</Typography>
@@ -209,6 +228,7 @@ function SignupProfile() {
                 marginTop: "40px",
                 cursor: "pointer!important",
               }}
+              Disabled={false}
             >
               <Box className="v-center">
                 {Loading == true ? (

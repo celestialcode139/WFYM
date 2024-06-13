@@ -315,6 +315,9 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 .css-4jnixx-MuiStack-root .MuiTextField-root{
   min-width: unset!important;
 }
+.css-160unip > .MuiTextField-root{
+  max-width: unset!important;
+}
 
 @-webkit-keyframes bounce {
   0% {
@@ -329,4 +332,9 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
   80%{
     transform: translateY(10);
   }
+}
+
+.galleryImage{
+  width: 80%!important;
+  height: 100px!important;
 }
