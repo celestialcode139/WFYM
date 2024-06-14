@@ -33,7 +33,7 @@ export default function MediaCover(props: any) {
         handleOpenDiloag();
       }}
     >
-      <video key={videosrc} className="video220" autoPlay loop muted style={{ borderRadius: "15px" }}>
+      <video key={videosrc} className="video220" autoPlay loop muted style={{ borderRadius: "15px" ,width:"100%"}}>
         <source src={videosrc} type="video/mp4" style={{ borderRadius: "15px" }} />
       </video>
       <ViewVideoDiloag

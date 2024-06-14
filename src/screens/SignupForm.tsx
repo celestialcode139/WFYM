@@ -21,7 +21,6 @@ import config from "../../config";
 import { ToastContainer } from "react-toastify";
 import Alert from "../Helpers/Alert";
 
-
 const useStyles = makeStyles(() => {
   const theme = useTheme();
 
@@ -81,7 +80,7 @@ function Signup() {
   useEffect(() => {
     if (Email != "" && Password != "" && CPassword != "") {
       setIsDisabled(false);
-    }else{
+    } else {
       setIsDisabled(true);
     }
   }, [Email, Password, CPassword]);
@@ -91,7 +90,7 @@ function Signup() {
   };
 
   const handleEmailChange = (e) => {
-    const emailValue = e.target.value.toLowerCase().replace(/\s+/g, '');
+    const emailValue = e.target.value.toLowerCase().replace(/\s+/g, "");
     setEmail(emailValue);
 
     // Email validation regex pattern
@@ -104,6 +103,8 @@ function Signup() {
   };
 
   const Validation = () => {
+    console.log("In Validation ........ ");
+    
     if (Email != "" && Password != "" && CPassword != "") {
       if (Password == CPassword) {
         StoreData();
@@ -112,7 +113,6 @@ function Signup() {
         handleShowToast("Confirm Password does not match.");
       }
     } else {
-      
       handleShowToast("Please fill out all fields.");
     }
   };
@@ -243,20 +243,21 @@ function Signup() {
           <Button
             Disabled={IsDisabled}
             sx={{ maxWidth: "280px", margin: "0 auto!important" }}
+            Loading={Loading}
             onClick={() => {
               Validation();
             }}
           >
-            {Loading ? (
+            {/* {Loading ? (
               <CircularProgress color="inherit" size={20} />
-            ) : (
-              "Continue"
-            )}
+            ) : ( */}
+            Continue
+            {/* )} */}
           </Button>
           {/* </Link> */}
         </Box>
       </Container>
-      <ToastContainer/>
+      <ToastContainer />
     </Box>
   );
 }

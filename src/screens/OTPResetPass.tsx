@@ -10,8 +10,9 @@ import { Link, useNavigate } from "react-router-dom";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
-import { useAlert } from "react-alert";
-
+//import { useAlert } from "react-alert";
+import { ToastContainer } from "react-toastify";
+import Alert from "../Helpers/Alert";
 
 const useStyles = makeStyles(() => {
   return {
@@ -55,18 +56,16 @@ const useStyles = makeStyles(() => {
 });
 function OTPResetPass() {
   const navigate = useNavigate();
-  const alert = useAlert();
+  //const alert = useAlert();
   const [otp, setOtp] = useState("");
   const [seconds, setSeconds] = useState(60);
   const [Resend, setResend] = useState(false);
   const classes = useStyles();
-  
-  const handleShowToast = (msg) => {
-    alert.error(msg);
-  }
+
   const handleOTPVerification = (OTP: string) => {
     retrieveData(OTP, "Varify");
   };
+
   const StoreData = (id: string) => {
     GeneralHelper.storeData("OTP_ID", id).then((result: any) => {
       if (result.status == 1) {
@@ -74,6 +73,7 @@ function OTPResetPass() {
       } else {
         console.log(result);
         // alert("Something went wrong")
+        Alert.notify("Something went wrong.", 4000);
       }
     });
   };
@@ -103,11 +103,11 @@ function OTPResetPass() {
         if (result?.data?.varify_otp != null) {
           StoreData(String(result.data?.varify_otp?._id));
         } else {
-          handleShowToast("Please enter a valid OTP.")
+          Alert.notify("Please enter a valid OTP.", 4000);
         }
       });
     } else {
-      handleShowToast("OTP has expired.")
+      Alert.notify("Email can't be empty.", 4000);
     }
   };
 
@@ -121,7 +121,7 @@ function OTPResetPass() {
       if (result?.status == "success") {
         handleResend();
       } else {
-        handleShowToast(String(result.message));
+        Alert.notify(String(result.message), 4000);
       }
       console.log("Result : ", result);
     });
@@ -225,6 +225,7 @@ function OTPResetPass() {
           </Typography>
         )}
       </Container>
+      <ToastContainer/>
     </Box>
   );
 }

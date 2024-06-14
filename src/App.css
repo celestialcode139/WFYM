@@ -262,7 +262,7 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
   object-fit: cover;
   height: 220px;
   border-radius: 7px;
-  background-color: #00000024;
+  /* background-color: #00000024; */
 }
 .prelative {
   position: relative;
@@ -335,6 +335,6 @@ span.MuiTypography-root.MuiTypography-overline.css-1hbyad5-MuiTypography-root {
 }
 
 .galleryImage{
-  width: 80%!important;
+  /* width: 80%!important; */
   height: 100px!important;
 }

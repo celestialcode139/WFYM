@@ -235,13 +235,14 @@ function SignupProfile() {
                 cursor: "pointer!important",
               }}
               Disabled={IsDisabled}
+              Loading={Loading}
             >
               <Box className="v-center">
-                {Loading == true ? (
+                {/* {Loading == true ? (
                   <CircularProgress color="inherit" size={20} />
-                ) : (
-                  "Continue"
-                )}
+                ) : ( */}
+                  Continue
+                {/* )} */}
               </Box>
             </Button>
             {/* </Link> */}

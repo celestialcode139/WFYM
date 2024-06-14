@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
-import Button from "../components/buttonSm";
+//import Button from "../components/buttonsm";
+import Button2 from "../components/button";
 import avatar from "../assets/images/avatar.png";
 import uploadVideoWhite from "../assets/images/uploadVideo_new.png";
 import Video from "../components/video";
@@ -77,12 +78,15 @@ const useStyles = makeStyles(() => {
       margin: "0 auto",
     },
     galleryImage: {
-      width: "100px",
+      width: "120px",
       borderRadius: "7px",
       objectFit: "cover",
-      top: "calc(50% - 20px)",
+      top: "15px",
       cursor: "pointer",
       zIndex: "999999",
+      border: "1px solid black",
+      padding:'45px 25px',
+      backgroundColor:'#00000024'
     },
     galleryImageUpload: {
       //   backgroundImage: `url('${UploadImage}')`,
@@ -122,12 +126,21 @@ function Media() {
   const [progress1, setprogress1] = useState(0);
   const [Loading, setLoading] = useState(false);
   const [Token, setToken] = useState("");
+  const [IsDisabled, setIsDisabled] = useState(true);
 
   interface IUpdateMedia {
     gallery: string[];
     introVideo: string;
     bodyShort?: string;
   }
+
+  useEffect(() => {
+    if (gallery.length !== 0 && introVideo != "" && bodyShort != "") {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [gallery, introVideo, bodyShort]);
 
   const handleMedia = (name: string, type: string, indx: number) => {
     if (type == "new") {
@@ -170,16 +183,16 @@ function Media() {
       null,
       Token
     ).then((result: any) => {
-      setLoading(false);
       if (result.status == "success") {
         Alert.notify(String("Media uploaded successfully"), 3000);
         setTimeout(() => {
-          navigate("/dashboard")
+          navigate("/dashboard");
+          setLoading(false);
         }, 3000);
       } else {
         console.log(result.message);
         Alert.notify(String(result.message), 3000);
-
+        setIsDisabled(true);
         // GeneralHelper.ShowToast(String(result.message));
       }
     });
@@ -200,6 +213,7 @@ function Media() {
         } else {
           console.log(result.message);
           GeneralHelper.ShowToast(String(result.message));
+          setIsDisabled(true);
         }
       }
     );
@@ -278,29 +292,35 @@ function Media() {
                 Intro & Full Body Shorts
               </Typography>
               <Grid container spacing={1}>
-                <Grid item xs={8} className="h-center v-center prelative">
+                <Grid
+                  item
+                  xs={6}
+                  className="h-center v-center prelative "
+                  sx={{ padding:"0!important"}}
+                  onClick={() => {
+                    if (introVideoRef.current) {
+                      introVideoRef.current.click();
+                    }
+                  }}
+                >
                   {progress < 100 && progress > 0 ? (
                     <Box
                       className={`${classes.galleryImage} pabsolute`}
-                      sx={{ width: 23 }}
+                      sx={{display:'flex',justifyContent:'center',alignItems:'center'}}
                     >
                       <CircularProgress progress={progress} />
                     </Box>
-                  ) : (
+                  ) : 
+                  (                    
                     <Box
                       className={`${classes.galleryImage} pabsolute`}
                       component="img"
                       src={uploadVideoWhite}
-                      onClick={() => {
-                        if (introVideoRef.current) {
-                          introVideoRef.current.click();
-                        }
-                      }}
                     ></Box>
                   )}
 
                   <input
-                    // accept="image/*"
+                    accept="video/*"
                     style={{ display: "none" }}
                     id="raised-button-file"
                     type="file"
@@ -315,7 +335,7 @@ function Media() {
                       );
                     }}
                   />
-                  <Video key={introVideo} src={introVideo} />
+                   <Video key={introVideo} src={introVideo} />
                 </Grid>
 
                 <Grid
@@ -327,7 +347,7 @@ function Media() {
                   {progress1 < 100 && progress1 > 0 ? (
                     <Box
                       className={`${classes.galleryImage} pabsolute`}
-                      sx={{ width: 23 }}
+                      sx={{display:'flex',justifyContent:'center',alignItems:'center'}}
                     >
                       <CircularProgress progress={progress1} />
                     </Box>
@@ -360,7 +380,7 @@ function Media() {
                       );
                     }}
                   />
-                  <Video key={bodyShort} src={bodyShort} />
+                   <Video key={bodyShort} src={bodyShort} />
                 </Grid>
               </Grid>
             </Grid>
@@ -369,16 +389,27 @@ function Media() {
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button
+          <Button2
             onClick={() => {
               UpdateMediaHandler();
             }}
+            Loading={Loading}
+            Disabled={IsDisabled}
           >
             Save Changes
-          </Button>
+          </Button2>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button className={`${classes.cancelBtn}`}>Cancel</Button>
+          <Button2
+            className={`${classes.cancelBtn}`}
+            sx={{
+              backgroundColor: "#ffffff",
+              color: "#000000",
+              border: "1px solid black",
+            }}
+          >
+            Cancel
+          </Button2>
         </Grid>
       </Grid>
     </>

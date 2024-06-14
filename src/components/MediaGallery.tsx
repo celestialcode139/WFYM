@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../App.css";
 import avatar from "../assets/images/avatar.png";
-import UploadImage from "../assets/images/uploadImage_new.png";
+import UploadImage from "../assets/images/uploadImage1.png";
 import MediaHelper from "../Helpers/MediaHelper";
 import CircularProgress from "../components/CircularProgress";
 
@@ -70,10 +70,11 @@ const useStyles = makeStyles(() => {
     },
     galleryImage: {
       width: "100%",
-      borderRadius: "7px",
+      borderRadius: "9px",
       height: "100%",
-      objectFit: "contain",
-      minHeight: "100px",
+      objectFit: "cover",
+      // maxHeight: "120px",
+      // maxWidth:'120px',
     },
     galleryImageUpload: {
       //   backgroundImage: `url('${UploadImage}')`,
@@ -92,8 +93,9 @@ const useStyles = makeStyles(() => {
       position: "absolute",
       top: "0px",
       border: "1px solid #9b9b9b",
-      borderStyle: "dashed",
-      borderRadius: "9px",
+      //borderStyle: "dashed",
+      borderRadius: "10px",
+      //objectFit:'cover',
     },
     label: {
       height: "100%",
@@ -172,7 +174,7 @@ function Media({ handleMedia, img, indx }: IMediaGallery) {
       />
       <Box
         key={profileImage.image_url}
-        sx={{ objectFit: `contain`, cursor: "pointer" }}
+        sx={{  cursor: "pointer" }}
         className={`${classes.galleryImage} galleryImage`}
         component="img"
         src={

@@ -11,7 +11,9 @@ import { useNavigate } from "react-router-dom";
 import GeneralHelper from "../Helpers/GeneralHelper";
 import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
-import { useAlert } from "react-alert";
+//import { useAlert } from "react-alert";
+import { ToastContainer } from "react-toastify";
+import Alert from "../Helpers/Alert";
 
 
 
@@ -63,7 +65,7 @@ const useStyles = makeStyles(() => {
 function SetNewPass() {
   const navigate = useNavigate();
   const classes = useStyles();
-  const alert = useAlert();
+  //const alert = useAlert();
   const [Password, setPassword] = React.useState("");
   const [CPassword, setCPassword] = React.useState("");
   const [IsDisabled, setIsDisabled] = React.useState(true);
@@ -82,20 +84,20 @@ function SetNewPass() {
     }
   }, [Password, CPassword]);
 
-  const handleShowToast = (msg) => {
-    alert.error(msg);
-  };
+  // const handleShowToast = (msg) => {
+  //   alert.error(msg);
+  // };
 
   const Validation = () => {
     if (Password != "") {
       if (Password == CPassword) {
         retrieveData()
       } else {
-        handleShowToast("Confirm Password does not match.");
+        Alert.notify("Confirm Password does not match.", 4000);
         setIsDisabled(true);
       }
     } else {
-      handleShowToast("Password Can't be empty.");
+      Alert.notify("Password Can't be empty.", 4000);
     }
   }
   const retrieveData = async () => {
@@ -106,7 +108,7 @@ function SetNewPass() {
       handleUpdatePass(Email.data, OTP_ID.data, Password)
     }else{
       setLoading(false);
-      handleShowToast("Something went wrong.");
+      Alert.notify("Something went wrong", 4000);
     }
   }
   const handleUpdatePass = (Email: string, OTP_Id: string, Password: string) => {
@@ -120,7 +122,7 @@ function SetNewPass() {
           })
         })
       } else {
-        handleShowToast("Something went wrong.");
+        Alert.notify("Something went wrong.", 4000);
         setLoading(false);
       }
     })
@@ -169,15 +171,16 @@ function SetNewPass() {
           </Grid>
         </Box>
         <Box sx={{ marginTop: "20px" }}>
-          <Button Disabled={IsDisabled} sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
-          {Loading == true ? (
+          <Button Disabled={IsDisabled} Loading={Loading} sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
+          {/* {Loading == true ? (
               <CircularProgress color="inherit" size={20} />
-            ) : (
-              "Continue"
-            )}
+            ) : ( */}
+              Continue
+            {/* )} */}
           </Button>
         </Box>
       </Container>
+      <ToastContainer/>
     </Box>
   );
 }

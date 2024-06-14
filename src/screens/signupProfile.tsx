@@ -144,6 +144,15 @@ function SignupProfile() {
     setLoading(false);
     navigate("/gender");
   };
+  
+  const onprogress = (progressEvent: any) => {
+    setprogress(0);
+    const progress = Math.round(
+      (progressEvent.loaded / progressEvent.total) * 100
+    );
+    setprogress(progress);
+  };
+  
   const featchData = async () => {
     const result: any = await GeneralHelper.retrieveData("UserDetails_Names");
     if (result.status == 1) {
@@ -158,6 +167,7 @@ function SignupProfile() {
   useEffect(() => {
     console.log("DOB",DOB);
   }, [DOB]);
+ 
 
   return (
     <Box className={`${classes.SignupProfile}`}>
@@ -267,19 +277,20 @@ function SignupProfile() {
                       onChange={handleDOBChange}
                     />
                   </Grid>
-                  <Grid item xs={6} sx={{ p: 1 }}>
+                  <Grid item xs={6} sx={{ p: 1,marginTop:'7px' }}>
                     {/* <Link to={{ pathname: "/gender" }}> */}
                     <Button
                      Disabled={IsDisabled}
+                     Loading={Loading}
                       onClick={() => {
                         Validation();
                       }}
                     >
-                      {Loading == true ? (
+                      {/* {Loading == true ? (
                         <CircularProgress color="inherit" size={20} />
-                      ) : (
-                        "Confirm"
-                      )}
+                      ) : ( */}
+                        Confirm
+                      {/* )} */}
                     </Button>
                     {/* </Link> */}
                   </Grid>

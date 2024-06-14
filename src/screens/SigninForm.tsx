@@ -188,12 +188,13 @@ function Signin() {
             onClick={() => {
               Validation();
             }}
+            Loading={Loading}
           >
-            {Loading == true ? (
+            {/* {Loading == true ? (
               <CircularProgress color="inherit" size={20} />
-            ) : (
-              "Continue"
-            )}
+            ) : ( */}
+              Continue
+            {/* )} */}
           </Button>
           <Typography
             className={`${classes.forgetPass}`}

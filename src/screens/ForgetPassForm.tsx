@@ -155,12 +155,12 @@ function ForgetPassForm() {
           </Grid>
         </Box>
         <Box sx={{ marginTop: "20px" }}>
-          <Button  Disabled={IsDisabled} sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
-          {Loading == true ? (
+          <Button  Disabled={IsDisabled} Loading={Loading} sx={{ maxWidth: "280px", margin: "0 auto!important" }} onClick={() => { Validation() }}>
+          {/* {Loading == true ? (
               <CircularProgress color="inherit" size={20} />
-            ) : (
-              "Continue"
-            )}
+            ) : ( */}
+              Continue
+            {/* )} */}
           </Button>
         </Box>
       </Container>

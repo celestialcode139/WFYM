@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import BouncingBallsLoading from "./BouncingBallsLoading";
 
 const useStyles = makeStyles(() => {
   return {
@@ -28,7 +29,7 @@ function Button(props: any) {
   return (
     <Box
       onClick={() =>
-        props.Disabled ? null : props?.onClick && props?.onClick()
+        props.Disabled || props.Loading ? null : props?.onClick && props?.onClick()
       }
       sx={[
         props.sx,
@@ -42,7 +43,7 @@ function Button(props: any) {
       ]}
       className={`${classes.button}`}
     >
-      {props.children}
+      {props.Loading ? <BouncingBallsLoading /> : props.children}
     </Box>
   );
 }
