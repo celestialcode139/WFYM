@@ -55,7 +55,7 @@ function Signup() {
       <Container maxWidth="lg">
         <OnBoardingHeader
           heading="Discover Your Perfect Match with Us"
-          subheading="Interact with people with the same interest like you"
+          subheading=""
         />
 
         <Box sx={{ maxWidth: "280px", margin: "0 auto!important" }}>

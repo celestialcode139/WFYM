@@ -276,7 +276,7 @@ function ViewProfile(props: any) {
               </Grid>
               <Grid item md={4} xs={12}>
                 <Typography className={`p-12 ${classes.detailHeading}`}>
-                  Children’s
+                  Children
                 </Typography>
                 <Typography className={`p-12`}>
                   {User?.user_details?.children_before}
