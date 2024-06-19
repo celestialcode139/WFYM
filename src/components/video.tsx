@@ -7,34 +7,49 @@ export default function MediaCover(props: any) {
   const [DiloagOpen, setDiloagOpen] = React.useState(false);
   const [videosrc, setvideosrc] = React.useState<string>("");
 
-
   const handleCloseDiloag = () => {
     console.log("Closing....");
     setTimeout(() => {
       setDiloagOpen(false);
-    },);
+    });
   };
   const handleOpenDiloag = () => {
     setDiloagOpen(true);
   };
   React.useEffect(() => {
     init();
-  }, [props.src])
+  }, [props.src]);
 
   const init = () => {
     MediaHelper.GetImage(props.src).then((e) => {
-      setvideosrc(e)
-    })
-  }
+      setvideosrc(e);
+    });
+  };
 
   return (
     <Box
       onClick={() => {
-        handleOpenDiloag();
+        videosrc !== "" && handleOpenDiloag();
       }}
     >
-      <video key={videosrc} className="video220" autoPlay loop muted style={{ borderRadius: "15px" ,width:"100%"}}>
-        <source src={videosrc} type="video/mp4" style={{ borderRadius: "15px" }} />
+      <video
+        key={videosrc}
+        className="video220"
+        autoPlay
+        loop
+        muted
+        style={{
+          borderRadius: "15px",
+          width: "100%",
+          cursor: "pointer",
+          backgroundColor: "#8080805c",
+        }}
+      >
+        <source
+          src={videosrc}
+          type="video/mp4"
+          style={{ borderRadius: "15px" }}
+        />
       </video>
       <ViewVideoDiloag
         key={DiloagOpen}

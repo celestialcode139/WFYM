@@ -6,6 +6,7 @@ import "../App.css";
 import Button2 from "../components/button";
 import avatar from "../assets/images/avatar.png";
 import uploadVideoWhite from "../assets/images/uploadVideo_new.png";
+import UploadeMediaIcon from "../assets/icons/UploadeIcon.png";
 import Video from "../components/video";
 import MediaGallery from "../components/MediaGallery";
 import MediaHelper from "../Helpers/MediaHelper";
@@ -78,15 +79,28 @@ const useStyles = makeStyles(() => {
       margin: "0 auto",
     },
     galleryImage: {
-      width: "120px",
+      width: "80px",
       borderRadius: "7px",
       objectFit: "cover",
-      top: "15px",
+      top: "80px",
       cursor: "pointer",
       zIndex: "999999",
-      border: "1px solid black",
-      padding:'45px 25px',
-      backgroundColor:'#00000024'
+      // border: "1px solid black",
+      // padding: "45px 25px",
+      // backgroundColor: "#00000024",
+    },
+    VideoUploade: {
+      position: "absolute",
+      width: "30px",
+      borderRadius: "7px",
+      objectFit: "cover",
+      cursor: "pointer",
+      zIndex: "999999",
+      bottom: "15px",
+      right: "15px",
+      // border: "1px solid #ffffff",
+      padding: "5px 5px",
+      backgroundColor: "#065BCE",
     },
     galleryImageUpload: {
       //   backgroundImage: `url('${UploadImage}')`,
@@ -122,8 +136,9 @@ function Media() {
   const [bodyShort, setbodyShort] = useState<string>("");
   const introVideoRef = useRef<HTMLInputElement>(null);
   const bodyShortRef = useRef<HTMLInputElement>(null);
-  const [progress, setprogress] = useState(0);
-  const [progress1, setprogress1] = useState(0);
+  const [IntroVideoProgress, setIntroVideoProgress] = useState(0);
+  const [BodyShortProgress, setBodyShortProgress] = useState(0);
+  // const [progress1, setprogress1] = useState(0);
   const [Loading, setLoading] = useState(false);
   const [Token, setToken] = useState("");
   const [IsDisabled, setIsDisabled] = useState(true);
@@ -156,17 +171,22 @@ function Media() {
     const progress = Math.round(
       (progressEvent.loaded / progressEvent.total) * 100
     );
-    console.log("progress:", progress);
-
-    setprogress(progress);
+    if (progress === 0) {
+      setIntroVideoProgress(1);
+    } else {
+      setIntroVideoProgress(progress);
+    }
   };
   const onprogress1 = (progressEvent: any) => {
     const progress = Math.round(
       (progressEvent.loaded / progressEvent.total) * 100
     );
-    console.log("progress:", progress);
-
-    setprogress1(progress);
+    console.log("progress 1 :", progress);
+    if (progress === 0) {
+      setBodyShortProgress(1);
+    } else {
+      setBodyShortProgress(progress);
+    }
   };
 
   const UpdateMediaHandler = () => {
@@ -241,7 +261,12 @@ function Media() {
         <Box className={`${classes.pageContainer}`}>
           <Grid container spacing={2} className={"h-center"}>
             <Grid item md={4} xs={12}>
-              <Typography className={`${classes.h1}`}>Gallery</Typography>
+              <Typography
+                className={`${classes.h1}`}
+                style={{ color: "#000000" }}
+              >
+                Gallery
+              </Typography>
               <Grid container spacing={1}>
                 {gallery.map((val, i) => {
                   return (
@@ -288,7 +313,10 @@ function Media() {
               sx={{ display: { md: "flex", xs: "none" } }}
             ></Grid>
             <Grid item md={5} xs={12}>
-              <Typography className={`${classes.h1}`}>
+              <Typography
+                className={`${classes.h1}`}
+                style={{ color: "#000000" }}
+              >
                 Intro & Full Body Shorts
               </Typography>
               <Grid container spacing={1}>
@@ -296,26 +324,46 @@ function Media() {
                   item
                   xs={6}
                   className="h-center v-center prelative "
-                  sx={{ padding:"0!important"}}
+                  sx={{ padding: "0!important" }}
                   onClick={() => {
-                    if (introVideoRef.current) {
+                    if (introVideoRef.current && introVideo === "") {
                       introVideoRef.current.click();
                     }
                   }}
                 >
-                  {progress < 100 && progress > 0 ? (
+                  {IntroVideoProgress !== 0 && (
                     <Box
                       className={`${classes.galleryImage} pabsolute`}
-                      sx={{display:'flex',justifyContent:'center',alignItems:'center'}}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
                     >
-                      <CircularProgress progress={progress} />
+                      <CircularProgress progress={IntroVideoProgress} />
                     </Box>
-                  ) : 
-                  (                    
+                  )}
+                  {introVideo === "" && IntroVideoProgress === 0 ? (
                     <Box
                       className={`${classes.galleryImage} pabsolute`}
                       component="img"
                       src={uploadVideoWhite}
+                      // onClick={() => {
+                      //   if (introVideoRef.current) {
+                      //     introVideoRef.current.click();
+                      //   }
+                      // }}
+                    ></Box>
+                  ) : (
+                    <Box
+                      className={`${classes.VideoUploade}`}
+                      component="img"
+                      src={UploadeMediaIcon}
+                      onClick={() => {
+                        if (introVideoRef.current) {
+                          introVideoRef.current.click();
+                        }
+                      }}
                     ></Box>
                   )}
 
@@ -326,16 +374,16 @@ function Media() {
                     type="file"
                     ref={introVideoRef}
                     onChange={async (e: any) => {
-                      setprogress(1);
+                      setIntroVideoProgress(1);
                       MediaHelper.UploadImage(e.target.files, onprogress).then(
                         async (resp) => {
-                          console.log("image upload resp:", resp[0]?.file_name);
+                          console.log("Video upload resp:", resp[0]?.file_name);
                           setintroVideo(resp[0]?.file_name);
                         }
                       );
                     }}
                   />
-                   <Video key={introVideo} src={introVideo} />
+                  <Video key={introVideo} src={introVideo} />
                 </Grid>
 
                 <Grid
@@ -343,19 +391,36 @@ function Media() {
                   xs={4}
                   className="prelative"
                   sx={{ display: "flex", justifyContent: "center" }}
+                  onClick={() => {
+                    if (bodyShortRef.current && bodyShort === "") {
+                      bodyShortRef.current.click();
+                    }
+                  }}
                 >
-                  {progress1 < 100 && progress1 > 0 ? (
+                  {BodyShortProgress !== 0 && (
                     <Box
                       className={`${classes.galleryImage} pabsolute`}
-                      sx={{display:'flex',justifyContent:'center',alignItems:'center'}}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
                     >
-                      <CircularProgress progress={progress1} />
+                      <CircularProgress progress={BodyShortProgress} />
                     </Box>
-                  ) : (
+                  )}
+
+                  {bodyShort === "" && BodyShortProgress === 0 ? (
                     <Box
                       className={`${classes.galleryImage} pabsolute`}
                       component="img"
                       src={uploadVideoWhite}
+                    ></Box>
+                  ) : (
+                    <Box
+                      className={`${classes.VideoUploade}`}
+                      component="img"
+                      src={UploadeMediaIcon}
                       onClick={() => {
                         if (bodyShortRef.current) {
                           bodyShortRef.current.click();
@@ -371,7 +436,7 @@ function Media() {
                     type="file"
                     ref={bodyShortRef}
                     onChange={async (e: any) => {
-                      // setprogress(1);
+                      setBodyShortProgress(1);
                       MediaHelper.UploadImage(e.target.files, onprogress1).then(
                         async (resp) => {
                           console.log("image upload resp:", resp[0].file_name);
@@ -380,7 +445,7 @@ function Media() {
                       );
                     }}
                   />
-                   <Video key={bodyShort} src={bodyShort} />
+                  <Video key={bodyShort} src={bodyShort} />
                 </Grid>
               </Grid>
             </Grid>
