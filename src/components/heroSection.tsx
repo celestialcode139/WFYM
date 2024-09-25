@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => {
 			},
 		},
 		p1: {
-			marginRight: "80px!important",
+			// marginRight: "80px!important",
 			// marginTop: "80px!important",
 			marginBottom: "30px!important",
 			color: "#000000",
@@ -80,13 +80,13 @@ const HeroSection = () => {
 					with us <img className="mgif" src={ChocolateIcon} />
 				</Typography>
 				<Grid container>
-					<Grid item sm={6.5} xs={12}>
+					<Grid item sm={7.5} xs={14}>
 						<img className="mgif" src={GreatPyrenees} />
 					</Grid>
 
-					<Grid item sm={5.5} xs={12}>
+					<Grid item sm={4.5} xs={10}>
 						<img className="mgif" src={LoveYou} />
-						<Typography className={`${classes.p1}`}>
+						<Typography  className={`${classes.p1}`}>
 							Discover meaningful connections with We Find Your
 							Match where our mission is to match you with someone
 							who truly complements your personality and values.

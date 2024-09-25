@@ -26,6 +26,7 @@ import APIHelper from "../Helpers/APIHelper";
 import config from "../../config";
 import NoMatches from "../assets/images/no_matches.svg";
 import { ToastContainer } from "react-toastify";
+import { useAuth } from "../context/AuthContextProvider";
 
 // import $ from "jquery";
 
@@ -120,6 +121,7 @@ const useStyles = makeStyles(() => {
 function Dashboard() {
 	// const {data} = useCallApi()
 	const classes = useStyles();
+	const {setErrorState} =useAuth()
 	const navigate = useNavigate();
 	const [Loading, setLoading] = useState(false);
 	const [RequestMatchLoading, setRequestMatchLoading] = useState(false);
@@ -180,6 +182,7 @@ function Dashboard() {
 						3000
 					);
 					setRequestMatchLoading(false);
+					setErrorState(result.data.isProfileVerified.fields)
 					NavigateTo("/profile/page-1");
 				} else if (result.data.isIdealPersonVerified.status == false) {
 					Alert.notify(

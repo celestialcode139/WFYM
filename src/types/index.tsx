@@ -142,10 +142,57 @@ export interface IMatchResult {
 	deleted_at?: Date;
 	deleted_by?: string;
 }
+
 export interface ICallData {
-	callStatus: string;
+	callStatus: "missed" | "accepted" | "cancel" | "rejected" | "ringing";
 	receiverID: string;
 	docID: string;
 	sender: IUser;
 	timestamp: string;
+}
+
+export enum profileErrorStateFields {
+	hobbies = "hobbies",
+	race = "race",
+	images = "images",
+	identity_status = "identity_status",
+	user_id = "user_id",
+	city = "city",
+	country = "country",
+	description = "description",
+	location = "location",
+	personality = "personality",
+	profession = "profession",
+	children_before = "children_before",
+	deal_breaker = "deal_breaker",
+	height = "height",
+	highest_degree = "highest_degree",
+	political_party = "political_party",
+	religion = "religion",
+	weight = "weight",
+	drink_habits = "drink_habits",
+	smoking_habits = "smoking_habits",
+}
+export enum idealMatchErrorStateFields {
+	race = "race",
+	user_id = "user_id",
+	personality = "personality",
+	religion = "religion",
+	political_party = "political_party",
+	looking_for = "looking_for",
+	description = "description",
+	maxAge = "maxAge",
+	minAge = "minAge",
+	children_before = "children_before",
+	location = "location",
+}
+export enum mediaErrorStateFields {
+	gallery = "gallery",
+	introVideo = "introVideo",
+	bodyShort = "bodyShort",
+}
+export namespace errorFieldsKeys {
+	export const profile = profileErrorStateFields;
+	export const idealMatch = idealMatchErrorStateFields;
+	export const media = mediaErrorStateFields;
 }

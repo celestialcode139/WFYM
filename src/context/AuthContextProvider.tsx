@@ -8,14 +8,24 @@ import {
 import GeneralHelper from "../Helpers/GeneralHelper";
 import { CallApi } from "../Helpers/APIHelper";
 import config from "../../config";
-import { IUser } from "../types";
-
+import {
+	IUser,
+	idealMatchErrorStateFields,
+	mediaErrorStateFields,
+	profileErrorStateFields,
+} from "../types";
+export type errorFieldsKeys =
+	| profileErrorStateFields
+	| idealMatchErrorStateFields
+	| mediaErrorStateFields;
 interface AuthContextType {
 	isAuthenticated: boolean;
 	authToken: string;
 	sessionUser: IUser;
 	setAuthToken: React.Dispatch<React.SetStateAction<string>>;
 	loadSession: () => Promise<boolean>;
+	errorState: Array<errorFieldsKeys>;
+	setErrorState: (e: errorFieldsKeys[]) => void;
 }
 
 interface AuthContextProviderProps {
@@ -28,6 +38,8 @@ export const AuthContext = createContext<AuthContextType>({
 	sessionUser: {} as IUser,
 	setAuthToken: (e: string) => e,
 	loadSession: () => null,
+	errorState: [],
+	setErrorState: (e: errorFieldsKeys[]) => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -39,6 +51,7 @@ export const AuthContextProvider = (props: AuthContextProviderProps) => {
 	const [sessionUser, setSessionUser] = useState<IUser>(null);
 	const [authToken, setAuthToken] = useState<string>(null);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [errorState, setErrorState] = useState<errorFieldsKeys[]>([]);
 
 	useEffect(() => {
 		console.log("Context is loading ...");
@@ -91,6 +104,8 @@ export const AuthContextProvider = (props: AuthContextProviderProps) => {
 				authToken,
 				setAuthToken,
 				loadSession,
+				setErrorState,
+				errorState,
 			}}
 		>
 			{!loading && children}

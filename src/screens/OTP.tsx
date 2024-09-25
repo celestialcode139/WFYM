@@ -58,7 +58,7 @@ function OTP() {
   const alert = useAlert();
 
   const [otp, setOtp] = useState("");
-  const [seconds, setSeconds] = useState(60);
+  const [seconds, setSeconds] = useState(90);
   const [Resend, setResend] = useState(false);
 
   const classes = useStyles();
