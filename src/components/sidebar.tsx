@@ -64,7 +64,7 @@ function Sidebar() {
               : classes.deactiveBtn
           }`}
         >
-          Ideal Personality
+          Ideal Match
         </Button>
       </Link>
       <Link to={{ pathname: "/profile/media" }}>

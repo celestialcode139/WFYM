@@ -1,6 +1,6 @@
 const Base_Url = {
-  // url: 'https://witty-eel-leg-warmers.cyclic.app/api/v1/'
-    url: 'https://api.wefindyourmatch.online/api/v1/'
+  url: "https://api.wefindyourmatch.online/api/v1/",
+  // url: 'http://localhost:1234/api/v1/'
 };
 const Endpoints = {
   auth: {
@@ -141,8 +141,8 @@ const Endpoints = {
     GetMedia: {
       url: `${Base_Url.url}media/media/getmedia`,
       method: "GET",
-    }
-  }
+    },
+  },
 };
 
 export default { Endpoints };

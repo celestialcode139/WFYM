@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import "../../App.css";
 import Button from "../../components/buttonSm";
@@ -9,8 +9,9 @@ import Looks from "../../components/looks";
 import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
-import Skeleton from '@mui/material/Skeleton';
-
+import Skeleton from "@mui/material/Skeleton";
+import { useAuth } from "../../context/AuthContextProvider";
+import { errorFieldsKeys } from "../../types";
 
 const useStyles = makeStyles(() => {
   return {
@@ -69,12 +70,13 @@ const useStyles = makeStyles(() => {
     },
     pageContainer: {
       maxWidth: "80%",
-      width: "100%"
+      width: "100%",
     },
   };
 });
 function ProfileScreen4() {
   const classes = useStyles();
+  const { errorState, setErrorState } = useAuth();
   const navigate = useNavigate();
   const [activeLook, setactiveLook] = useState("");
   const [Token, setToken] = useState("");
@@ -90,10 +92,10 @@ function ProfileScreen4() {
   const GetProfile = (Token: string) => {
     APIHelper.CallApi(config.Endpoints.user.GetMyProfile, {}, null, Token).then(
       (result: any) => {
-        setLoading(false)
+        setLoading(false);
         if (result.status == "success") {
           console.log("Profile Details ", result.data);
-          setGender(result.data.gender)
+          setGender(result.data.gender);
           setactiveLook(
             result?.data?.user_details?.personality
               ? result.data.user_details.personality
@@ -128,9 +130,16 @@ function ProfileScreen4() {
     setLoading(true);
     UpdateBio();
   };
+  const handleUpdatePersonality = (value) => {
+    const UpdatedErrorState = errorState.filter(
+      (item) => item !== "personality"
+    );
+    setErrorState(UpdatedErrorState);
+    setactiveLook(value);
+  };
   // Other functions
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     if (Token != "") {
       GetProfile(Token);
     } else {
@@ -142,33 +151,72 @@ function ProfileScreen4() {
     <>
       <Box className={`h-center`}>
         <Box className={`${classes.pageContainer}`}>
-          {!Loading ? <Looks
-            key={activeLook}
-            gender={Gender}
-            look={activeLook}
-            onChange={(look: any) => {
-              setactiveLook(look);
-            }}
-          />
-            :
+          {errorState.includes(errorFieldsKeys.profile.personality) && (
+            // <span className={classes.errorMessage}>{"(required)"}</span>
+            <Typography style={{ color: "red" }}>Required*</Typography>
+          )}
+          {!Loading ? (
+            <Looks
+              key={activeLook}
+              gender={Gender}
+              look={activeLook}
+              onChange={(look: any) => {
+                handleUpdatePersonality(look);
+              }}
+            />
+          ) : (
             <Grid container spacing={2}>
-              <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={250} /></Grid>
-              <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={250} /></Grid>
-              <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={250} /></Grid>
-              <Grid item md={3}><Skeleton animation="wave" variant="rounded" width={"100%"} height={250} /></Grid>
+              <Grid item md={3}>
+                <Skeleton
+                  animation="wave"
+                  variant="rounded"
+                  width={"100%"}
+                  height={250}
+                />
+              </Grid>
+              <Grid item md={3}>
+                <Skeleton
+                  animation="wave"
+                  variant="rounded"
+                  width={"100%"}
+                  height={250}
+                />
+              </Grid>
+              <Grid item md={3}>
+                <Skeleton
+                  animation="wave"
+                  variant="rounded"
+                  width={"100%"}
+                  height={250}
+                />
+              </Grid>
+              <Grid item md={3}>
+                <Skeleton
+                  animation="wave"
+                  variant="rounded"
+                  width={"100%"}
+                  height={250}
+                />
+              </Grid>
             </Grid>
-          }
-
+          )}
         </Box>
       </Box>
       <Grid container className="h-center" sx={{ marginTop: "40px" }}>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button Loading={Loading} onClick={() => handleNext()}>Next</Button>
+          <Button Loading={Loading} onClick={() => handleNext()}>
+            Next
+          </Button>
         </Grid>
         <Grid item md={3} xs={12} sx={{ p: 1 }}>
-          <Button onClick={() => {
-            navigate(-1);
-          }} className={`${classes.cancelBtn}`}>Previous</Button>
+          <Button
+            onClick={() => {
+              navigate(-1);
+            }}
+            className={`${classes.cancelBtn}`}
+          >
+            Previous
+          </Button>
         </Grid>
       </Grid>
     </>
