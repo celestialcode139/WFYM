@@ -49,7 +49,7 @@ export default function BasicMenu(props: any) {
           </Link>
           <Link style={{color:"black"}} to={{ pathname: "/ideal-personality/general-info" }}>
             <MenuItem>
-              <ListItemText>Ideal Personality</ListItemText>
+              <ListItemText>Ideal Match</ListItemText>
             </MenuItem>
           </Link>
           <Link style={{color:"black"}} to={{ pathname: "/profile/change-password" }}>

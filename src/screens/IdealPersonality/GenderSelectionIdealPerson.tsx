@@ -13,6 +13,8 @@ import GeneralHelper from "../../Helpers/GeneralHelper";
 import APIHelper from "../../Helpers/APIHelper";
 import config from "../../../config";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContextProvider";
+import { errorFieldsKeys } from "../../types";
 // import $ from "jquery";
 
 const useStyles = makeStyles(() => {
@@ -45,6 +47,7 @@ const useStyles = makeStyles(() => {
 });
 function Race() {
   const classes = useStyles();
+  const { errorState, setErrorState } = useAuth();
   const navigate = useNavigate();
   const [Token, setToken] = useState("");
   const [SelectedGender, setSelectedGender] = useState("male");
@@ -94,6 +97,20 @@ function Race() {
   const handleNext = () => {
     UpdateBio();
   };
+  const handleSelectGender = (value) => {
+    const UpdatedErrorState = errorState.filter(
+      (item) => item !== "looking_for"
+    );
+    setErrorState(UpdatedErrorState);
+    setSelectedGender(value);
+  };
+  const handleUpdatePersonality = (value) => {
+    const UpdatedErrorState = errorState.filter(
+      (item) => item !== "personality"
+    );
+    setErrorState(UpdatedErrorState);
+    // setactiveLook(value);
+  };
   // Other functions
   useEffect(() => {
     if (Token != "") {
@@ -111,6 +128,7 @@ function Race() {
           // sx={{ marginTop: "30px", padding: "20px", position: "relative" }}
           className={`blurBg min100vh h-center`}
         >
+          
           <Box
             className={`${classes.pageContainer}`}
             sx={{ marginTop: { md: "100px", sm: "60px", xs: "30px" } }}
@@ -120,12 +138,19 @@ function Race() {
               className={`f-bold v-center`}
               sx={{ marginBottom: "30px", color: "#000000" }}
             >
-              Looking For
+              Looking For{" "}
+              {errorState.includes(errorFieldsKeys.idealMatch.looking_for) && (
+                <Typography
+                  style={{ color: "red", marginLeft: "5px", fontSize: "12px" }}
+                >
+                  (Required*)
+                </Typography>
+              )}
             </Typography>
             <Box sx={{ justifyContent: "center", display: "flex" }}>
               <Box>
                 <Button
-                  onClick={() => setSelectedGender("male")}
+                  onClick={() => handleSelectGender("male")}
                   sx={{
                     backgroundColor:
                       SelectedGender == "male" ? "#22172A" : "#EFFBFC",
@@ -146,7 +171,7 @@ function Race() {
                   </Box>
                 </Button>
                 <Button
-                  onClick={() => setSelectedGender("female")}
+                  onClick={() => handleSelectGender("female")}
                   sx={{
                     backgroundColor:
                       SelectedGender == "female" ? "#22172A" : "#EFFBFC",
@@ -170,7 +195,7 @@ function Race() {
                   </Box>
                 </Button>
                 <Button
-                  onClick={() => setSelectedGender("Other")}
+                  onClick={() => handleSelectGender("Other")}
                   sx={{
                     backgroundColor:
                       SelectedGender == "Other" ? "#22172A" : "#EFFBFC",

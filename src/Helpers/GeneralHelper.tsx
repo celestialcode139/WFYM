@@ -19,15 +19,14 @@ const storeData = (label: string, data: any) => {
     }
   });
 };
-const retrieveData = (label: string):Promise<TokenResponse> => {
+const retrieveData = (label: string): Promise<TokenResponse> => {
   return new Promise((resolve) => {
     try {
       const storedData = Cookies.get(label);
       if (storedData) {
-          resolve({ status: 1, data: storedData });
-      }else{
+        resolve({ status: 1, data: storedData });
+      } else {
         resolve({ status: 0, message: "Something went wrong" });
-
       }
     } catch (error) {
       resolve({ status: 0, message: "Something went wrong" });
@@ -46,5 +45,15 @@ const ClearData = (label: string) => {
     }
   });
 };
+const NumericVerification = (value) => {
+  const result = String(value).replace(/\D/g, ""); // \D matches non-digit characters
+  return result.length > 0 ? result : null;
+};
 
-export default { ShowToast, storeData, retrieveData, ClearData };
+export default {
+  ShowToast,
+  storeData,
+  retrieveData,
+  ClearData,
+  NumericVerification,
+};
